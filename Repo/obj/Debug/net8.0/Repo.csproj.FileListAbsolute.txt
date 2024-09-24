@@ -1,0 +1,15 @@
+D:\Second-Soul\Repo\bin\Debug\net8.0\Repo.deps.json
+D:\Second-Soul\Repo\bin\Debug\net8.0\Repo.dll
+D:\Second-Soul\Repo\bin\Debug\net8.0\Repo.pdb
+D:\Second-Soul\Repo\bin\Debug\net8.0\DAO.dll
+D:\Second-Soul\Repo\bin\Debug\net8.0\DAO.pdb
+D:\Second-Soul\Repo\obj\Debug\net8.0\Repo.csproj.AssemblyReference.cache
+D:\Second-Soul\Repo\obj\Debug\net8.0\Repo.GeneratedMSBuildEditorConfig.editorconfig
+D:\Second-Soul\Repo\obj\Debug\net8.0\Repo.AssemblyInfoInputs.cache
+D:\Second-Soul\Repo\obj\Debug\net8.0\Repo.AssemblyInfo.cs
+D:\Second-Soul\Repo\obj\Debug\net8.0\Repo.csproj.CoreCompileInputs.cache
+D:\Second-Soul\Repo\obj\Debug\net8.0\Repo.csproj.Up2Date
+D:\Second-Soul\Repo\obj\Debug\net8.0\Repo.dll
+D:\Second-Soul\Repo\obj\Debug\net8.0\refint\Repo.dll
+D:\Second-Soul\Repo\obj\Debug\net8.0\Repo.pdb
+D:\Second-Soul\Repo\obj\Debug\net8.0\ref\Repo.dll

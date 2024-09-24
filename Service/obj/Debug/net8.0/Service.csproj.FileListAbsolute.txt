@@ -1,0 +1,17 @@
+D:\Second-Soul\Service\bin\Debug\net8.0\Service.deps.json
+D:\Second-Soul\Service\bin\Debug\net8.0\Service.dll
+D:\Second-Soul\Service\bin\Debug\net8.0\Service.pdb
+D:\Second-Soul\Service\bin\Debug\net8.0\DAO.dll
+D:\Second-Soul\Service\bin\Debug\net8.0\Repo.dll
+D:\Second-Soul\Service\bin\Debug\net8.0\Repo.pdb
+D:\Second-Soul\Service\bin\Debug\net8.0\DAO.pdb
+D:\Second-Soul\Service\obj\Debug\net8.0\Service.csproj.AssemblyReference.cache
+D:\Second-Soul\Service\obj\Debug\net8.0\Service.GeneratedMSBuildEditorConfig.editorconfig
+D:\Second-Soul\Service\obj\Debug\net8.0\Service.AssemblyInfoInputs.cache
+D:\Second-Soul\Service\obj\Debug\net8.0\Service.AssemblyInfo.cs
+D:\Second-Soul\Service\obj\Debug\net8.0\Service.csproj.CoreCompileInputs.cache
+D:\Second-Soul\Service\obj\Debug\net8.0\Service.csproj.Up2Date
+D:\Second-Soul\Service\obj\Debug\net8.0\Service.dll
+D:\Second-Soul\Service\obj\Debug\net8.0\refint\Service.dll
+D:\Second-Soul\Service\obj\Debug\net8.0\Service.pdb
+D:\Second-Soul\Service\obj\Debug\net8.0\ref\Service.dll
