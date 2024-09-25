@@ -17,6 +17,10 @@ public partial class Order
 
     public int? CouponId { get; set; }
 
+    public string PhoneNumber { get; set; } = null!;
+
+    public string Address { get; set; } = null!;
+
     public virtual Coupon? Coupon { get; set; }
 
     public virtual User? Customer { get; set; }

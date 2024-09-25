@@ -5,12 +5,13 @@ namespace BusssinessObject;
 
 public partial class FavoriteShop
 {
-    public int? UserId { get; set; }
-    public int? ShopId { get; set; }
+    public int UserId { get; set; }
+
+    public int ShopId { get; set; }
 
     public DateTime? AddedDate { get; set; }
 
-    public virtual User? Shop { get; set; }
+    public virtual User Shop { get; set; } = null!;
 
-    public virtual User? User { get; set; }
+    public virtual User User { get; set; } = null!;
 }

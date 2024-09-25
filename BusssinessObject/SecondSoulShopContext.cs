@@ -54,7 +54,7 @@ public partial class SecondSoulShopContext : DbContext
     {
         modelBuilder.Entity<Category>(entity =>
         {
-            entity.HasKey(e => e.CategoryId).HasName("PK__Categori__19093A2B99344B93");
+            entity.HasKey(e => e.CategoryId).HasName("PK__Categori__19093A2BC0F6EEE6");
 
             entity.Property(e => e.CategoryId).HasColumnName("CategoryID");
             entity.Property(e => e.CategoryName).HasMaxLength(50);
@@ -67,9 +67,9 @@ public partial class SecondSoulShopContext : DbContext
 
         modelBuilder.Entity<Coupon>(entity =>
         {
-            entity.HasKey(e => e.CouponId).HasName("PK__Coupons__384AF1DA8F63BD87");
+            entity.HasKey(e => e.CouponId).HasName("PK__Coupons__384AF1DA282FDFDE");
 
-            entity.HasIndex(e => e.Code, "UQ__Coupons__A25C5AA7743BF8C9").IsUnique();
+            entity.HasIndex(e => e.Code, "UQ__Coupons__A25C5AA7F8D623DA").IsUnique();
 
             entity.Property(e => e.CouponId).HasColumnName("CouponID");
             entity.Property(e => e.Code).HasMaxLength(50);
@@ -88,25 +88,28 @@ public partial class SecondSoulShopContext : DbContext
 
         modelBuilder.Entity<FavoriteShop>(entity =>
         {
-            entity.HasKey(e => new { e.UserId, e.ShopId }).HasName("PK_FavoriteShops");
+            entity.HasKey(e => new { e.UserId, e.ShopId }).HasName("PK__Favorite__91F499CE6B53F0C7");
+
+            entity.Property(e => e.UserId).HasColumnName("UserID");
+            entity.Property(e => e.ShopId).HasColumnName("ShopID");
             entity.Property(e => e.AddedDate)
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime");
 
-            entity.Property(e => e.ShopId).HasColumnName("ShopID");
-            entity.Property(e => e.UserId).HasColumnName("UserID");
-
             entity.HasOne(d => d.Shop).WithMany(p => p.FavoriteShopShops)
                 .HasForeignKey(d => d.ShopId)
-                .HasConstraintName("FK_FavoriteShops_Shop");
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__FavoriteS__ShopI__5AEE82B9");
 
             entity.HasOne(d => d.User).WithMany(p => p.FavoriteShopUsers)
                 .HasForeignKey(d => d.UserId)
-                .HasConstraintName("FK_FavoriteShops_User");
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__FavoriteS__UserI__59FA5E80");
         });
+
         modelBuilder.Entity<Message>(entity =>
         {
-            entity.HasKey(e => e.MessageId).HasName("PK__Messages__C87C037C1B00B60F");
+            entity.HasKey(e => e.MessageId).HasName("PK__Messages__C87C037C5E977083");
 
             entity.Property(e => e.MessageId).HasColumnName("MessageID");
             entity.Property(e => e.IsRead).HasDefaultValue(false);
@@ -129,14 +132,16 @@ public partial class SecondSoulShopContext : DbContext
 
         modelBuilder.Entity<Order>(entity =>
         {
-            entity.HasKey(e => e.OrderId).HasName("PK__Orders__C3905BAF29540535");
+            entity.HasKey(e => e.OrderId).HasName("PK__Orders__C3905BAFC6019EBD");
 
             entity.Property(e => e.OrderId).HasColumnName("OrderID");
+            entity.Property(e => e.Address).HasMaxLength(255);
             entity.Property(e => e.CouponId).HasColumnName("CouponID");
             entity.Property(e => e.CustomerId).HasColumnName("CustomerID");
             entity.Property(e => e.OrderDate)
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime");
+            entity.Property(e => e.PhoneNumber).HasMaxLength(15);
             entity.Property(e => e.Status).HasMaxLength(20);
             entity.Property(e => e.TotalAmount).HasColumnType("decimal(18, 2)");
 
@@ -151,7 +156,7 @@ public partial class SecondSoulShopContext : DbContext
 
         modelBuilder.Entity<OrderDetail>(entity =>
         {
-            entity.HasKey(e => e.OrderDetailId).HasName("PK__OrderDet__D3B9D30CAF8505CA");
+            entity.HasKey(e => e.OrderDetailId).HasName("PK__OrderDet__D3B9D30CFEC7F9C7");
 
             entity.Property(e => e.OrderDetailId).HasColumnName("OrderDetailID");
             entity.Property(e => e.OrderId).HasColumnName("OrderID");
@@ -169,7 +174,7 @@ public partial class SecondSoulShopContext : DbContext
 
         modelBuilder.Entity<Payment>(entity =>
         {
-            entity.HasKey(e => e.PaymentId).HasName("PK__Payments__9B556A583E0029A2");
+            entity.HasKey(e => e.PaymentId).HasName("PK__Payments__9B556A58F4ED0ECF");
 
             entity.Property(e => e.PaymentId).HasColumnName("PaymentID");
             entity.Property(e => e.Amount).HasColumnType("decimal(18, 2)");
@@ -187,7 +192,7 @@ public partial class SecondSoulShopContext : DbContext
 
         modelBuilder.Entity<Product>(entity =>
         {
-            entity.HasKey(e => e.ProductId).HasName("PK__Products__B40CC6ED09CB60A9");
+            entity.HasKey(e => e.ProductId).HasName("PK__Products__B40CC6ED46B279BB");
 
             entity.Property(e => e.ProductId).HasColumnName("ProductID");
             entity.Property(e => e.AddedDate)
@@ -214,7 +219,7 @@ public partial class SecondSoulShopContext : DbContext
 
         modelBuilder.Entity<Review>(entity =>
         {
-            entity.HasKey(e => e.ReviewId).HasName("PK__Reviews__74BC79AE2B6A26AA");
+            entity.HasKey(e => e.ReviewId).HasName("PK__Reviews__74BC79AEA7568786");
 
             entity.Property(e => e.ReviewId).HasColumnName("ReviewID");
             entity.Property(e => e.Comment).HasColumnType("text");
@@ -235,7 +240,7 @@ public partial class SecondSoulShopContext : DbContext
 
         modelBuilder.Entity<ShoppingCart>(entity =>
         {
-            entity.HasKey(e => e.CartId).HasName("PK__Shopping__51BCD7972554F9D1");
+            entity.HasKey(e => e.CartId).HasName("PK__Shopping__51BCD7979CC02949");
 
             entity.ToTable("ShoppingCart");
 
@@ -257,11 +262,11 @@ public partial class SecondSoulShopContext : DbContext
 
         modelBuilder.Entity<User>(entity =>
         {
-            entity.HasKey(e => e.UserId).HasName("PK__Users__1788CCAC897C2026");
+            entity.HasKey(e => e.UserId).HasName("PK__Users__1788CCACB30732FE");
 
-            entity.HasIndex(e => e.Username, "UQ__Users__536C85E4FB501281").IsUnique();
+            entity.HasIndex(e => e.Username, "UQ__Users__536C85E4E098B892").IsUnique();
 
-            entity.HasIndex(e => e.Email, "UQ__Users__A9D105345324B8BA").IsUnique();
+            entity.HasIndex(e => e.Email, "UQ__Users__A9D105343B5244F6").IsUnique();
 
             entity.Property(e => e.UserId).HasColumnName("UserID");
             entity.Property(e => e.Address).HasMaxLength(255);
