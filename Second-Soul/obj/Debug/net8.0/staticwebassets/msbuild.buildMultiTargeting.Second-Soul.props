@@ -1,3 +1,0 @@
-﻿<Project>
-  <Import Project="..\build\Second-Soul.props" />
-</Project>

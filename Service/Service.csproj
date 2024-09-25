@@ -10,4 +10,9 @@
     <ProjectReference Include="..\Repo\Repo.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="ProductRepo\" />
+    <Folder Include="UserService\" />
+  </ItemGroup>
+
 </Project>
