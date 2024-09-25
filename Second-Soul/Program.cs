@@ -1,6 +1,25 @@
+using BusssinessObject;
+using Repo.CategoryRepo;
+using Repo.CouponRepo;
+using Repo.GenericRepo;
+using Repo.ProductRepo;
+using Repo.ReviewRepo;
+using Repo.UserRepo;
+using Service.Mapper;
+using Service.UnitOfWork;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddDbContext<SecondSoulShopContext>();
+builder.Services.AddScoped(typeof(IGenericRepo<>), typeof(GenericRepo<>));
+builder.Services.AddScoped<IProductRepo, ProductRepo>();
+builder.Services.AddScoped<ICategoryRepo, CategoryRepo>();
+builder.Services.AddScoped<IUserRepo, UserRepo>();
+builder.Services.AddScoped<ICouponRepo, CouponRepo>();
+builder.Services.AddScoped<IReviewRepo, ReviewRepo>();
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddAutoMapper(typeof(MapperConfigurationsProfile));
 builder.Services.AddRazorPages();
 
 var app = builder.Build();

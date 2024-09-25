@@ -1,14 +1,14 @@
 ﻿using BusssinessObject;
-using Repo.GenericRepo;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Repo.OrderRepo
+namespace Service.UserService
 {
-    public interface IOrderRepo : IGenericRepo<Order>
+    public interface IUserService
     {
+        public Task<User?> GetUserByUsernameAndPassword(string username, string password);
     }
 }

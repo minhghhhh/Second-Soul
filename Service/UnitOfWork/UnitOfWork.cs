@@ -1,6 +1,7 @@
 ﻿using BusssinessObject;
 using Repo.CategoryRepo;
 using Repo.CouponRepo;
+using Repo.OrderDetailRepo;
 using Repo.OrderRepo;
 using Repo.ProductRepo;
 using Repo.ReviewRepo;
@@ -13,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace Service.UnitOfWork
 {
-    public class UnitOfWork
+    public class UnitOfWork : IUnitOfWork
     {
         private readonly SecondSoulShopContext _dbContext;
         private readonly IUserRepo _userRepo;
@@ -22,9 +23,10 @@ namespace Service.UnitOfWork
         private readonly ICategoryRepo _categoryRepo;
         private readonly ICouponRepo _couponRepo;
         private readonly IReviewRepo _reviewRepo;
+        private readonly IOrderDetailRepo _orderDetailRepo;
 
 
-        public UnitOfWork(SecondSoulShopContext dbContext, IUserRepo userRepository,IProductRepo productRepo,IOrderRepo orderRepo,ICategoryRepo categoryRepo,ICouponRepo couponRepo,IReviewRepo reviewRepo)
+        public UnitOfWork(SecondSoulShopContext dbContext, IUserRepo userRepository,IProductRepo productRepo,IOrderRepo orderRepo,ICategoryRepo categoryRepo,ICouponRepo couponRepo,IReviewRepo reviewRepo,IOrderDetailRepo orderDetailRepo)
         {
             _dbContext = dbContext;
             _userRepo = userRepository;
@@ -33,6 +35,7 @@ namespace Service.UnitOfWork
             _categoryRepo = categoryRepo;
             _couponRepo = couponRepo;
             _reviewRepo = reviewRepo;
+            _orderDetailRepo = orderDetailRepo;
 
         }
         public IUserRepo UserRepository => _userRepo;
@@ -41,6 +44,7 @@ namespace Service.UnitOfWork
         public ICategoryRepo CategoryRepository => _categoryRepo;
         public ICouponRepo CouponRepository => _couponRepo;
         public IReviewRepo ReviewRepository => _reviewRepo;
+        public IOrderDetailRepo OrderDetailRepository => _orderDetailRepo;
 
         public Task<int> SaveChangeAsync()
         {

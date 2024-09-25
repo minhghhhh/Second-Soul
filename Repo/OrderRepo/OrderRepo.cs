@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 
 namespace Repo.OrderRepo
 {
-    public class OrderRepo : GenericRepo<Order> , IOrderRepo
+    public class OrderRepo : GenericRepo<Order>, IOrderRepo
     {
         public OrderRepo(SecondSoulShopContext context) : base(context)
-    {
+        {
 
+        }
     }
-}
 }

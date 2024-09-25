@@ -6,9 +6,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Repo.OrderRepo
+namespace Repo.OrderDetailRepo
 {
-    public interface IOrderRepo : IGenericRepo<Order>
+    public interface IOrderDetailRepo : IGenericRepo<OrderDetail>
     {
     }
 }

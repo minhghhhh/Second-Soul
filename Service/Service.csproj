@@ -7,12 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Repo\Repo.csproj" />
+    <Compile Remove="ProductRepo\**" />
+    <EmbeddedResource Remove="ProductRepo\**" />
+    <None Remove="ProductRepo\**" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="ProductRepo\" />
-    <Folder Include="UserService\" />
+    <ProjectReference Include="..\Repo\Repo.csproj" />
   </ItemGroup>
 
 </Project>

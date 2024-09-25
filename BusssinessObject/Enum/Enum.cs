@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BusssinessObject.Enum
 {
-    public class Enum
+    public static class Enums
     { public enum Role
         {
             Customer,

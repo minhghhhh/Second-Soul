@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -48,6 +49,12 @@ namespace Repo.GenericRepo
         public void UpdateE(T entity)
         {
             _dbSet.Update(entity);
+        }
+
+        public async Task<T?> GetSingleOrDefaultWithNoTracking(Expression<Func<T, bool>>? func = null)
+        {
+            var predicate = func ?? (_dbSet => false);
+            return await _dbSet.AsNoTracking().SingleOrDefaultAsync(predicate);
         }
 
     }

@@ -6,11 +6,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Repo.CouponRepo
+namespace Repo.OrderDetailRepo
 {
-    public class CouponRepo : GenericRepo<Coupon>, ICouponRepo
+    public class OrderDetailRepo : GenericRepo<OrderDetail>, IOrderDetailRepo
     {
-        public CouponRepo(SecondSoulShopContext context) : base(context)
+        public OrderDetailRepo(SecondSoulShopContext context) : base(context)
         {
         }
     }

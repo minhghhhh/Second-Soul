@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Repo.ProductRepo
 {
-     public interface IProductRepo
+     public interface IProductRepo : IGenericRepo<Product>
     {
     }
 }
