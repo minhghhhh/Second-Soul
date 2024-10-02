@@ -23,7 +23,7 @@ namespace Repo.GenericRepo
          return   await _dbSet.ToListAsync();
         }
 
-        public async Task<T?> GetByIdAsync(Guid id)
+        public async Task<T?> GetByIdAsync(int id)
         {
             return await _dbSet.FindAsync(id);
         }
@@ -55,6 +55,12 @@ namespace Repo.GenericRepo
         {
             var predicate = func ?? (_dbSet => false);
             return await _dbSet.AsNoTracking().SingleOrDefaultAsync(predicate);
+        }
+
+        public async Task<List<T>> GetListWithNoTracking(Expression<Func<T, bool>>? func = null)
+        {
+            var predicate = func ?? (_dbSet => true);
+            return await _dbSet.AsNoTracking().Where(predicate).ToListAsync();
         }
 
     }

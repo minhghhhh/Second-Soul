@@ -1,6 +1,8 @@
 ﻿using Repo.CategoryRepo;
 using Repo.CouponRepo;
+using Repo.OrderDetailRepo;
 using Repo.OrderRepo;
+using Repo.PaymentRepo;
 using Repo.ProductRepo;
 using Repo.ReviewRepo;
 using Repo.UserRepo;
@@ -17,9 +19,11 @@ namespace Service.UnitOfWork
         public IUserRepo UserRepository { get; }
         public IProductRepo ProductRepository { get; }
         public IOrderRepo OrderRepository { get; }
+        public IOrderDetailRepo OrderDetailRepository { get; }  
         public ICategoryRepo CategoryRepository { get; }
         public ICouponRepo CouponRepository { get; }
         public IReviewRepo ReviewRepository { get; }
+        public IPaymentRepo PaymentRepository { get; }
         public Task<int> SaveChangeAsync();
     }
 }

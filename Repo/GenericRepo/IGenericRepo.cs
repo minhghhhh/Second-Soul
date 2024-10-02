@@ -10,11 +10,13 @@ namespace Repo.GenericRepo
     public interface IGenericRepo<T> where T : class
     {
         Task<List<T>> GetAllAsync();
-        Task<T?> GetByIdAsync(Guid id);
+        Task<T?> GetByIdAsync(int id);
         Task AddAsync(T entity);
         Task Update(T entity);
         Task Remove(T entity);
         void UpdateE(T entity);
         Task<T?> GetSingleOrDefaultWithNoTracking(Expression<Func<T, bool>>? func = null);
+        Task<List<T>> GetListWithNoTracking(Expression<Func<T, bool>>? func = null);
+
     }
 }

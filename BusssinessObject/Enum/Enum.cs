@@ -10,8 +10,34 @@ namespace BusssinessObject.Enum
     { public enum Role
         {
             Customer,
-            Staff,
             Admin
+        }
+        public enum OrderStatus
+        {
+            Pending,
+            Shipped,
+            Delivered,
+            Cancelled,
+            Returned
+        }
+        public enum Condition
+        {
+            New,
+            Like_New,
+            Good,
+            Fair 
+        }
+
+        public enum PaymentMethod
+        {
+            COD,
+            Banking
+        }
+        public enum PaymentStatus
+        {
+            Pending,
+            Completed,
+            Failed
         }
     }
 }

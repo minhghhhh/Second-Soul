@@ -46,7 +46,7 @@ namespace Service.UserService
         {
             try
             {
-                if (user == null || user.UserId != default || user.Role != default || user.CreatedDate != default || user.IsActive != default)
+                if (user == null || !(user.UserId > 0) || (string.IsNullOrEmpty(user.Role) || user.Role != "Customer" || user.Role != "") || user.CreatedDate != default || user.IsActive != default)
                 {
                     throw new Exception("The account cannot be created.");
                 }

@@ -98,12 +98,12 @@ public partial class SecondSoulShopContext : DbContext
 
             entity.HasOne(d => d.Shop).WithMany(p => p.FavoriteShopShops)
                 .HasForeignKey(d => d.ShopId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK__FavoriteS__ShopI__5AEE82B9");
 
             entity.HasOne(d => d.User).WithMany(p => p.FavoriteShopUsers)
                 .HasForeignKey(d => d.UserId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK__FavoriteS__UserI__59FA5E80");
         });
 
@@ -147,11 +147,17 @@ public partial class SecondSoulShopContext : DbContext
 
             entity.HasOne(d => d.Coupon).WithMany(p => p.Orders)
                 .HasForeignKey(d => d.CouponId)
+                .OnDelete(DeleteBehavior.SetNull)
                 .HasConstraintName("FK__Orders__CouponID__52593CB8");
 
             entity.HasOne(d => d.Customer).WithMany(p => p.Orders)
                 .HasForeignKey(d => d.CustomerId)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK__Orders__Customer__5165187F");
+
+            entity.HasMany(o => o.Payments)
+                .WithOne(p => p.Order)
+                .OnDelete(DeleteBehavior.Cascade);
         });
 
         modelBuilder.Entity<OrderDetail>(entity =>
@@ -165,11 +171,14 @@ public partial class SecondSoulShopContext : DbContext
 
             entity.HasOne(d => d.Order).WithMany(p => p.OrderDetails)
                 .HasForeignKey(d => d.OrderId)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK__OrderDeta__Order__5535A963");
 
             entity.HasOne(d => d.Product).WithMany(p => p.OrderDetails)
                 .HasForeignKey(d => d.ProductId)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK__OrderDeta__Produ__5629CD9C");
+
         });
 
         modelBuilder.Entity<Payment>(entity =>
@@ -210,11 +219,20 @@ public partial class SecondSoulShopContext : DbContext
 
             entity.HasOne(d => d.Category).WithMany(p => p.Products)
                 .HasForeignKey(d => d.CategoryId)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK__Products__Catego__45F365D3");
 
             entity.HasOne(d => d.Seller).WithMany(p => p.Products)
                 .HasForeignKey(d => d.SellerId)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK__Products__Seller__44FF419A");
+            entity.HasMany(p => p.Reviews)
+                .WithOne(r => r.Product)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasMany(p => p.ShoppingCarts)
+                .WithOne(sc => sc.Product)
+                .OnDelete(DeleteBehavior.Cascade);
         });
 
         modelBuilder.Entity<Review>(entity =>
@@ -279,6 +297,26 @@ public partial class SecondSoulShopContext : DbContext
             entity.Property(e => e.PhoneNumber).HasMaxLength(15);
             entity.Property(e => e.Role).HasMaxLength(20);
             entity.Property(e => e.Username).HasMaxLength(50);
+            
+            entity.HasMany(u => u.FavoriteShopUsers)
+                .WithOne(fs => fs.User)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasMany(u => u.MessageSenders)
+                .WithOne(m => m.Sender)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasMany(u => u.Orders)
+                .WithOne(o => o.Customer)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasMany(u => u.Reviews)
+                .WithOne(r => r.User)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasMany(u => u.ShoppingCarts)
+                .WithOne(sc => sc.User)
+                .OnDelete(DeleteBehavior.Cascade);
         });
 
         OnModelCreatingPartial(modelBuilder);
