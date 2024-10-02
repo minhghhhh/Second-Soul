@@ -9,6 +9,7 @@ namespace Service.ProductService
 {
     public interface IProductService
     {
-        Task<List<Product>> SearchProduct(string query, decimal? minPrice, decimal? maxPrice, int? categoryID, string condition, bool? isAvailable, long? sellerID);
+        Task<List<Product>> SearchProduct(string query, decimal? minPrice, decimal? maxPrice, int? categoryID, string condition, bool? isAvailable, long? sellerID, int pageIndex = 1, int pageSize = 10);
+        Task<List<Product>> GetallProduct();
     }
 }

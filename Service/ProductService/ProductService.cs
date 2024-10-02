@@ -19,7 +19,13 @@ namespace Service.ProductService
             _productRepo = productRepo;
             _categoryRepo = categoryRepo;
         }
-        public async Task<List<Product>> SearchProduct(string query, decimal? minPrice, decimal? maxPrice, int? categoryID, string condition, bool? isAvailable, long? sellerID)
+
+
+        public async Task<List<Product>> GetallProduct()
+        {
+            return await _productRepo.GetAllAsync();
+        }
+        public async Task<List<Product>> SearchProduct(string query, decimal? minPrice, decimal? maxPrice, int? categoryID, string condition, bool? isAvailable, long? sellerID, int pageIndex = 1, int pageSize = 10)
         {
             try
             {
@@ -27,7 +33,7 @@ namespace Service.ProductService
                 await ValidateSearchParametersAsync(minPrice, maxPrice, categoryID, isAvailable, sellerID);
 
                 // Call the repository method if all validations pass
-                return await _productRepo.SearchProduct(query, minPrice, maxPrice, categoryID, condition, isAvailable, sellerID);
+                return await _productRepo.SearchProduct(query, minPrice, maxPrice, categoryID, condition, isAvailable, sellerID, pageIndex, pageSize);
             }
             catch (Exception ex)
             {

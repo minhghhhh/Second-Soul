@@ -16,7 +16,11 @@ namespace Repo.ProductRepo
         {
             _dbcontext = context;
         }
-        public async Task<List<Product>> SearchProduct(string query, decimal? minPrice, decimal? maxPrice, int? categoryID, string condition, bool? isAvailable, long? sellerID)
+        public IQueryable<List<Product>> GetProductsAsQueryable()
+        {
+            return (IQueryable<List<Product>>)_dbcontext.Products.AsQueryable();
+        }
+        public async Task<List<Product>> SearchProduct(string query, decimal? minPrice, decimal? maxPrice, int? categoryID, string condition, bool? isAvailable, long? sellerID, int pageIndex = 1, int pageSize = 10)
         {
             var productQuery = _dbcontext.Products.Include(p => p.Category).AsQueryable();
 
@@ -62,7 +66,7 @@ namespace Repo.ProductRepo
             }
 
             // Execute the query and return the result
-            return await productQuery.ToListAsync();
+            return await productQuery.Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
         }
     }
 }

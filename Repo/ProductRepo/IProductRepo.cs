@@ -10,6 +10,6 @@ namespace Repo.ProductRepo
 {
     public interface IProductRepo : IGenericRepo<Product>
     {
-        Task<List<Product>> SearchProduct(string query, decimal? minPrice, decimal? maxPrice, int? categoryID, string condition, bool? isAvailable, long? sellerID);
-    }
+        IQueryable<List<Product>> GetProductsAsQueryable();
+        Task<List<Product>> SearchProduct(string query, decimal? minPrice, decimal? maxPrice, int? categoryID, string condition, bool? isAvailable, long? sellerID, int pageIndex = 1, int pageSize = 10);    }
 }
