@@ -9,15 +9,15 @@ public partial class Coupon
 
     public string Code { get; set; } = null!;
 
-    public decimal? DiscountAmount { get; set; }
+    public decimal DiscountPercentage { get; set; }  
 
-    public decimal? DiscountPercentage { get; set; }
+    public int MaxDiscount { get; set; }           
 
-    public decimal? MaxDiscount { get; set; }
+    public DateTime? ExpiryDate { get; set; }         
 
-    public DateTime? ExpiryDate { get; set; }
+    public bool IsActive { get; set; }              
 
-    public bool? IsActive { get; set; }
+    public int MinSpendAmount { get; set; }    
 
     public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
 }
