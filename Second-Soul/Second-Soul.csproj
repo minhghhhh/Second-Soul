@@ -14,6 +14,9 @@
   <ItemGroup>
     <Folder Include="Models\" />
     <Folder Include="Controllers\" />
+    <Folder Include="Pages\Order\" />
+    <Folder Include="Pages\Product\" />
+    <Folder Include="Pages\User\" />
   </ItemGroup>
 
 </Project>

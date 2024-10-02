@@ -2,6 +2,8 @@ using BusssinessObject;
 using Repo.CategoryRepo;
 using Repo.CouponRepo;
 using Repo.GenericRepo;
+using Repo.OrderDetailRepo;
+using Repo.OrderRepo;
 using Repo.ProductRepo;
 using Repo.ReviewRepo;
 using Repo.UserRepo;
@@ -19,6 +21,8 @@ builder.Services.AddScoped<IUserRepo, UserRepo>();
 builder.Services.AddScoped<ICouponRepo, CouponRepo>();
 builder.Services.AddScoped<IReviewRepo, ReviewRepo>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddScoped<IOrderRepo, OrderRepo>();
+builder.Services.AddScoped<IOrderDetailRepo, OrderDetailRepo>();
 builder.Services.AddAutoMapper(typeof(MapperConfigurationsProfile));
 builder.Services.AddRazorPages();
 

@@ -20,3 +20,9 @@ html {
 body {
   margin-bottom: 60px;
 }
+.header-background {
+    background-image: url('/pic/logo/BackGround.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}

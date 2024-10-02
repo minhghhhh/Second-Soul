@@ -1,4 +1,4 @@
-use master
+﻿use master
 GO
 ALTER DATABASE SecondSoulShop SET SINGLE_USER WITH ROLLBACK IMMEDIATE;
 Go
@@ -15,7 +15,7 @@ CREATE TABLE Users (
     Email NVARCHAR(100) UNIQUE NOT NULL,
     PhoneNumber NVARCHAR(15) NULL,
     Address NVARCHAR(255) NULL,
-    Role NVARCHAR(20) CHECK (Role IN ('Customer', 'Admin')), 
+    Role NVARCHAR(20) CHECK (Role IN ('Customer','Admin')), 
     CreatedDate DATETIME DEFAULT GETDATE(),
     IsActive BIT DEFAULT 1
 );
@@ -35,21 +35,21 @@ CREATE TABLE Products (
     CategoryID INT,
     Price DECIMAL(18, 2) NOT NULL,
     Quantity INT DEFAULT 0,
-    Condition NVARCHAR(20) CHECK (Condition IN ('New', 'Used - Like New', 'Used - Good', 'Used - Fair')),
+    Condition NVARCHAR(20) CHECK (Condition IN ('New', 'Like_New', 'Good', 'Fair')),
     AddedDate DATETIME DEFAULT GETDATE(),
     IsAvailable BIT DEFAULT 1,
-    ImageUrl NVARCHAR(255) NOT NULL, -- Cloudinary URL for product image
+    ImageUrl NVARCHAR(255) NOT NULL, 
     FOREIGN KEY (SellerID) REFERENCES Users(UserID),
     FOREIGN KEY (CategoryID) REFERENCES Categories(CategoryID)
 );
 CREATE TABLE Coupons (
     CouponID INT IDENTITY(1,1) PRIMARY KEY,
     Code NVARCHAR(50) UNIQUE NOT NULL,
-    DiscountAmount DECIMAL(18, 2) DEFAULT 0, -- Flat discount
-    DiscountPercentage DECIMAL(4, 2) DEFAULT 0, -- Discount percentage (0.15 = 15%)
-    MaxDiscount DECIMAL(18, 2) DEFAULT 0, -- Maximum discount that can be applied
+    DiscountPercentage DECIMAL(4, 2) DEFAULT 0, 
+    MaxDiscount INT DEFAULT 0,             
     ExpiryDate DATETIME,
-    IsActive BIT DEFAULT 1
+    IsActive BIT DEFAULT 1,
+    MinSpendAmount INT DEFAULT 0
 );
 
 CREATE TABLE Orders (
@@ -80,7 +80,7 @@ CREATE TABLE FavoriteShops (
     UserID INT,
     ShopID INT, 
     AddedDate DATETIME DEFAULT GETDATE(),
-    PRIMARY KEY (UserID, ShopID),  
+    PRIMARY KEY (UserID,ShopID),  
     FOREIGN KEY (UserID) REFERENCES Users(UserID),
     FOREIGN KEY (ShopID) REFERENCES Users(UserID)
 );
@@ -111,7 +111,7 @@ CREATE TABLE Payments (
     OrderID INT,
     PaymentDate DATETIME DEFAULT GETDATE(),
     Amount DECIMAL(18, 2) NOT NULL,
-    PaymentMethod NVARCHAR(50) CHECK (PaymentMethod IN ('Credit Card', 'PayPal', 'Bank Transfer')),
+    PaymentMethod NVARCHAR(50) CHECK (PaymentMethod IN ('COD', 'Banking')),
     Status NVARCHAR(20) CHECK (Status IN ('Pending', 'Completed', 'Failed')),
     FOREIGN KEY (OrderID) REFERENCES Orders(OrderID)
 );
@@ -127,3 +127,40 @@ CREATE TABLE Messages (
     FOREIGN KEY (SenderID) REFERENCES Users(UserID),
     FOREIGN KEY (ReceiverID) REFERENCES Users(UserID)
 );
+Go
+INSERT INTO [SecondSoulShop].[dbo].[Categories] 
+    ([CategoryName], [ParentCategoryID])
+VALUES
+    ( 'Topwear', NULL),        
+    ( 'Bottomwear', Null), 
+	('Footwear',Null),
+	( 'Headwear', Null),
+	('Full-set',null),
+	('Others',null),
+    ( 'Jackets', 1),              
+    ( 'T-shirts', 1),             
+    ( 'Dresses', 5),              
+    ('Blouses', 1),              
+    ( 'TankTop',1),       
+    ( 'Skirt', 2),    
+	( 'Pants', 2),
+    ( 'Short', 2), 
+	( 'Croptop',1),
+	('Vest',1),
+	('Sneakers',3),
+	('Loafers',3),
+	('High-heels',3),
+	('Boots',3),
+	('Sandals',3),
+	('Hand Bag',6),
+	('Backpack',6),
+	('Gloves',6),
+	('Scarf',6);
+Go
+INSERT INTO Coupons (Code, DiscountPercentage, MaxDiscount, ExpiryDate, IsActive, MinSpendAmount)
+VALUES
+    ('SUMMER2024', 15.00, 50000, '2024-07-31', 1, 0),         -- Giảm 15%, tối đa 50,000 VND
+    ('NEWUSER', 20.00, 100000, '2024-11-30', 1, 0),           -- Giảm 20%, tối đa 100,000 VND
+    ('FLASHSALE', 10.00, 25000, '2024-10-15', 1, 0),          -- Giảm 10%, tối đa 25,000 VND
+    ('EXPIREDCOUPON', 5.00, 10000, '2023-12-31', 0, 0),       -- Giảm 5%, tối đa 10,000 VND, đã hết hạn
+    ('BIGSPENDER', 20.00, 200000, '2024-12-31', 1, 1000000);   -- Giảm 10%, tối đa 100,000 VND, yêu cầu chi tiêu 500,000 VND

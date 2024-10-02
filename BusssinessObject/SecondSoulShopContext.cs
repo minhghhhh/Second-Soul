@@ -72,20 +72,25 @@ public partial class SecondSoulShopContext : DbContext
             entity.HasIndex(e => e.Code, "UQ__Coupons__A25C5AA7F8D623DA").IsUnique();
 
             entity.Property(e => e.CouponId).HasColumnName("CouponID");
+
             entity.Property(e => e.Code).HasMaxLength(50);
-            entity.Property(e => e.DiscountAmount)
-                .HasDefaultValue(0m)
-                .HasColumnType("decimal(18, 2)");
+
             entity.Property(e => e.DiscountPercentage)
                 .HasDefaultValue(0m)
                 .HasColumnType("decimal(4, 2)");
-            entity.Property(e => e.ExpiryDate).HasColumnType("datetime");
-            entity.Property(e => e.IsActive).HasDefaultValue(true);
-            entity.Property(e => e.MaxDiscount)
-                .HasDefaultValue(0m)
-                .HasColumnType("decimal(18, 2)");
-        });
 
+            entity.Property(e => e.MaxDiscount)
+                .HasDefaultValue(0) 
+                .HasColumnType("int"); 
+
+            entity.Property(e => e.MinSpendAmount)
+                .HasDefaultValue(0) 
+                .HasColumnType("int"); 
+
+            entity.Property(e => e.ExpiryDate).HasColumnType("datetime");
+
+            entity.Property(e => e.IsActive).HasDefaultValue(true);
+        });
         modelBuilder.Entity<FavoriteShop>(entity =>
         {
             entity.HasKey(e => new { e.UserId, e.ShopId }).HasName("PK__Favorite__91F499CE6B53F0C7");

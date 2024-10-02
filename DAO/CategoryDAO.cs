@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DAO
 {
-    internal class CategoryDAO
+    public class CategoryDAO
     {
     }
 }

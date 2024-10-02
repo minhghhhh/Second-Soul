@@ -36,7 +36,6 @@ namespace Service.UnitOfWork
             _couponRepo = couponRepo;
             _reviewRepo = reviewRepo;
             _orderDetailRepo = orderDetailRepo;
-
         }
         public IUserRepo UserRepository => _userRepo;
         public IProductRepo ProductRepository => _productRepo;

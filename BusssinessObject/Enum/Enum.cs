@@ -10,7 +10,6 @@ namespace BusssinessObject.Enum
     { public enum Role
         {
             Customer,
-            Staff,
             Admin
         }
     }
