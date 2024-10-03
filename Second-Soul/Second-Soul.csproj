@@ -8,15 +8,20 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Service\Service.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Folder Include="Models\" />
     <Folder Include="Controllers\" />
     <Folder Include="Pages\Order\" />
     <Folder Include="Pages\Product\" />
     <Folder Include="Pages\User\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Session" Version="2.1.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\BusssinessObject\BusssinessObject.csproj" />
+    <ProjectReference Include="..\Data\Data.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,23 +1,22 @@
+using BusinessObject;
 using BusssinessObject;
+using Data;
+using Data.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
-using Service.CategoryService;
-using Service.ProductService;
-using Service.UserService;
-
 namespace Second_Soul.Pages
 {
     public class SearchModel : PageModel
     {
-        private readonly IUserService _userService;
-        private readonly IProductService _producService;
-        private readonly ICategoryService _categoryService;
-        public SearchModel(IUserService userService, IProductService producService, ICategoryService categoryService)
+        private readonly ProductBusiness _productBusiness;
+        private readonly CategoryBusiness _categoryBusiness;
+
+
+        public SearchModel(ProductBusiness productBusiness,CategoryBusiness categoryBusiness)
         {
-            _producService = producService;
-            _userService = userService;
-            _categoryService = categoryService;
+            _productBusiness = productBusiness;
+            _categoryBusiness = categoryBusiness;
         }
         public string? Query { get; set; }
         public List<string> SearchResults { get; set; } = new List<string>();
@@ -46,32 +45,12 @@ namespace Second_Soul.Pages
             SellerID = sellerID;
             PageIndex = pageIndex;
 
-            Products = await _producService.SearchProduct(query, minPrice, maxPrice, categoryIDs, condition, isAvailable, sellerID, pageIndex, PageSize);
-            Categories = await _categoryService.GetCategoriesAsync();
+            Products = (List<Product>)await _productBusiness.SearchProduct(query, minPrice, maxPrice, categoryIDs, condition, isAvailable, sellerID, pageIndex, PageSize);
+            Categories = await _categoryBusiness.GetCategoriesAsync();
 
             // Pagination logic
             TotalPages = (int)Math.Ceiling(Products.Count() / (double)PageSize);
             return Page();
-        }
-
-
-        private List<string> PerformSearch(string query)
-        {
-            // Mock data - replace with actual database or data source search
-            var items = new List<string>
-        {
-            "Shirt", "Pants", "Shoes", "Second-Hand Jacket",
-            "Bags", "Jeans", "Skirts", "Dresses", "Hats", "Coats",
-            "Scarves", "Gloves", "T-Shirts", "Belts", "Socks","haha","huhu",  "Shirt", "Pants", "Shoes", "Second-Hand Jacket",
-            "Bags", "Jeans", "Skirts", "Dresses", "Hats", "Coats",
-            "Scarves", "Gloves", "T-Shirts", "Belts", "Socks"
-        };
-            if (string.IsNullOrEmpty(query))
-            {
-                return items.ToList();
-
-            }
-            return items.Where(item => item.Contains(query, StringComparison.OrdinalIgnoreCase)).ToList();
         }
 
         public bool HasPreviousPage => PageIndex > 1;

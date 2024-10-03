@@ -21,22 +21,6 @@ namespace Service.UserService
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<bool> ConfirmUserByUsernameAndPassword(string email, string password)
-        {
-            try
-            {
-                var user = await _unitOfWork.UserRepository.GetSingleOrDefaultWithNoTracking(u => u.Email.ToLower() == email.ToLower() && u.PasswordHash == HashPassWithSHA256.HashWithSHA256(password));
-                if (user != null)
-                {
-                    return true;
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex);
-            }
-            return false;
-        }
 
         public async Task CreateUser(User user)
         {

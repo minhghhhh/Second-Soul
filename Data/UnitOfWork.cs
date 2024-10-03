@@ -1,23 +1,15 @@
 ﻿
 using Data.Models;
-using Repo.CategoryRepo;
-using Repo.CouponRepo;
-using Repo.OrderDetailRepo;
-using Repo.OrderRepo;
-using Repo.PaymentRepo;
-using Repo.ProductRepo;
-using Repo.ReviewRepo;
-using Repo.UserRepo;
-using Service.PaymentService;
+using Data.Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Service.UnitOfWork
+namespace Data
 {
-    public class UnitOfWork : IUnitOfWork
+    public class UnitOfWork 
     {
         private readonly SecondSoulShopContext _dbContext;
         private readonly UserRepo _userRepo;
@@ -43,14 +35,14 @@ namespace Service.UnitOfWork
             _paymentRepo = paymentRepo;
 
         }
-        public IUserRepo UserRepository => _userRepo;
-        public IProductRepo ProductRepository => _productRepo;
-        public IOrderRepo OrderRepository => _orderRepo;
-        public ICategoryRepo CategoryRepository => _categoryRepo;
-        public ICouponRepo CouponRepository => _couponRepo;
-        public IReviewRepo ReviewRepository => _reviewRepo;
-        public IOrderDetailRepo OrderDetailRepository => _orderDetailRepo;
-        public IPaymentRepo PaymentRepository => _paymentRepo;
+        public UserRepo UserRepository => _userRepo;
+        public ProductRepo ProductRepository => _productRepo;
+        public OrderRepo OrderRepository => _orderRepo;
+        public CategoryRepo CategoryRepository => _categoryRepo;
+        public CouponRepo CouponRepository => _couponRepo;
+        public ReviewRepo ReviewRepository => _reviewRepo;
+        public OrderDetailRepo OrderDetailRepository => _orderDetailRepo;
+        public PaymentRepo PaymentRepository => _paymentRepo;
 
 
         public Task<int> SaveChangeAsync()
