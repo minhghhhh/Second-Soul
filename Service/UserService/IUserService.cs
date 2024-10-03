@@ -9,6 +9,7 @@ namespace Service.UserService
 {
     public interface IUserService
     {
-        public Task<User?> GetUserByUsernameAndPassword(string username, string password);
+        Task<bool> ConfirmUserByUsernameAndPassword(string email, string password);
+        Task CreateUser(User user);
     }
 }

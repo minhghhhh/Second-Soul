@@ -9,6 +9,7 @@ using Repo.ReviewRepo;
 using Repo.UserRepo;
 using Service.Mapper;
 using Service.UnitOfWork;
+using Service.UserService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,6 +24,8 @@ builder.Services.AddScoped<IReviewRepo, ReviewRepo>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IOrderRepo, OrderRepo>();
 builder.Services.AddScoped<IOrderDetailRepo, OrderDetailRepo>();
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddMvcCore();  
 builder.Services.AddAutoMapper(typeof(MapperConfigurationsProfile));
 builder.Services.AddRazorPages();
 
