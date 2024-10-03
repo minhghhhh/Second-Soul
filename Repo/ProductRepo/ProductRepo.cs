@@ -44,7 +44,7 @@ namespace Repo.ProductRepo
             // Apply category filter for multiple category IDs
             if (categoryIDs != null && categoryIDs.Any())
             {
-                productQuery = productQuery.Where(p => categoryIDs.Contains(p.CategoryId.Value));
+                productQuery = productQuery.Where(p => categoryIDs.Contains(p.CategoryId));
             }
 
             // Apply condition filter

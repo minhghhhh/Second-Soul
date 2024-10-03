@@ -12,6 +12,7 @@ using Service.UnitOfWork;
 using Microsoft.Extensions.Options;
 using BusssinessObject.Utils;
 using Microsoft.Extensions.Configuration;
+using Service.UserService;
 
 var builder = WebApplication.CreateBuilder(args);
 
