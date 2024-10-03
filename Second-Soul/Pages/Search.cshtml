@@ -29,10 +29,10 @@
             <!-- Assume categories are dynamically loaded -->
             @foreach (var category in Model.Categories)
             {
-                <option value="@category.CategoryID" @(category.CategoryID == Model.CategoryID ? "selected" : "")>
+@*                 <option value="@category.CategoryID" @(category.CategoryID == Model.CategoryID ? "selected" : "")>
                     @category.Name
                 </option>
-            }
+ *@            }
         </select>
     </div>
 

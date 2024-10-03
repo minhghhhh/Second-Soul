@@ -1,25 +1,34 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BusssinessObject;
 
 public partial class Message
 {
+    [Key]
     public int MessageId { get; set; }
 
-    public int? SenderId { get; set; }
+    [Required]
+    public int SenderId { get; set; }
 
-    public int? ReceiverId { get; set; }
+    [Required]
+    public int ReceiverId { get; set; }
 
-    public string? Subject { get; set; }
+    [MaxLength(100)]
+    public string Subject { get; set; } = string.Empty;
 
-    public string? MessageBody { get; set; }
+    [Required]
+    public string MessageBody { get; set; } = string.Empty;
 
-    public DateTime? SentDate { get; set; }
+    public DateTime SentDate { get; set; } = default;
 
-    public bool? IsRead { get; set; }
+    public bool IsRead { get; set; } = false;
 
-    public virtual User? Receiver { get; set; }
+    [ForeignKey("ReceiverId")]
+    public virtual User Receiver { get; set; } = null!;
 
-    public virtual User? Sender { get; set; }
+    [ForeignKey("SenderId")]
+    public virtual User Sender { get; set; } = null!;
 }

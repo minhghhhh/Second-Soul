@@ -1,27 +1,40 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
 
 namespace BusssinessObject;
 
 public partial class User
 {
+    [Key]
     public int UserId { get; set; }
 
-    public string Username { get; set; } = null!;
+    [Required]
+    [MaxLength(50)]
+    public string Username { get; set; } = string.Empty;
 
-    public string PasswordHash { get; set; } = null!;
+    [Required]
+    public string PasswordHash { get; set; } = string.Empty;
 
-    public string Email { get; set; } = null!;
+    [Required]
+    [MaxLength(100)]
+    public string Email { get; set; } = string.Empty;
 
-    public string? PhoneNumber { get; set; }
+    [MaxLength(15)]
+    public string PhoneNumber { get; set; } = string.Empty;
 
-    public string? Address { get; set; }
+    [MaxLength(255)]
+    public string Address { get; set; } = string.Empty;
 
-    public string? Role { get; set; }
+    [Required]
+    [Column(TypeName = "nvarchar(20)")]
+    [RegularExpression("Customer|Admin")]
+    public string Role { get; set; } = string.Empty;
 
-    public DateTime? CreatedDate { get; set; }
+    public DateTime CreatedDate { get; set; } = default;
 
-    public bool? IsActive { get; set; }
+    public bool IsActive { get; set; } = true;
 
     public virtual ICollection<FavoriteShop> FavoriteShopShops { get; set; } = new List<FavoriteShop>();
 

@@ -1,21 +1,34 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
 
 namespace BusssinessObject;
 
 public partial class Payment
 {
+    [Key]
     public int PaymentId { get; set; }
 
-    public int? OrderId { get; set; }
+    [Required]
+    public int OrderId { get; set; }
 
-    public DateTime? PaymentDate { get; set; }
+    public DateTime PaymentDate { get; set; } = DateTime.Now;
 
+    [Required]
+    [Column(TypeName = "decimal(18,2)")]
     public decimal Amount { get; set; }
 
-    public string? PaymentMethod { get; set; }
+    [Required]
+    [Column(TypeName = "nvarchar(50)")]
+    [RegularExpression("COD|Banking")]
+    public string PaymentMethod { get; set; } = string.Empty;
 
-    public string? Status { get; set; }
+    [Required]
+    [Column(TypeName = "nvarchar(20)")]
+    [RegularExpression("Pending|Completed|Failed")]
+    public string Status { get; set; } = string.Empty;
 
+    [ForeignKey("OrderId")]
     public virtual Order? Order { get; set; }
 }

@@ -32,15 +32,21 @@ CREATE TABLE Products (
     SellerID INT,
     Name NVARCHAR(100) NOT NULL,
     Description TEXT,
-    CategoryID INT,
+    CategoryID INT NOT NULL,
     Price DECIMAL(18, 2) NOT NULL,
     Quantity INT DEFAULT 0,
     Condition NVARCHAR(20) CHECK (Condition IN ('New', 'Like_New', 'Good', 'Fair')),
     AddedDate DATETIME DEFAULT GETDATE(),
     IsAvailable BIT DEFAULT 1,
-    ImageUrl NVARCHAR(255) NOT NULL, 
     FOREIGN KEY (SellerID) REFERENCES Users(UserID),
     FOREIGN KEY (CategoryID) REFERENCES Categories(CategoryID)
+);
+CREATE TABLE ProductImages (
+    Id INT IDENTITY(1,1) PRIMARY KEY,
+    ImageUrl NVARCHAR(255) NOT NULL,
+    PublicId NVARCHAR(255),
+    ProductId INT NOT NULL,
+    FOREIGN KEY (ProductId) REFERENCES Products(ProductID) ON DELETE CASCADE
 );
 CREATE TABLE Coupons (
     CouponID INT IDENTITY(1,1) PRIMARY KEY,
@@ -87,9 +93,9 @@ CREATE TABLE FavoriteShops (
 
 CREATE TABLE Reviews (
     ReviewID INT IDENTITY(1,1) PRIMARY KEY,
-    ProductID INT,
-    UserID INT,
-    Rating INT CHECK (Rating BETWEEN 1 AND 5),
+    ProductID INT NOT NULL,
+    UserID INT NOT NULL,
+    Rating INT CHECK (Rating BETWEEN 1 AND 5) NOT NULL,
     Comment TEXT,
     ReviewDate DATETIME DEFAULT GETDATE(),
     FOREIGN KEY (ProductID) REFERENCES Products(ProductID),
@@ -97,18 +103,18 @@ CREATE TABLE Reviews (
 );
 
 CREATE TABLE ShoppingCart (
-    CartID INT IDENTITY(1,1) PRIMARY KEY,
-    UserID INT,
+     UserID INT,
     ProductID INT,
     Quantity INT NOT NULL,
     AddedDate DATETIME DEFAULT GETDATE(),
+	PRIMARY KEY(UserID, ProductID),
     FOREIGN KEY (UserID) REFERENCES Users(UserID),
     FOREIGN KEY (ProductID) REFERENCES Products(ProductID)
 );
 
 CREATE TABLE Payments (
     PaymentID INT IDENTITY(1,1) PRIMARY KEY,
-    OrderID INT,
+    OrderID INT NOT NULL,
     PaymentDate DATETIME DEFAULT GETDATE(),
     Amount DECIMAL(18, 2) NOT NULL,
     PaymentMethod NVARCHAR(50) CHECK (PaymentMethod IN ('COD', 'Banking')),
@@ -118,12 +124,12 @@ CREATE TABLE Payments (
 
 CREATE TABLE Messages (
     MessageID INT IDENTITY(1,1) PRIMARY KEY,
-    SenderID INT,
-    ReceiverID INT,
+    SenderID INT NOT NULL,
+    ReceiverID INT NOT NULL,
     Subject NVARCHAR(100),
-    MessageBody TEXT,
+    MessageBody TEXT NOT NULL,
     SentDate DATETIME DEFAULT GETDATE(),
-    IsRead BIT DEFAULT 0,
+    IsRead BIT DEFAULT 0 NOT NULL,
     FOREIGN KEY (SenderID) REFERENCES Users(UserID),
     FOREIGN KEY (ReceiverID) REFERENCES Users(UserID)
 );
@@ -136,7 +142,7 @@ VALUES
 	('Footwear',Null),
 	( 'Headwear', Null),
 	('Full-set',null),
-	('Others',null),
+	('Accessories',null),
     ( 'Jackets', 1),              
     ( 'T-shirts', 1),             
     ( 'Dresses', 5),              

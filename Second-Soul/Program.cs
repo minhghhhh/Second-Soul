@@ -9,6 +9,9 @@ using Repo.ReviewRepo;
 using Repo.UserRepo;
 using Service.Mapper;
 using Service.UnitOfWork;
+using Microsoft.Extensions.Options;
+using BusssinessObject.Utils;
+using Microsoft.Extensions.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,7 +30,7 @@ builder.Services.AddScoped<IOrderRepo, OrderRepo>();
 builder.Services.AddScoped<IOrderDetailRepo, OrderDetailRepo>();
 builder.Services.AddAutoMapper(typeof(MapperConfigurationsProfile));
 builder.Services.AddRazorPages();
-
+//builder.Services.Configure<CloudinaryOptions>(Configuration.GetSection("Cloudinary"));
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

@@ -1,23 +1,32 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BusssinessObject;
 
 public partial class Review
 {
+    [Key]
     public int ReviewId { get; set; }
 
-    public int? ProductId { get; set; }
+    [Required]
+    public int ProductId { get; set; }
 
-    public int? UserId { get; set; }
+    [Required]
+    public int UserId { get; set; }
 
-    public int? Rating { get; set; }
+    [Required]
+    [Range(1, 5)]
+    public int Rating { get; set; }
 
-    public string? Comment { get; set; }
+    public string Comment { get; set; } = string.Empty;
 
-    public DateTime? ReviewDate { get; set; }
+    public DateTime ReviewDate { get; set; } = default;
 
-    public virtual Product? Product { get; set; }
+    [ForeignKey("ProductId")]
+    public virtual Product Product { get; set; } = null!;
 
-    public virtual User? User { get; set; }
+    [ForeignKey("UserId")]
+    public virtual User User { get; set; } = null!;
 }
