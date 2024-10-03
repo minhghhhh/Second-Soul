@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace Service.UserService
 {
-    public class UserService
+    public class UserService : IUserService
     {
         private readonly IUnitOfWork _unitOfWork;
         public UserService()

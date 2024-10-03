@@ -4,8 +4,7 @@ ALTER DATABASE SecondSoulShop SET SINGLE_USER WITH ROLLBACK IMMEDIATE;
 Go
 DROP DATABASE SecondSoulShop;
 Go
-Create database SecondSoulShop
-GO
+ GO
 USE SecondSoulShop;
 Go
 CREATE TABLE Users (

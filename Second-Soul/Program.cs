@@ -28,6 +28,8 @@ builder.Services.AddScoped<IReviewRepo, ReviewRepo>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IOrderRepo, OrderRepo>();
 builder.Services.AddScoped<IOrderDetailRepo, OrderDetailRepo>();
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddMvcCore();  
 builder.Services.AddAutoMapper(typeof(MapperConfigurationsProfile));
 builder.Services.AddRazorPages();
 //builder.Services.Configure<CloudinaryOptions>(Configuration.GetSection("Cloudinary"));
