@@ -11,5 +11,7 @@ namespace Repo.ProductRepo
     public interface IProductRepo : IGenericRepo<Product>
     {
         IQueryable<List<Product>> GetProductsAsQueryable();
-        Task<List<Product>> SearchProduct(string query, decimal? minPrice, decimal? maxPrice, int? categoryID, string condition, bool? isAvailable, long? sellerID, int pageIndex = 1, int pageSize = 10);    }
+        Task<List<Product>> SearchProduct(string query, decimal? minPrice, decimal? maxPrice, List<int>? categoryIDs, string condition, bool? isAvailable, long? sellerID, int pageIndex = 1, int pageSize = 10);
+
+    }
 }

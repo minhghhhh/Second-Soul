@@ -2,6 +2,7 @@
 using Microsoft.Identity.Client;
 using Repo.CategoryRepo;
 using Repo.ProductRepo;
+using Service.UnitOfWork;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,28 +13,27 @@ using System.Threading.Tasks;
 namespace Service.ProductService
 {
     public class ProductService : IProductService
-    { private readonly IProductRepo _productRepo;
-        private readonly ICategoryRepo _categoryRepo;
-        public ProductService(IProductRepo productRepo, ICategoryRepo categoryRepo)
+    {
+        private readonly IUnitOfWork _unitOfWork;
+        public ProductService(IUnitOfWork unitOfWork)
         {
-            _productRepo = productRepo;
-            _categoryRepo = categoryRepo;
+            _unitOfWork = unitOfWork;
         }
 
 
         public async Task<List<Product>> GetallProduct()
         {
-            return await _productRepo.GetAllAsync();
+            return await _unitOfWork.ProductRepository.GetAllAsync();
         }
-        public async Task<List<Product>> SearchProduct(string query, decimal? minPrice, decimal? maxPrice, int? categoryID, string condition, bool? isAvailable, long? sellerID, int pageIndex = 1, int pageSize = 10)
+        public async Task<List<Product>> SearchProduct(string query, decimal? minPrice, decimal? maxPrice, List<int>? categoryIDs, string condition, bool? isAvailable, long? sellerID, int pageIndex = 1, int pageSize = 10)
         {
             try
             {
                 // Validate the parameters asynchronously
-                await ValidateSearchParametersAsync(minPrice, maxPrice, categoryID, isAvailable, sellerID);
+                await ValidateSearchParametersAsync(minPrice, maxPrice, categoryIDs, isAvailable, sellerID);
 
                 // Call the repository method if all validations pass
-                return await _productRepo.SearchProduct(query, minPrice, maxPrice, categoryID, condition, isAvailable, sellerID, pageIndex, pageSize);
+                return await _unitOfWork.ProductRepository.SearchProduct(query, minPrice, maxPrice, categoryIDs, condition, isAvailable, sellerID, pageIndex, pageSize);
             }
             catch (Exception ex)
             {
@@ -45,7 +45,7 @@ namespace Service.ProductService
             }
         }
 
-        private async Task ValidateSearchParametersAsync(decimal? minPrice, decimal? maxPrice, int? categoryID, bool? isAvailable, long? sellerID)
+        private async Task ValidateSearchParametersAsync(decimal? minPrice, decimal? maxPrice, List<int>? categoryIDs, bool? isAvailable, long? sellerID)
         {
             // Ensure minPrice is not negative
             if (minPrice.HasValue && minPrice.Value < 0)
@@ -60,9 +60,15 @@ namespace Service.ProductService
             }
 
             // Validate CategoryID asynchronously
-            if (categoryID.HasValue && !(await IsValidCategoryAsync(categoryID.Value)))
+            if (categoryIDs != null)
             {
-                throw new ArgumentException("Invalid category ID.");
+                foreach (var categoryID in categoryIDs)
+                {
+                    if (!(categoryID > 0) || !(await IsValidCategoryAsync(categoryID)))
+                    {
+                        throw new ArgumentException("Invalid category ID.");
+                    }
+                }
             }
 
             // Ensure isAvailable is true (if required in the business logic)
@@ -82,7 +88,7 @@ namespace Service.ProductService
         private async Task<bool> IsValidCategoryAsync(int categoryID)
         {
             // Fetch all categories asynchronously from the repository
-            var validCategories = await _categoryRepo.GetAllAsync();
+            var validCategories = await _unitOfWork.CategoryRepository.GetAllAsync();
 
             // Check if any of the categories have the given categoryID
             return validCategories.Any(category => category.CategoryId == categoryID);

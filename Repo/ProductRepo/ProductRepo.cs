@@ -20,7 +20,7 @@ namespace Repo.ProductRepo
         {
             return (IQueryable<List<Product>>)_dbcontext.Products.AsQueryable();
         }
-        public async Task<List<Product>> SearchProduct(string query, decimal? minPrice, decimal? maxPrice, int? categoryID, string condition, bool? isAvailable, long? sellerID, int pageIndex = 1, int pageSize = 10)
+        public async Task<List<Product>> SearchProduct(string query, decimal? minPrice, decimal? maxPrice, List<int>? categoryIDs, string condition, bool? isAvailable, long? sellerID, int pageIndex = 1, int pageSize = 10)
         {
             var productQuery = _dbcontext.Products.Include(p => p.Category).AsQueryable();
 
@@ -41,10 +41,10 @@ namespace Repo.ProductRepo
                 productQuery = productQuery.Where(p => p.Price <= maxPrice.Value);
             }
 
-            // Apply category filter
-            if (categoryID.HasValue)
+            // Apply category filter for multiple category IDs
+            if (categoryIDs != null && categoryIDs.Any())
             {
-                productQuery = productQuery.Where(p => p.CategoryId == categoryID.Value);
+                productQuery = productQuery.Where(p => categoryIDs.Contains(p.CategoryId.Value));
             }
 
             // Apply condition filter
@@ -68,5 +68,6 @@ namespace Repo.ProductRepo
             // Execute the query and return the result
             return await productQuery.Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
         }
+
     }
 }
