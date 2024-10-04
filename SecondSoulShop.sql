@@ -136,7 +136,16 @@ CREATE TABLE Messages (
     FOREIGN KEY (SenderID) REFERENCES Users(UserID),
     FOREIGN KEY (ReceiverID) REFERENCES Users(UserID)
 );
+
+-- Password is 1
 Go
+INSERT INTO [SecondSoulShop].[dbo].[Users]  (Username, PasswordHash, Email, PhoneNumber, [Address], [Role])
+VALUES 
+('customer1', '6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b', 'customer1@example.com', '1234567890', '123 Customer St, City', 'Customer'),
+('admin1', '6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b', 'admin1@example.com', '0987654321', '456 Admin Ave, City', 'Admin'),
+('customer2', '6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b', 'customer2@example.com', NULL, NULL, 'Customer'),
+('admin2', '6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b', 'admin2@example.com', NULL, NULL, 'Admin');
+
 INSERT INTO [SecondSoulShop].[dbo].[Categories] 
     ([CategoryName], [ParentCategoryID])
 VALUES
