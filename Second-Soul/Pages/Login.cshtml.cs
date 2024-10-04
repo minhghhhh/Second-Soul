@@ -24,7 +24,7 @@ namespace Second_Soul.Pages
         {
             [Required]
             [EmailAddress]
-            public string UserName { get; set; }
+            public string Email { get; set; }
 
             [Required]
             [DataType(DataType.Password)]
@@ -35,7 +35,7 @@ namespace Second_Soul.Pages
         {
             if (ModelState.IsValid)
             {
-                var result = await _userBusiness.GetByEmailAndPasswordAsync(Input.UserName, Input.Password);
+                var result = await _userBusiness.GetByEmailAndPasswordAsync(Input.Email, Input.Password);
                 if (result != null && result.Status > 0 && result.Data != null)
                 {
                     var user = result.Data as User;

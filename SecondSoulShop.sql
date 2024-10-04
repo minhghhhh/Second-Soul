@@ -1,10 +1,14 @@
 ﻿use master
-GO
-ALTER DATABASE SecondSoulShop SET SINGLE_USER WITH ROLLBACK IMMEDIATE;
 Go
-DROP DATABASE SecondSoulShop;
+IF EXISTS (SELECT * FROM sys.databases WHERE name = N'SecondSoulShop' AND database_id > 4)
+BEGIN
+    ALTER DATABASE SecondSoulShop SET SINGLE_USER WITH ROLLBACK IMMEDIATE;
+    DROP DATABASE SecondSoulShop;
+    PRINT 'SecondSoulShop has been deleted.';
+END
 Go
- GO
+Create Database SecondSoulShop;
+Go
 USE SecondSoulShop;
 Go
 CREATE TABLE Users (
