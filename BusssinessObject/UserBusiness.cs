@@ -2,12 +2,13 @@
 using Common;
 using Data;
 using Data.Models;
+using Data.Utils.HashPass;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+ 
 namespace BusssinessObject
 {
     public interface IUserBusiness
@@ -37,10 +38,10 @@ namespace BusssinessObject
         {
             try
             {
-                var result = await _unitOfWork.UserRepository.GetByEmailAndPasswordAsync(email, password);
-                if (result.IsActive)
+                var result = await _unitOfWork.UserRepository.GetByEmailAndPasswordAsync(email, HashPassWithSHA256.HashWithSHA256(password));
+                if (result != null && result.IsActive)
                 {
-                    return new BusinessResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG,result);
+                    return new BusinessResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, result);
                 }
                 else
                 {

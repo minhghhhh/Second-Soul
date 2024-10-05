@@ -1,100 +1,90 @@
 ﻿@page
 @model Second_Soul.Pages.SearchModel
 @{
-    ViewData["Title"] = "Search Results";
+	ViewData["Title"] = "Search Results";
 }
 
 <h2>Search Results for "@Model.Query"</h2>
 
 <form method="get">
-    <div class="form-group">
-        <label for="query">Search</label>
-        <input type="text" name="query" class="form-control" value="@Model.Query" placeholder="Search products..." />
-    </div>
+	<div class="form-group">
+		<label for="query">Search</label>
+		<input type="text" name="query" class="form-control" value="@Model.Query" placeholder="Search products..." />
+	</div>
 
-    <div class="form-group">
-        <label for="minPrice">Min Price</label>
-        <input type="number" name="minPrice" class="form-control" value="@Model.MinPrice" placeholder="Min Price" />
-    </div>
+	<div class="form-group">
+		<label for="minPrice">Min Price</label>
+		<input type="number" name="minPrice" class="form-control" value="@Model.MinPrice" placeholder="Min Price" />
+	</div>
 
-    <div class="form-group">
-        <label for="maxPrice">Max Price</label>
-        <input type="number" name="maxPrice" class="form-control" value="@Model.MaxPrice" placeholder="Max Price" />
-    </div>
+	<div class="form-group">
+		<label for="maxPrice">Max Price</label>
+		<input type="number" name="maxPrice" class="form-control" value="@Model.MaxPrice" placeholder="Max Price" />
+	</div>
 
-    <div class="form-group">
-        <label for="categoryID">Category</label>
-        <select name="categoryID" class="form-control">
-            <option value="">All Categories</option>
-            <!-- Assume categories are dynamically loaded -->
-            @foreach (var category in Model.Categories)
-            {
-@*                 <option value="@category.CategoryID" @(category.CategoryID == Model.CategoryID ? "selected" : "")>
-                    @category.Name
-                </option>
- *@            }
-        </select>
-    </div>
+	<div class="form-group">
+		<label for="categoryID">Category</label>
+		<select name="categoryID" class="form-control">
+			<option value="">All Categories</option>
+			<!-- Assume categories are dynamically loaded -->
+			@foreach (var category in Model.Categories)
+			{
+				@*                 <option value="@category.CategoryID" @(category.CategoryID == Model.CategoryID ? "selected" : "")>
+			@category.Name
+			</option>
+			*@            }
+		</select>
+	</div>
+	@if (Model.Conditions.Count > 0)
+	{
+		<div class="form-group">
+			<label for="condition">Condition</label>
+			@Html.DropDownListFor(
+						m => m.Condition, // Ensure this property exists in your model
+						Model.Conditions,
+						new { @class = "form-control", @asp_for = "condition" }
+						)
+		</div>
+	}
+	<div class="form-group">
+		<label for="sellerID">Seller ID</label>
+		<input type="number" name="sellerID" class="form-control" value="@Model.SellerID" placeholder="Seller ID" />
+	</div>
 
-    <div class="form-group">
-        <label for="condition">Condition</label>
-        <select name="condition" class="form-control">
-            <option value="">All Conditions</option>
-@*             <option value="New" @(Model.Condition == "New" ? "selected" : "")>New</option>
-            <option value="Used - Like New" @(Model.Condition == "Like_New" ? "selected" : "")>Like New</option>
-            <option value="Used - Good" @(Model.Condition == "Good" ? "selected" : "")>Good</option>
-            <option value="Used - Fair" @(Model.Condition == "Fair" ? "selected" : "")>Fair</option>
- *@        </select>
-    </div>
-
-    <div class="form-group">
-        <label for="isAvailable">Availability</label>
-        <select name="isAvailable" class="form-control">
-            <option value="">All</option>
-@*             <option value="true" @(Model.IsAvailable == true ? "selected" : "")>Available</option>
-            <option value="false" @(Model.IsAvailable == false ? "selected" : "")>Unavailable</option>
- *@        </select>
-    </div>
-
-    <div class="form-group">
-        <label for="sellerID">Seller ID</label>
-        <input type="number" name="sellerID" class="form-control" value="@Model.SellerID" placeholder="Seller ID" />
-    </div>
-
-    <button type="submit" class="btn btn-primary">Search</button>
+	<button type="submit" class="btn btn-primary">Search</button>
 </form>
 
 <h3>Results</h3>
 <ul>
-@*     @foreach (var product in Model.Products)
-    {
-        <li>@product.Name - @product.Price</li>
-    } *@
+	@foreach (var product in Model.Products)
+	{
+		<li>@product.Name - @product.Price</li>
+	}
 </ul>
 
 <!-- Pagination Controls -->
 <nav aria-label="Page navigation">
-    <ul class="pagination">
-        @if (Model.PageIndex > 1)
-        {
-            <li class="page-item">
-                <a class="page-link" asp-route-query="@Model.Query" asp-route-pageIndex="@(Model.PageIndex - 1)">Previous</a>
-            </li>
-        }
+	<ul class="pagination">
+		@if (Model.PageIndex > 1)
+		{
+			<li class="page-item">
+				<a class="page-link" asp-route-query="@Model.Query" asp-route-pageIndex="@(Model.PageIndex - 1)">Previous</a>
+			</li>
+		}
 
-        @for (var i = 1; i <= Model.TotalPages; i++)
-        {
-            <li class="page-item @(i == Model.PageIndex ? "active" : "")">
-                <a class="page-link" asp-route-query="@Model.Query" asp-route-pageIndex="@i">@i</a>
-            </li>
-        }
+		@for (var i = 1; i <= Model.TotalPages; i++)
+		{
+			<li class="page-item @(i == Model.PageIndex ? "active" : "")">
+				<a class="page-link" asp-route-query="@Model.Query" asp-route-pageIndex="@i">@i</a>
+			</li>
+		}
 
-        @if (Model.PageIndex < Model.TotalPages)
-        {
-            <li class="page-item">
-                <a class="page-link" asp-route-query="@Model.Query" asp-route-pageIndex="@(Model.PageIndex + 1)">Next</a>
-            </li>
-        }
-    </ul>
+		@if (Model.PageIndex < Model.TotalPages)
+		{
+			<li class="page-item">
+				<a class="page-link" asp-route-query="@Model.Query" asp-route-pageIndex="@(Model.PageIndex + 1)">Next</a>
+			</li>
+		}
+	</ul>
 </nav>
 

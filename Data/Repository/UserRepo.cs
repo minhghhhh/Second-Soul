@@ -14,9 +14,9 @@ namespace Data.Repository
         public UserRepo(SecondSoulShopContext context) : base(context)
         {
         }
-        public async Task<User> GetByEmailAndPasswordAsync(string username, string password)
+        public async Task<User?> GetByEmailAndPasswordAsync(string email, string password)
         {
-            return await _dbSet.FirstOrDefaultAsync(a => a.Username == username && a.PasswordHash == password);
+            return await _dbSet.FirstOrDefaultAsync(a => a.Email.ToLower() == email.ToLower() && a.PasswordHash == password);
         }
     }
 }

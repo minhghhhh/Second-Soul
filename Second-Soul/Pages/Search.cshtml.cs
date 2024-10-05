@@ -4,7 +4,9 @@ using Data;
 using Data.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using static Data.Enum.Enums;
 namespace Second_Soul.Pages
 {
     public class SearchModel : PageModel
@@ -13,7 +15,7 @@ namespace Second_Soul.Pages
         private readonly CategoryBusiness _categoryBusiness;
 
 
-        public SearchModel(ProductBusiness productBusiness,CategoryBusiness categoryBusiness)
+        public SearchModel(ProductBusiness productBusiness, CategoryBusiness categoryBusiness)
         {
             _productBusiness = productBusiness;
             _categoryBusiness = categoryBusiness;
@@ -24,6 +26,7 @@ namespace Second_Soul.Pages
         public decimal? MinPrice { get; set; }
         public decimal? MaxPrice { get; set; }
         public List<int> CategoryIDs { get; set; } = new List<int>();
+        public List<SelectListItem> Conditions { get; set; } = new List<SelectListItem>();
         public string? Condition { get; set; }
         public bool? IsAvailable { get; set; }
         public int? SellerID { get; set; }
@@ -40,7 +43,16 @@ namespace Second_Soul.Pages
             MinPrice = minPrice;
             MaxPrice = maxPrice;
             CategoryIDs = categoryIDs; // Update this line
-            Condition = condition;
+            if (string.IsNullOrEmpty(condition))
+            {
+                Condition = condition;
+                Conditions = Enum.GetNames(typeof(Condition)).Select(o => new SelectListItem
+                {
+                    Text = o,
+                    Value = o,
+                    Selected = o == Condition
+                }).ToList();
+            }
             IsAvailable = isAvailable;
             SellerID = sellerID;
             PageIndex = pageIndex;
