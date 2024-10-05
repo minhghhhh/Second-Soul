@@ -176,6 +176,24 @@ VALUES
 	('Gloves',6),
 	('Scarf',6);
 Go
+INSERT INTO Products (SellerID, Name, Description, CategoryID, Price, Quantity, Condition)
+VALUES
+    (1, 'Casual T-Shirt', 'Comfortable cotton t-shirt for everyday wear.', 8, 19.99, 100, 'New'),
+    (1, 'Denim Jeans', 'Stylish denim jeans, perfect for casual outings.', 12, 39.99, 50, 'Like_New'),
+    (1, 'Leather Jacket', 'Classic leather jacket for a rugged look.', 7, 129.99, 20, 'Good'),
+    (3, 'Summer Dress', 'Light and breezy summer dress for warm days.', 11, 49.99, 30, 'New'),
+    (3, 'Sport Sneakers', 'Durable sneakers for your active lifestyle.', 15, 59.99, 75, 'New'),
+    (3, 'Wool Scarf', 'Warm wool scarf to keep you cozy in winter.', 24, 29.99, 50, 'Fair'),
+    (3, 'Formal Blouse', 'Elegant blouse suitable for office wear.', 10, 34.99, 60, 'Good'),
+    (3, 'Chino Pants', 'Comfortable chino pants for formal occasions.', 13, 44.99, 40, 'Like_New'),
+    (3, 'Winter Boots', 'Insulated boots for snowy days.', 18, 89.99, 25, 'New'),
+    (1, 'Graphic Croptop', 'Trendy graphic croptop for a casual look.', 9, 24.99, 80, 'New'),
+    (1, 'Canvas Backpack', 'Spacious and stylish canvas backpack.', 23, 39.99, 45, 'Good'),
+    (1, 'Leather Loafers', 'Sophisticated loafers for a polished look.', 16, 69.99, 30, 'Like_New'),
+    (1, 'Sporty Tank Top', 'Breathable tank top for workouts.', 9, 21.99, 70, 'New'),
+    (3, 'Elegant High-Heels', 'Stylish high-heels for special occasions.', 17, 74.99, 15, 'New'),
+    (3, 'Trendy Skirt', 'Fashionable skirt that pairs well with tops.', 14, 49.99, 50, 'Good');
+Go
 INSERT INTO Coupons (Code, DiscountPercentage, MaxDiscount, ExpiryDate, IsActive, MinSpendAmount)
 VALUES
     ('SUMMER2024', 15.00, 50000, '2024-07-31', 1, 0),         -- Giảm 15%, tối đa 50,000 VND
