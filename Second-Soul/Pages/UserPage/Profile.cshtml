@@ -1,0 +1,16 @@
+﻿@page
+@model Second_Soul.Pages.UserPage.ProfileModel
+@{
+}
+<form method="post" enctype="multipart/form-data">
+    <input type="file" name="profilePicture" />
+    <input type="hidden" name="userId" value="@Model.User." />
+    <button type="submit">Update Profile Picture</button>
+</form>
+
+@if (!string.IsNullOrEmpty(Model.ErrorMessage))
+{
+    <div style="color: red;">@Model.ErrorMessage</div>
+    <div style="color: red;">@Model.SuccessMessage</div>
+
+}

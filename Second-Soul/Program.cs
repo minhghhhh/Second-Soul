@@ -1,22 +1,41 @@
 using BusinessObject;
 using BusssinessObject;
+using CloudinaryDotNet;
+using Microsoft.Extensions.DependencyInjection;
 using Data;
 using Data.Base;
 using Data.Models;
 using Data.Repository;
+using Microsoft.Extensions.Configuration;
+using Data.Utils;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddSession(options =>
+builder.Services.ConfigureApplicationCookie(options =>
 {
-    options.IdleTimeout = TimeSpan.FromMinutes(30);
     options.Cookie.HttpOnly = true;
-    options.Cookie.IsEssential = true;
+    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+    options.Cookie.SameSite = SameSiteMode.Strict;
+    options.Cookie.Name = "SecondSoul";
+    options.ExpireTimeSpan = TimeSpan.FromDays(30);
+    options.SlidingExpiration = true;
 });
 
-// Add services to the container.
+
+var cloudinarySettings = builder.Configuration.GetSection("CloudinaryOptions").Get<CloudinaryOptions>();
+
+// Create Cloudinary account
+Account account = new Account(
+    cloudinarySettings.CloudName,
+    cloudinarySettings.ApiKey,
+    cloudinarySettings.ApiSecret
+);
+
+// Register Cloudinary as a singleton service
+Cloudinary cloudinary = new Cloudinary(account);
+builder.Services.AddSingleton(cloudinary);
 builder.Services.AddDbContext<SecondSoulShopContext>();
 builder.Services.AddScoped(typeof(IGenericRepo<>), typeof(GenericRepo<>));
-builder.Services.AddScoped<IUserBusiness,UserBusiness>();
+builder.Services.AddScoped<IUserBusiness, UserBusiness>();
 builder.Services.AddScoped<ICategoryBusiness, CategoryBusiness>();
 builder.Services.AddScoped<IProductBusiness, ProductBusiness>();
 builder.Services.AddScoped<IOrderBusiness, OrderBusiness>();
@@ -27,13 +46,13 @@ builder.Services.AddScoped<PaymentRepo>();
 builder.Services.AddScoped<CategoryRepo>();
 builder.Services.AddScoped<UserRepo>();
 builder.Services.AddScoped<OrderRepo>();
-builder.Services.AddScoped<OrderDetailRepo>();   
+builder.Services.AddScoped<OrderDetailRepo>();
 builder.Services.AddScoped<CouponRepo>();
 builder.Services.AddScoped<ReviewRepo>();
 builder.Services.AddScoped<UnitOfWork>();
 builder.Services.AddScoped<OrderRepo>();
 builder.Services.AddScoped<OrderDetailRepo>();
-builder.Services.AddMvcCore();  
+builder.Services.AddMvcCore();
 builder.Services.AddRazorPages();
 //builder.Services.Configure<CloudinaryOptions>(Configuration.GetSection("Cloudinary"));
 var app = builder.Build();
@@ -53,7 +72,8 @@ app.UseRouting();
 
 app.UseAuthorization();
 /*app.UseMiddleware<AuthenticationMiddleware>();
-*/app.MapRazorPages();
+*/
+app.MapRazorPages();
 
 app.Run();
 /*public class AuthenticationMiddleware

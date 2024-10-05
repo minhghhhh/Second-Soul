@@ -16,6 +16,7 @@ public partial class User
 
     [Required]
     public string PasswordHash { get; set; } = string.Empty;
+    public string? ImageUrl { get; set; } = string.Empty;
 
     [Required]
     [MaxLength(100)]
