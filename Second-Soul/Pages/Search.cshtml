@@ -21,34 +21,31 @@
 		<label for="maxPrice">Max Price</label>
 		<input type="number" name="maxPrice" class="form-control" value="@Model.MaxPrice" placeholder="Max Price" />
 	</div>
+	@if (Model.Categories.Count > 0)
+	{
+		<div class="form-group">
+			<label for="categoryIDs">Category</label>
+			@Html.DropDownList("categoryIDs", Model.Categories, "Select Categories", new { @class = "form-control", multiple = "multiple" })
+		</div>
 
-	<div class="form-group">
-		<label for="categoryID">Category</label>
-		<select name="categoryID" class="form-control">
-			<option value="">All Categories</option>
-			<!-- Assume categories are dynamically loaded -->
-			@foreach (var category in Model.Categories)
-			{
-				@*                 <option value="@category.CategoryID" @(category.CategoryID == Model.CategoryID ? "selected" : "")>
-			@category.Name
-			</option>
-			*@            }
-		</select>
-	</div>
+	}
+
 	@if (Model.Conditions.Count > 0)
 	{
 		<div class="form-group">
 			<label for="condition">Condition</label>
-			@Html.DropDownListFor(
-						m => m.Condition, // Ensure this property exists in your model
-						Model.Conditions,
-						new { @class = "form-control", @asp_for = "condition" }
-						)
+			@Html.DropDownList("condition", Model.Conditions, "Select Condition", new { @class = "form-control" })
 		</div>
 	}
+
 	<div class="form-group">
 		<label for="sellerID">Seller ID</label>
 		<input type="number" name="sellerID" class="form-control" value="@Model.SellerID" placeholder="Seller ID" />
+	</div>
+
+	<div class="form-group">
+		<label for="isAvailable">Available</label>
+		<input type="checkbox" name="isAvailable" @(Model.IsAvailable == true ? "checked" : "") />
 	</div>
 
 	<button type="submit" class="btn btn-primary">Search</button>
@@ -56,16 +53,23 @@
 
 <h3>Results</h3>
 <ul>
-	@foreach (var product in Model.Products)
+	@if (Model.Products.Any())
 	{
-		<li>@product.Name - @product.Price</li>
+		foreach (var product in Model.Products)
+		{
+			<li>@product.Name - @product.Price</li>
+		}
+	}
+	else
+	{
+		<li>No products found.</li>
 	}
 </ul>
 
-<!-- Pagination Controls -->
+ <!-- Pagination Controls -->
 <nav aria-label="Page navigation">
 	<ul class="pagination">
-		@if (Model.PageIndex > 1)
+		@if (Model.HasPreviousPage)
 		{
 			<li class="page-item">
 				<a class="page-link" asp-route-query="@Model.Query" asp-route-pageIndex="@(Model.PageIndex - 1)">Previous</a>
@@ -79,7 +83,7 @@
 			</li>
 		}
 
-		@if (Model.PageIndex < Model.TotalPages)
+		@if (Model.HasNextPage)
 		{
 			<li class="page-item">
 				<a class="page-link" asp-route-query="@Model.Query" asp-route-pageIndex="@(Model.PageIndex + 1)">Next</a>
@@ -87,4 +91,3 @@
 		}
 	</ul>
 </nav>
-

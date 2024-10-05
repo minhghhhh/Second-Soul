@@ -22,15 +22,15 @@ namespace Data.Repository
         {
             return (IQueryable<List<Product>>)_dbcontext.Products.AsQueryable();
         }
-        public async Task<List<Product>> SearchProduct(string query, decimal? minPrice, decimal? maxPrice, List<int>? categoryIDs, string condition, bool? isAvailable, long? sellerID, int pageIndex = 1, int pageSize = 10)
+        public async Task<List<Product>> SearchProduct(string? query, decimal? minPrice, decimal? maxPrice, List<int>? categoryIDs, string? condition, bool? isAvailable, long? sellerID, int pageIndex = 1, int pageSize = 10)
         {
             // Validate parameters
             await ValidateSearchParametersAsync(minPrice, maxPrice, categoryIDs, isAvailable, sellerID);
 
-            var productQuery = _dbcontext.Products.Include(p => p.Category).AsQueryable();
+			var productQuery = _dbcontext.Products.AsNoTracking().Include(p => p.Category).AsQueryable();
 
-            // Apply search filter
-            if (!string.IsNullOrEmpty(query))
+			// Apply search filter
+			if (!string.IsNullOrEmpty(query))
             {
                 productQuery = productQuery.Where(p => p.Name.Contains(query));
             }
