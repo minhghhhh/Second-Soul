@@ -66,10 +66,10 @@ public partial class SecondSoulShopContext : DbContext
             entity.Property(e => e.Email).HasMaxLength(100).IsRequired();
             entity.Property(e => e.PhoneNumber).HasMaxLength(15);
             entity.Property(e => e.Address).HasMaxLength(255);
-            entity.Property(e => e.Role).HasMaxLength(20).HasConversion<string>( );
+            entity.Property(e => e.Role).HasMaxLength(20).HasConversion<string>();
             entity.Property(e => e.CreatedDate).HasDefaultValueSql("(getdate())").HasColumnType("datetime");
             entity.Property(e => e.IsActive).HasDefaultValue(true);
-
+            entity.Property(e => e.ImageUrl).HasMaxLength(255).HasDefaultValue(string.Empty);  
             entity.HasMany(u => u.FavoriteShopUsers)
                   .WithOne(fs => fs.User)
                   .OnDelete(DeleteBehavior.Cascade);
@@ -90,6 +90,7 @@ public partial class SecondSoulShopContext : DbContext
                   .WithOne(sc => sc.User)
                   .OnDelete(DeleteBehavior.Cascade);
         });
+
 
         modelBuilder.Entity<Category>(entity =>
         {

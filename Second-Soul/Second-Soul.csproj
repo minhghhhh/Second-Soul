@@ -8,15 +8,24 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Models\" />
-    <Folder Include="Controllers\" />
-    <Folder Include="Pages\Order\" />
-    <Folder Include="Pages\Product\" />
-    <Folder Include="Pages\User\" />
+    <Compile Remove="Pages\Order\**" />
+    <Compile Remove="Pages\Product\**" />
+    <Content Remove="Pages\Order\**" />
+    <Content Remove="Pages\Product\**" />
+    <EmbeddedResource Remove="Pages\Order\**" />
+    <EmbeddedResource Remove="Pages\Product\**" />
+    <None Remove="Pages\Order\**" />
+    <None Remove="Pages\Product\**" />
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Models\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FluentAssertions" Version="6.12.1" />
     <PackageReference Include="Microsoft.AspNetCore.Session" Version="2.1.1" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
   </ItemGroup>
 
   <ItemGroup>

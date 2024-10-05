@@ -17,6 +17,7 @@ CREATE TABLE Users (
     PasswordHash NVARCHAR(255) NOT NULL,
     Email NVARCHAR(100) UNIQUE NOT NULL,
     PhoneNumber NVARCHAR(15) NULL,
+	ImageUrl NVARCHAR(255) Null,
     Address NVARCHAR(255) NULL,
     Role NVARCHAR(20) CHECK (Role IN ('Customer','Admin')), 
     CreatedDate DATETIME DEFAULT GETDATE(),
