@@ -22,6 +22,7 @@ namespace BusssinessObject
         Task<IBusinessResult> Update(Product cate);
         Task<IBusinessResult> DeleteById(int id);
         Task<bool> IdExists(int id);
+        Task<List<Product>> GetProductsBySeller(int id);
         IQueryable<List<Product>> GetProductsAsQueryable();
         Task<IBusinessResult> SearchProduct(string? query, decimal? minPrice, decimal? maxPrice, List<int>? categoryIDs, string? condition, bool? isAvailable, long? sellerID, int pageIndex = 1, int pageSize = 10);
 
@@ -32,6 +33,10 @@ namespace BusssinessObject
         public ProductBusiness(UnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
+        }
+        public async Task<List<Product>> GetProductsBySeller(int id)
+        {
+            return await _unitOfWork.ProductRepository.GetProductsBySeller(id);
         }
         public async Task<List<Product>> GetOldestProducts()
         {

@@ -18,6 +18,7 @@ namespace Data.Repository
             _categoryRepo = categoryRepo;
             _dbcontext = context;
         }
+
         public async Task<List<Product>> GetProductsNewest()
         {
             return await _dbcontext.Products.AsNoTracking().OrderByDescending(p=>p.AddedDate).Where(p=> p.IsAvailable == true).ToListAsync();
@@ -26,11 +27,15 @@ namespace Data.Repository
         {
             return await _dbcontext.Products.AsNoTracking().OrderBy(p => p.AddedDate).Where(p => p.IsAvailable == true).ToListAsync();
         }
-
+        public async Task<List<Product>> GetProductsBySeller(int id)
+        {
+            return await _dbcontext.Products.Where(p=>p.SellerId== id && p.IsAvailable == true).ToListAsync();   
+        }
         public IQueryable<List<Product>> GetProductsAsQueryable()
         {
             return (IQueryable<List<Product>>)_dbcontext.Products.AsQueryable();
         }
+
         public async Task<List<Product>> SearchProduct(string? query, decimal? minPrice, decimal? maxPrice, List<int>? categoryIDs, string? condition, bool? isAvailable, long? sellerID, int pageIndex = 1, int pageSize = 10)
         {
             // Validate parameters

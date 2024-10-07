@@ -13,5 +13,17 @@ namespace Data.Repository
         public CouponRepo(SecondSoulShopContext context) : base(context)
         {
         }
+        public async Task DisableExpiredCoupons()
+        {
+            var expiredCoupons = context.Coupons
+                .Where(c => c.ExpiryDate <= DateTime.Now && c.IsActive);
+
+            foreach (var coupon in expiredCoupons)
+            {
+                coupon.IsActive = false;
+            }
+
+            await context.SaveChangesAsync();
+        }
     }
 }

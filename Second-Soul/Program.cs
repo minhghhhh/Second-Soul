@@ -30,7 +30,7 @@ Account account = new Account(
     cloudinarySettings.ApiSecret
 );
 
-// Register Cloudinary as a singleton service
+builder.Services.AddHostedService<BackgroundService>(); // Add the background service
 Cloudinary cloudinary = new Cloudinary(account);
 builder.Services.AddSingleton(cloudinary);
 builder.Services.AddDbContext<SecondSoulShopContext>();
