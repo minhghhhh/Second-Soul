@@ -20,7 +20,10 @@ namespace BusssinessObject
 		Task<IBusinessResult> Save(User cate);
 		Task<IBusinessResult> Update(User cate);
 		Task<IBusinessResult> DeleteById(int id);
-		Task<bool> IdExists(int id);
+		Task<IBusinessResult> GetByEmailAsync (string email);
+		Task<IBusinessResult> CreateUserAsync (User cate);
+
+        Task<bool> IdExists(int id);
 		Task<IBusinessResult> GetByEmailAndPasswordAsync(string email, string password);
 
 		//  Task<IBusinessResult> AdvancedSearch(int? id, string name, int? parentid);
@@ -107,7 +110,7 @@ namespace BusssinessObject
 			}
 		}
 
-		/*
+        /*
                  public async Task<bool> ConfirmUserByUsernameAndPassword(string email, string password)
                 {
                     try
@@ -126,28 +129,28 @@ namespace BusssinessObject
                 }
 
          */
-		public async Task<IBusinessResult> Save(User cate)
-		{
-			try
-			{
-				//int result = await _currencyRepository.CreateAsync(currency);
-				int result = await _unitOfWork.UserRepository.CreateAsync(cate);
-				if (result > 0)
-				{
-					return new BusinessResult(Const.SUCCESS_CREATE_CODE, Const.SUCCESS_CREATE_MSG);
-				}
-				else
-				{
-					return new BusinessResult(Const.FAIL_CREATE_CODE, Const.FAIL_CREATE_MSG);
-				}
-			}
-			catch (Exception ex)
-			{
-				return new BusinessResult(Const.ERROR_EXCEPTION, ex.ToString());
-			}
-		}
+        public async Task<IBusinessResult> Save(User cate)
+        {
+            try
+            {
+                cate.PasswordHash = HashPassWithSHA256.HashWithSHA256(cate.PasswordHash); // Hash the password before saving
+                int result = await _unitOfWork.UserRepository.CreateAsync(cate);
+                if (result > 0)
+                {
+                    return new BusinessResult(Const.SUCCESS_CREATE_CODE, Const.SUCCESS_CREATE_MSG);
+                }
+                else
+                {
+                    return new BusinessResult(Const.FAIL_CREATE_CODE, Const.FAIL_CREATE_MSG);
+                }
+            }
+            catch (Exception ex)
+            {
+                return new BusinessResult(Const.ERROR_EXCEPTION, ex.ToString());
+            }
+        }
 
-		public async Task<IBusinessResult> Update(User cate)
+        public async Task<IBusinessResult> Update(User cate)
 		{
 			try
 			{
@@ -205,7 +208,29 @@ namespace BusssinessObject
 			return cate != null;
 		}
 
-		public static IBusinessResult GetFromCookie(HttpRequest request)
+        public async Task<IBusinessResult> GetByEmailAsync(string email)
+        {
+            try
+            {
+                var result = await _unitOfWork.UserRepository.GetByEmailAsync(email.ToLower());
+                if (result != null)
+                {
+                    return new BusinessResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, result);
+                }
+                else
+                {
+                    return new BusinessResult(Const.FAIL_READ_CODE, Const.FAIL_READ_MSG);
+                }
+            }
+            catch (Exception ex)
+            {
+                return new BusinessResult(Const.ERROR_EXCEPTION, ex.Message);
+            }
+        }
+
+
+
+        public static IBusinessResult GetFromCookie(HttpRequest request)
 		{
 			try
 			{
@@ -230,6 +255,27 @@ namespace BusssinessObject
 			}
 		}
 
+        public async Task<IBusinessResult> CreateUserAsync(User cate)
+        {
+            try
+            {
+                cate.PasswordHash = HashPassWithSHA256.HashWithSHA256(cate.PasswordHash); // Hash password before saving
+                cate.CreatedDate = DateTime.Now; // Set current time
+                int result = await _unitOfWork.UserRepository.CreateAsync(cate);
+                if (result > 0)
+                {
+                    return new BusinessResult(Const.SUCCESS_CREATE_CODE, Const.SUCCESS_CREATE_MSG);
+                }
+                else
+                {
+                    return new BusinessResult(Const.FAIL_CREATE_CODE, Const.FAIL_CREATE_MSG);
+                }
+            }
+            catch (Exception ex)
+            {
+                return new BusinessResult(Const.ERROR_EXCEPTION, ex.Message);
+            }
+        }
 
-	}
+    }
 }

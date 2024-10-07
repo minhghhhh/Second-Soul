@@ -8,18 +8,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Models\**" />
     <Compile Remove="Pages\Order\**" />
     <Compile Remove="Pages\Product\**" />
+    <Content Remove="Models\**" />
     <Content Remove="Pages\Order\**" />
     <Content Remove="Pages\Product\**" />
+    <EmbeddedResource Remove="Models\**" />
     <EmbeddedResource Remove="Pages\Order\**" />
     <EmbeddedResource Remove="Pages\Product\**" />
+    <None Remove="Models\**" />
     <None Remove="Pages\Order\**" />
     <None Remove="Pages\Product\**" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Models\" />
   </ItemGroup>
 
   <ItemGroup>
