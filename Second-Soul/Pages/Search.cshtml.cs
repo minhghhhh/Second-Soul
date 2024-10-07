@@ -47,27 +47,45 @@ namespace Second_Soul.Pages
 				Value = o,
 				Selected = condition != null ? o == Condition : false
 			}).ToList();
+
 			IsAvailable = isAvailable;
 			SellerID = sellerID;
 			PageIndex = pageIndex;
 
 			var productResult = await _productBusiness.SearchProduct(query, minPrice, maxPrice, categoryIDs, condition, isAvailable, sellerID, pageIndex, PageSize);
-			if (productResult.Status > 0 && productResult.Data != null) 
+			if (productResult.Status > 0 && productResult.Data != null)
 			{
-				Products = (List<Product>) productResult.Data;
-			} 
-				var result = await _categoryBusiness.GetAll();
-			if (result.Status > 0 && result.Data != null)
+				Products = (List<Product>)productResult.Data;
+			}
+
+			// Update the method that fetches categories
+			var result = await _categoryBusiness.GetAll();
+			if (result != null && result.Status > 0 && result.Data != null)
 			{
 				var categories = result.Data as List<Category>;
 				if (categories != null && categories.Count > 0)
-					Categories = categories.Select(c => new SelectListItem
+				{
+					var parentCategories = categories.Where(c => c.ParentCategoryId == null).ToList();
+ 					foreach (Category parentCategory in parentCategories)
 					{
-						Text = c.CategoryName,
-						Value = c.CategoryId.ToString(),
-						Selected = categoryIDs == null ? false : categoryIDs.Contains(c.CategoryId)
-					}).ToList();
-
+						var subCategories = categories.Where(c => c.ParentCategoryId == parentCategory.CategoryId);
+						var selectGroup = new SelectListGroup
+						{
+							Name = parentCategory.CategoryName,
+							Disabled = false
+						};
+						foreach(Category subCategory in subCategories)
+						{
+							Categories.Add(new SelectListItem
+							{
+								Text = subCategory.CategoryName, // Subcategory text
+								Value = subCategory.CategoryId.ToString(),
+								Selected = categoryIDs != null && categoryIDs.Contains(subCategory.CategoryId),
+								Group = selectGroup
+							});
+						}
+					}
+				}
 			}
 
 			// Pagination logic
