@@ -18,6 +18,15 @@ namespace Data.Repository
             _categoryRepo = categoryRepo;
             _dbcontext = context;
         }
+        public async Task<List<Product>> GetProductsNewest()
+        {
+            return await _dbcontext.Products.AsNoTracking().OrderByDescending(p=>p.AddedDate).Where(p=> p.IsAvailable == true).ToListAsync();
+        }
+        public async Task<List<Product>> GetProductOldest()
+        {
+            return await _dbcontext.Products.AsNoTracking().OrderBy(p => p.AddedDate).Where(p => p.IsAvailable == true).ToListAsync();
+        }
+
         public IQueryable<List<Product>> GetProductsAsQueryable()
         {
             return (IQueryable<List<Product>>)_dbcontext.Products.AsQueryable();

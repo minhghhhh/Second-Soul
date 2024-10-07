@@ -41,7 +41,7 @@ namespace Data.Base
         }
         public async Task<int> Update(T entity)
         {
-            _dbSet.Add(entity);
+            _dbSet.Update(entity);
             return await context.SaveChangesAsync();
         }
         public async Task<int> Delete(T entity)

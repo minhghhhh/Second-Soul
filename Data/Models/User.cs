@@ -23,10 +23,10 @@ public partial class User
     public string Email { get; set; } = string.Empty;
 
     [MaxLength(15)]
-    public string PhoneNumber { get; set; } = string.Empty;
+    public string? PhoneNumber { get; set; }
 
     [MaxLength(255)]
-    public string Address { get; set; } = string.Empty;
+    public string? Address { get; set; }
 
     [Required]
     [Column(TypeName = "nvarchar(20)")]

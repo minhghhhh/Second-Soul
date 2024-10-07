@@ -1,0 +1,29 @@
+﻿@page
+@model Second_Soul.Pages.CategoryPage.DetailsCategoryModel
+@{
+    ViewData["Title"] = "Category Details";
+}
+
+<div class="container mt-4">
+    <h1 class="mb-4 text-center">Category Details</h1>
+    <div class="card border">
+        <div class="card-body">
+            <dl class="row mb-0">
+                <dt class="col-sm-3 border-bottom py-2">@Html.DisplayNameFor(model => model.Cate.CategoryId)</dt>
+                <dd class="col-sm-9 border-bottom py-2">@Html.DisplayFor(model => model.Cate.CategoryId)</dd>
+
+                <dt class="col-sm-3 border-bottom py-2">@Html.DisplayNameFor(model => model.Cate.CategoryName)</dt>
+                <dd class="col-sm-9 border-bottom py-2">@Html.DisplayFor(model => model.Cate.CategoryName)</dd>
+
+                <dt class="col-sm-3 border-bottom py-2">@Html.DisplayNameFor(model => model.Cate.ParentCategory)</dt>
+                <dd class="col-sm-9 border-bottom py-2">@Html.DisplayFor(model => model.Cate.ParentCategory)</dd>
+            </dl>
+        </div>
+    </div>
+
+    <div class="mt-4 text-center">
+        <a asp-page="./EditCategory" asp-route-id="@Model.Cate?.CategoryId" class="btn btn-outline-primary me-2">Edit</a> |
+        <a asp-page="./DeleteCategory" asp-route-id="@Model.Cate?.CategoryId" class="btn btn-outline-danger me-2">Delete</a> |
+        <a asp-page="./IndexCategory" class="btn btn-outline-secondary">Back to List</a>
+    </div>
+</div>
