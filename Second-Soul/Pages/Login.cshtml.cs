@@ -10,55 +10,63 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Second_Soul.Pages
 {
-    public class LoginModel : PageModel
-    {
-        private readonly IUserBusiness _userBusiness;
-        public LoginModel(IUserBusiness userBusiness)
-        {
-            _userBusiness = userBusiness;
-        }
+	public class LoginModel : PageModel
+	{
+		private readonly IUserBusiness _userBusiness;
+		public LoginModel(IUserBusiness userBusiness)
+		{
+			_userBusiness = userBusiness;
+		}
 
-        [BindProperty]
-        public LoginInput Input { get; set; }
+		[BindProperty]
+		public LoginInput Input { get; set; } = new();
 
-        public class LoginInput
-        {
-            [Required]
-            [EmailAddress]
-            public string Email { get; set; }
+		public class LoginInput
+		{
+			public LoginInput()
+			{
+			}
 
-            [Required]
-            [DataType(DataType.Password)]
-            public string Password { get; set; }
-        }
+			[Required]
+			[EmailAddress]
+			public string Email { get; set; } = string.Empty;
 
-        public async Task<IActionResult> OnPostAsync()
-        {
-            if (ModelState.IsValid)
-            {
-                var result = await _userBusiness.GetByEmailAndPasswordAsync(Input.Email, Input.Password);
-                if (result != null && result.Status > 0 && result.Data != null)
-                {
-                    var user = result.Data as User;
-                    var userJson = JsonSerializer.Serialize(user);
+			[Required]
+			[DataType(DataType.Password)]
+			public string Password { get; set; } = string.Empty;
+		}
 
-                    var cookieOptions = new CookieOptions
-                    {
-                        Expires = DateTime.Now.AddDays(30),
-                        HttpOnly = true,
-                        Secure = true,
-                        SameSite = SameSiteMode.Strict
-                    };
+		public async Task<IActionResult> OnPostAsync()
+		{
+			if (ModelState.IsValid)
+			{
+				var result = await _userBusiness.GetByEmailAndPasswordAsync(Input.Email, Input.Password);
+				if (result != null)
+				{
+					if (result.Status > 0 && result.Data != null)
+					{
+						var user = result.Data as User;
+						var userJson = JsonSerializer.Serialize(user);
 
-                    Response.Cookies.Append("User", userJson, cookieOptions);
-                    return RedirectToPage("/Index");
-                }
-                else
-                {
-                    ModelState.AddModelError(string.Empty, "Invalid login attempt.");
-                }
-            }
-            return Page();
-        }
-    }
+						var cookieOptions = new CookieOptions
+						{
+							Expires = DateTime.Now.AddDays(30),
+							HttpOnly = true,
+							Secure = true,
+							SameSite = SameSiteMode.Strict
+						};
+
+						Response.Cookies.Append("User", userJson, cookieOptions);
+						return RedirectToPage("/Index");
+					}
+					else
+					{
+						Console.WriteLine(result.Message);
+					}
+				}
+				ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+			}
+			return Page();
+		}
+	}
 }
