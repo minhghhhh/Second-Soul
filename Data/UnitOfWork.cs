@@ -20,9 +20,10 @@ namespace Data
         private readonly ReviewRepo _reviewRepo;
         private readonly OrderDetailRepo _orderDetailRepo;
         private readonly PaymentRepo _paymentRepo;
+        private readonly ShoppingCartRepo _shoppingCartRepo;
 
 
-        public UnitOfWork(SecondSoulShopContext dbContext, UserRepo userRepository, ProductRepo productRepo, OrderRepo orderRepo, CategoryRepo categoryRepo, CouponRepo couponRepo, ReviewRepo reviewRepo, OrderDetailRepo orderDetailRepo, PaymentRepo paymentRepo)
+        public UnitOfWork(SecondSoulShopContext dbContext, UserRepo userRepository, ProductRepo productRepo, OrderRepo orderRepo, CategoryRepo categoryRepo, CouponRepo couponRepo, ReviewRepo reviewRepo, OrderDetailRepo orderDetailRepo, PaymentRepo paymentRepo, ShoppingCartRepo shoppingCartRepo)
         {
             _dbContext = dbContext;
             _userRepo = userRepository;
@@ -33,7 +34,7 @@ namespace Data
             _reviewRepo = reviewRepo;
             _orderDetailRepo = orderDetailRepo;
             _paymentRepo = paymentRepo;
-
+            _shoppingCartRepo = shoppingCartRepo;
         }
         public UserRepo UserRepository => _userRepo;
         public ProductRepo ProductRepository => _productRepo;
@@ -43,9 +44,9 @@ namespace Data
         public ReviewRepo ReviewRepository => _reviewRepo;
         public OrderDetailRepo OrderDetailRepository => _orderDetailRepo;
         public PaymentRepo PaymentRepository => _paymentRepo;
-
-
-        public Task<int> SaveChangeAsync()
+		public ShoppingCartRepo ShoppingCartRepository => _shoppingCartRepo;
+ 
+		public Task<int> SaveChangeAsync()
         {
             return _dbContext.SaveChangesAsync();
         }
