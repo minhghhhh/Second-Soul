@@ -69,7 +69,8 @@ public partial class SecondSoulShopContext : DbContext
             entity.Property(e => e.Role).HasMaxLength(20).HasConversion<string>();
             entity.Property(e => e.CreatedDate).HasDefaultValueSql("(getdate())").HasColumnType("datetime");
             entity.Property(e => e.IsActive).HasDefaultValue(true);
-            entity.Property(e => e.ImageUrl).HasMaxLength(255).HasDefaultValue(string.Empty);  
+            entity.Property(e => e.ImageUrl).HasMaxLength(255).HasDefaultValue(string.Empty);
+            entity.Property(e => e.Token).HasMaxLength(255).HasDefaultValue(string.Empty);
             entity.HasMany(u => u.FavoriteShopUsers)
                   .WithOne(fs => fs.User)
                   .OnDelete(DeleteBehavior.Cascade);

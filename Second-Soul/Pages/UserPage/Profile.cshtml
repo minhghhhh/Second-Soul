@@ -7,9 +7,9 @@
     <button type="submit">Update Profile Picture</button>
 </form>
 
-@if (!string.IsNullOrEmpty(Model.ErrorMessage))
+@if (!string.IsNullOrEmpty(Model.ErrorMessage) || !string.IsNullOrEmpty(Model.SuccessMessage))
 {
     <div style="color: red;">@Model.ErrorMessage</div>
-    <div style="color: red;">@Model.SuccessMessage</div>
+    <div style="color: lawngreen;">@Model.SuccessMessage</div>
 
 }

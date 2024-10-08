@@ -18,5 +18,9 @@ namespace Data.Repository
         {
             return await _dbSet.FirstOrDefaultAsync(a => a.Email.ToLower() == email.ToLower() && a.PasswordHash == password);
         }
+        public async Task<User?> GetByEmailAsync(string email)
+        {
+            return await _dbSet.FirstOrDefaultAsync(a => a.Email.ToLower() == email.ToLower());
+        }
     }
 }

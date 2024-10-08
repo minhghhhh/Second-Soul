@@ -13,10 +13,12 @@ namespace Data.Repository
     {
         private readonly SecondSoulShopContext _dbcontext;
         private readonly CategoryRepo _categoryRepo;
-        public ProductRepo(SecondSoulShopContext context,CategoryRepo categoryRepo) : base(context)
+        private readonly UserRepo _userRepo;
+        public ProductRepo(SecondSoulShopContext context, CategoryRepo categoryRepo, UserRepo userRepo) : base(context)
         {
             _categoryRepo = categoryRepo;
             _dbcontext = context;
+            _userRepo = userRepo;
         }
 
         public async Task<List<Product>> GetProductsNewest()
@@ -36,34 +38,6 @@ namespace Data.Repository
             return (IQueryable<List<Product>>)_dbcontext.Products.AsQueryable();
         }
 
-        public async Task<List<Product>> SearchProduct(string? query, decimal? minPrice, decimal? maxPrice, List<int>? categoryIDs, string? condition, bool? isAvailable, long? sellerID, int pageIndex = 1, int pageSize = 10)
-        {
-            // Validate parameters
-            await ValidateSearchParametersAsync(minPrice, maxPrice, categoryIDs, isAvailable, sellerID);
-	public class ProductRepo : GenericRepo<Product>
-	{
-		private readonly SecondSoulShopContext _dbcontext;
-		private readonly CategoryRepo _categoryRepo;
-		private readonly UserRepo _userRepo;
-		public ProductRepo(SecondSoulShopContext context, CategoryRepo categoryRepo, UserRepo userRepo) : base(context)
-		{
-			_categoryRepo = categoryRepo;
-			_dbcontext = context;
-			_userRepo = userRepo;
-		}
-		public async Task<List<Product>> GetProductsNewest()
-		{
-			return await _dbcontext.Products.AsNoTracking().OrderByDescending(p => p.AddedDate).Where(p => p.IsAvailable == true).ToListAsync();
-		}
-		public async Task<List<Product>> GetProductOldest()
-		{
-			return await _dbcontext.Products.AsNoTracking().OrderBy(p => p.AddedDate).Where(p => p.IsAvailable == true).ToListAsync();
-		}
-
-		public IQueryable<List<Product>> GetProductsAsQueryable()
-		{
-			return (IQueryable<List<Product>>)_dbcontext.Products.AsQueryable();
-		}
 		public async Task<List<Product>> SearchProduct(string? query, decimal? minPrice, decimal? maxPrice, List<int>? categoryIDs, string? condition, bool? isAvailable, int? sellerID, int pageIndex = 1, int pageSize = 10)
 		{
 			// Validate parameters

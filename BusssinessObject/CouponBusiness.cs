@@ -26,7 +26,6 @@ namespace BusssinessObject
         {
             _unitOfWork = unitOfWork;
         }
-    {
         public Task DisableExpiredCoupons()
         {
             return _unitOfWork.CouponRepository.DisableExpiredCoupons();   

@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Net.WebRequestMethods;
 
 namespace Data.Utils
 {
@@ -126,8 +127,8 @@ namespace Data.Utils
                 <div class='content'>
                     <p>Please click the button below to confirm your email:</p>                    
                       <a class='button' href='"
-					+ confirmationLink
-					+ "'>Confirm Email</a>"
+					+ confirmationLink 
+                    + "'>Confirm Email</a>"
 					+ @"
                 </div>
             </body>

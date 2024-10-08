@@ -2,8 +2,57 @@
 @model Second_Soul.Pages.SearchModel
 @{
 	ViewData["Title"] = "Search Results";
+	Layout = null;
 }
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>@ViewData["Title"] - Second_Soul</title>
+	<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+	<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+	<link rel="stylesheet" href="~/Second_Soul.styles.css" asp-append-version="true" />
+</head>
+<body>
+	<header class="header-background">
+		<nav class="navbar navbar-expand-sm navbar-light">
+			<div class="container">
+				<a class="navbar-brand" asp-area="" asp-page="/Index">
+					<img src="/pic/logo/2ndsoullogonoBG.png" alt="Second Soul Logo" style="height: 60px;" />
+				</a>
+				<div class="collapse navbar-collapse">
+					<ul class="navbar-nav me-auto">
+						<li class="nav-item">
+							<a class="nav-link" href="#" style="color: saddlebrown;">Shop</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="#" style="color: saddlebrown;">Category</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="#" style="color: saddlebrown;">Product</a>
+						</li>
+					</ul>
+					<form method="get" asp-page="/Search" class="d-flex" style="flex-grow: 1; margin-left: 20px;">
+						<input class="form-control me-2" type="search" name="query" placeholder="Tìm kiếm..." aria-label="Search" />
+						<button class="btn btn-outline-light" type="submit">Search</button>
+					</form>
+					<ul class="navbar-nav">
+						<li class="nav-item">
+							<a class="nav-link" href="#" style="color: saddlebrown;">Thông Báo</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="#" style="color: saddlebrown;">Cart</a>
+						</li>
+						<li class="nav-item">
+							<a asp-page="/Login" class="nav-link" style="color: saddlebrown;">Login</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</nav>
+	</header>
 <h2>Search Results for "@Model.Query"</h2>
 
 <form method="get">
@@ -104,3 +153,15 @@
 		}
 	</ul>
 </nav>
+	<footer class="border-top footer text-muted">
+		<div class="container">
+			&copy; 2024 - Second_Soul - <a asp-area="" asp-page="/Privacy">Privacy</a>
+		</div>
+	</footer>
+
+	<script src="~/lib/jquery/dist/jquery.min.js"></script>
+	<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+	<script src="~/js/site.js" asp-append-version="true"></script>
+
+</body>
+</html>

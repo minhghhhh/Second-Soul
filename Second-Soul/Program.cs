@@ -8,6 +8,9 @@ using Data.Models;
 using Data.Repository;
 using Microsoft.Extensions.Configuration;
 using Data.Utils;
+using Second_Soul;
+using FluentAssertions.Common;
+using Net.payOS;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.ConfigureApplicationCookie(options =>
@@ -20,6 +23,14 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.SlidingExpiration = true;
 });
 
+/*builder.Configuration.AddJsonFile("appsettings.Development.json", optional: false, reloadOnChange: true);
+var configuration = builder.Configuration;
+
+
+var payOs = new PayOS(configuration["Environment:PAYOS_CLIENT_ID"] ?? throw new Exception("Cannot find environment client"),
+                    configuration["Environment:PAYOS_API_KEY"] ?? throw new Exception("Cannot find environment api"),
+                    configuration["Environment:PAYOS_CHECKSUM_KEY"] ?? throw new Exception("Cannot find environment sum"));
+builder.Services.AddScoped<PayOS>(_ => payOs);*/
 
 var cloudinarySettings = builder.Configuration.GetSection("CloudinaryOptions").Get<CloudinaryOptions>();
 
@@ -29,12 +40,13 @@ Account account = new Account(
     cloudinarySettings.ApiKey,
     cloudinarySettings.ApiSecret
 );
-
-builder.Services.AddHostedService<BackgroundService>(); // Add the background service
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddHostedService<BackGround>(); // Add the background service
 Cloudinary cloudinary = new Cloudinary(account);
 builder.Services.AddSingleton(cloudinary);
 builder.Services.AddDbContext<SecondSoulShopContext>();
 builder.Services.AddScoped(typeof(IGenericRepo<>), typeof(GenericRepo<>));
+builder.Services.AddScoped<ICouponBusiness, CouponBusiness>();
 builder.Services.AddScoped<IUserBusiness, UserBusiness>();
 builder.Services.AddScoped<ICategoryBusiness, CategoryBusiness>();
 builder.Services.AddScoped<IProductBusiness, ProductBusiness>();
@@ -55,7 +67,6 @@ builder.Services.AddScoped<OrderDetailRepo>();
 builder.Services.AddScoped<ShoppingCartRepo>();
 builder.Services.AddMvcCore();
 builder.Services.AddRazorPages();
-//builder.Services.Configure<CloudinaryOptions>(Configuration.GetSection("Cloudinary"));
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -77,24 +88,3 @@ app.UseAuthorization();
 app.MapRazorPages();
 
 app.Run();
-/*public class AuthenticationMiddleware
-{
-    private readonly RequestDelegate _next;
-
-    public AuthenticationMiddleware(RequestDelegate next)
-    {
-        _next = next;
-    }
-
-    public async Task Invoke(HttpContext context)
-    {
-        var path = context.Request.Path;
-        if (!path.StartsWithSegments("/Login") && !context.Session.Keys.Contains("AccountId"))
-        {
-            context.Response.Redirect("/Login");
-            return;
-        }
-
-        await _next(context);
-    }
-}*/
