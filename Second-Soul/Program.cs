@@ -52,6 +52,7 @@ builder.Services.AddScoped<ReviewRepo>();
 builder.Services.AddScoped<UnitOfWork>();
 builder.Services.AddScoped<OrderRepo>();
 builder.Services.AddScoped<OrderDetailRepo>();
+builder.Services.AddScoped<ShoppingCartRepo>();
 builder.Services.AddMvcCore();
 builder.Services.AddRazorPages();
 //builder.Services.Configure<CloudinaryOptions>(Configuration.GetSection("Cloudinary"));

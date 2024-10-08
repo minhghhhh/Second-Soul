@@ -24,7 +24,7 @@ namespace BusssinessObject
         Task<bool> IdExists(int id);
         Task<List<Product>> GetProductsBySeller(int id);
         IQueryable<List<Product>> GetProductsAsQueryable();
-        Task<IBusinessResult> SearchProduct(string? query, decimal? minPrice, decimal? maxPrice, List<int>? categoryIDs, string? condition, bool? isAvailable, long? sellerID, int pageIndex = 1, int pageSize = 10);
+        Task<IBusinessResult> SearchProduct(string? query, decimal? minPrice, decimal? maxPrice, List<int>? categoryIDs, string? condition, bool? isAvailable, int? sellerID, int pageIndex = 1, int pageSize = 10);
 
     }
     public class ProductBusiness : IProductBusiness
@@ -51,7 +51,7 @@ namespace BusssinessObject
         {
             return _unitOfWork.ProductRepository.GetProductsAsQueryable();
         }
-        public async Task<IBusinessResult> SearchProduct(string? query, decimal? minPrice, decimal? maxPrice, List<int>? categoryIDs, string? condition, bool? isAvailable, long? sellerID, int pageIndex = 1, int pageSize = 10)
+        public async Task<IBusinessResult> SearchProduct(string? query, decimal? minPrice, decimal? maxPrice, List<int>? categoryIDs, string? condition, bool? isAvailable, int? sellerID, int pageIndex = 1, int pageSize = 10)
         {
             try
             {
