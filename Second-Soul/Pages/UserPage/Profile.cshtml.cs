@@ -55,7 +55,6 @@ namespace Second_Soul.Pages.UserPage
                     ErrorMessage = "Only PNG, JPG, and JPEG formats are allowed.";
                     return Page();
                 }
-
                 var uploadParams = new ImageUploadParams()
                 {
                     File = new FileDescription(PictureFile.FileName, PictureFile.OpenReadStream())

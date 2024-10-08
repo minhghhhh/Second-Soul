@@ -36,7 +36,7 @@ public partial class SecondSoulShopContext : DbContext
     public virtual DbSet<Review> Reviews { get; set; }
 
     public virtual DbSet<ShoppingCart> ShoppingCarts { get; set; }
-
+    public virtual DbSet<ProductImage> ProductImages { get; set; }
     public virtual DbSet<User> Users { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -149,9 +149,7 @@ public partial class SecondSoulShopContext : DbContext
         {
             entity.HasKey(e => e.Id);
 
-            entity.Property(e => e.ImageUrl).IsRequired();
-            entity.Property(e => e.PublicId).HasMaxLength(255);
-
+            entity.Property(e => e.ImageUrl).HasMaxLength(255).IsRequired();
             entity.HasOne(d => d.Product)
                   .WithMany(p => p.ProductImages)
                   .HasForeignKey(d => d.ProductId)

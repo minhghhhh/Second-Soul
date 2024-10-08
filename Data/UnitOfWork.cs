@@ -21,10 +21,13 @@ namespace Data
         private readonly OrderDetailRepo _orderDetailRepo;
         private readonly PaymentRepo _paymentRepo;
         private readonly ShoppingCartRepo _shoppingCartRepo;
+        private readonly ProductImageRepo _productImageRepo;
+        private readonly FavoriteShopsRepo _favoriteShopRepo;
 
-
-        public UnitOfWork(SecondSoulShopContext dbContext, UserRepo userRepository, ProductRepo productRepo, OrderRepo orderRepo, CategoryRepo categoryRepo, CouponRepo couponRepo, ReviewRepo reviewRepo, OrderDetailRepo orderDetailRepo, PaymentRepo paymentRepo, ShoppingCartRepo shoppingCartRepo)
+        public UnitOfWork(SecondSoulShopContext dbContext,FavoriteShopsRepo favoriteShopsRepo, ProductImageRepo productImageRepo,UserRepo userRepository, ProductRepo productRepo, OrderRepo orderRepo, CategoryRepo categoryRepo, CouponRepo couponRepo, ReviewRepo reviewRepo, OrderDetailRepo orderDetailRepo, PaymentRepo paymentRepo, ShoppingCartRepo shoppingCartRepo)
         {
+            _productImageRepo = productImageRepo;
+            _favoriteShopRepo = favoriteShopsRepo;
             _dbContext = dbContext;
             _userRepo = userRepository;
             _productRepo = productRepo;
@@ -37,6 +40,8 @@ namespace Data
             _shoppingCartRepo = shoppingCartRepo;
         }
         public UserRepo UserRepository => _userRepo;
+        public FavoriteShopsRepo FavoriteShopsRepo => _favoriteShopRepo;
+        public ProductImageRepo ProductImageRepo => _productImageRepo;
         public ProductRepo ProductRepository => _productRepo;
         public OrderRepo OrderRepository => _orderRepo;
         public CategoryRepo CategoryRepository => _categoryRepo;

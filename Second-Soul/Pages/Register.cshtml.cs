@@ -43,13 +43,14 @@ namespace Second_Soul.Pages
                     return Page();
                 }
                 var newUser = new User
-                { 
+                {
                     Username = Input.Username,
-                    PasswordHash = Input.Password,  
+                    PasswordHash = Input.Password,
                     Email = Input.Email,
                     PhoneNumber = Input.PhoneNumber,
                     Address = Input.Address,
-                    Role = "Customer",  
+                    Role = "Customer",
+                    ImageUrl = null,
                     CreatedDate = DateTime.Now,  
                     IsActive = false 
                 };
