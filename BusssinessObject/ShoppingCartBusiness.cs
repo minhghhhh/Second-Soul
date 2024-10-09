@@ -2,6 +2,7 @@
 using Common;
 using Data;
 using Data.Models;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,21 +11,36 @@ using System.Threading.Tasks;
 
 namespace BusssinessObject
 {
-	public class ShoppingCartBusiness
+    public interface IShoppingCartBusiness
+    {
+		Task<IBusinessResult> GetByUserId(int userId, int? offset, int? limit);
+        Task<IBusinessResult> Save(ShoppingCart cart);
+        Task<IBusinessResult> DeleteById(int id);
+    }
+
+    public class ShoppingCartBusiness : IShoppingCartBusiness
 	{
 		private readonly UnitOfWork _unitOfWork;
 		public ShoppingCartBusiness(UnitOfWork unitOfWork)
 		{
 			_unitOfWork = unitOfWork;
 		}
-		public async Task<IBusinessResult> GetAll()
+		public async Task<IBusinessResult> GetByUserId(int userId, int? offset, int? limit)
 		{
 			try
 			{
 				#region Business rule
 				#endregion
 
- 				var shoppingCarts = await _unitOfWork.ShoppingCartRepository.GetAllAsync();
+				if (offset != null && limit != null) 
+				{ 
+					if (offset < 0 || limit < 0)
+					{
+                        return new BusinessResult(Const.WARNING_NO_DATA_CODE, Const.WARNING_NO_DATA__MSG);
+                    }
+                }
+
+ 				var shoppingCarts = await _unitOfWork.ShoppingCartRepository.GetShoppingCartsWithProductByUserId(userId, offset, limit);
 
 
 				if (shoppingCarts == null || shoppingCarts.Count == 0)
