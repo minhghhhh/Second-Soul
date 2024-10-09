@@ -111,7 +111,7 @@ namespace BusssinessObject
                 #endregion
 
                 //var currency = await _currencyRepository.GetByIdAsync(code);
-                var cv = await _unitOfWork.ProductRepository.GetByIdAsync(id);
+                var cv = await _unitOfWork.ProductRepository.GetProductDetails(id);
 
                 if (cv == null)
                 {

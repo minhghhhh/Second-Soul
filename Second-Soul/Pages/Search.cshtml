@@ -195,17 +195,19 @@
             <div>
                 @if (Model.Products.Any())
                 {
-                    foreach (var product in Model.Products)
+                    @foreach (var product in Model.Products)
                     {
-                        <div class="result-item">
-                            <h5>@product.Name</h5>
+                        <div class="result-item" id="product-@product.ProductId">
+                            <h5>
+                                <a href="/ProductPage/Details/@product.ProductId">@product.Name</a>
+                            </h5>
                             <p>Price: @product.Price</p>
                         </div>
                     }
                 }
                 else
                 {
-                    <div class="result-item"><p>No products found.</p></div>
+                    <div class="result-item"><p>No products name "@Model.Query"found.</p></div>
                 }
             </div>
 

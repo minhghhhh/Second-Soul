@@ -132,7 +132,10 @@ namespace Data.Repository
 				}
 			}
 		}
-
+		public async Task<Product?> GetProductDetails(int id)
+		{
+			return await context.Products.Include(a=>a.Category).Include(a=>a.Seller).Where(a=>a.ProductId== id).FirstOrDefaultAsync();
+		}
 		private async Task<bool> IsValidCategoryAsync(int categoryID)
 		{
 			return await _categoryRepo.GetSingleOrDefaultWithNoTracking(c => c.CategoryId == categoryID) != null;

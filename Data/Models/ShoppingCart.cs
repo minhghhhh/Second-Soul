@@ -12,10 +12,6 @@ public partial class ShoppingCart
 
     [Key, Column(Order = 1)]
     public int ProductId { get; set; }
-
-    [Required]
-    public int Quantity { get; set; }
-
     public DateTime AddedDate { get; set; } = default;
 
     [ForeignKey("ProductId")]

@@ -109,7 +109,6 @@ CREATE TABLE Reviews (
 CREATE TABLE ShoppingCarts (
      UserID INT,
     ProductID INT,
-    Quantity INT NOT NULL,
     AddedDate DATETIME DEFAULT GETDATE(),
 	PRIMARY KEY(UserID, ProductID),
     FOREIGN KEY (UserID) REFERENCES Users(UserID),
