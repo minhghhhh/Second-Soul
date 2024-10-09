@@ -76,7 +76,6 @@
                 <div class="cart-item" id="item-@item.Product.ProductId">
                     <div class="item-details">
                         <h2>@item.Product.Name</h2>
-                        <p>Quantity: @item.Quantity</p>
                         <p>Price: @item.Product.Price.ToString("C")</p>
                     </div>
                     <form asp-page-handler="DeleteItem" method="post" onsubmit="return confirm('Are you sure you want to remove this item?');">
