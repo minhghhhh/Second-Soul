@@ -1,167 +1,250 @@
 ﻿@page
 @model Second_Soul.Pages.SearchModel
 @{
-	ViewData["Title"] = "Search Results";
-	Layout = null;
+    ViewData["Title"] = "Search Results";
+    Layout = null;
+}
+@using Data.Models
+@using System.Text.Json
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@{
+    var userCookie = HttpContextAccessor.HttpContext?.Request.Cookies["User"];
+    User? currentUser = null;
+
+    if (!string.IsNullOrEmpty(userCookie))
+    {
+        var user = JsonSerializer.Deserialize<User>(userCookie);
+        if (user != null)
+        {
+            currentUser = JsonSerializer.Deserialize<User>(userCookie);
+        }
+    }
 }
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta charset="utf-8" />
-	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-	<title>@ViewData["Title"] - Second_Soul</title>
-	<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-	<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-	<link rel="stylesheet" href="~/Second_Soul.styles.css" asp-append-version="true" />
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Second_Soul</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/Second_Soul.styles.css" asp-append-version="true" />
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+
+        .header-background {
+            background-color: #fff;
+            border-bottom: 1px solid #eaeaea;
+        }
+
+        .nav-link {
+            color: saddlebrown;
+        }
+
+        .search-results {
+            margin-top: 20px;
+        }
+
+        .result-item {
+            background-color: #fff;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .footer {
+            padding: 20px 0;
+            background-color: #fff;
+        }
+
+        .layout {
+            display: flex;
+            flex-direction: row;
+            gap: 20px;
+        }
+
+        .filters {
+            flex: 1;
+            max-width: 300px;
+        }
+
+        .results {
+            flex: 2;
+        }
+    </style>
 </head>
 <body>
-	<header class="header-background">
-		<nav class="navbar navbar-expand-sm navbar-light">
-			<div class="container">
-				<a class="navbar-brand" asp-area="" asp-page="/Index">
-					<img src="/pic/logo/2ndsoullogonoBG.png" alt="Second Soul Logo" style="height: 60px;" />
-				</a>
-				<div class="collapse navbar-collapse">
-					<ul class="navbar-nav me-auto">
-						<li class="nav-item">
-							<a class="nav-link" href="#" style="color: saddlebrown;">Shop</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link" href="#" style="color: saddlebrown;">Category</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link" href="#" style="color: saddlebrown;">Product</a>
-						</li>
-					</ul>
-					<form method="get" asp-page="/Search" class="d-flex" style="flex-grow: 1; margin-left: 20px;">
-						<input class="form-control me-2" type="search" name="query" placeholder="Tìm kiếm..." aria-label="Search" />
-						<button class="btn btn-outline-light" type="submit">Search</button>
-					</form>
-					<ul class="navbar-nav">
-						<li class="nav-item">
-							<a class="nav-link" href="#" style="color: saddlebrown;">Thông Báo</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link" href="#" style="color: saddlebrown;">Cart</a>
-						</li>
-						<li class="nav-item">
-							<a asp-page="/Login" class="nav-link" style="color: saddlebrown;">Login</a>
-						</li>
-					</ul>
-				</div>
-			</div>
-		</nav>
-	</header>
-<h2>Search Results for "@Model.Query"</h2>
+    <header class="header-background">
+        <nav class="navbar navbar-expand-sm navbar-light">
+            <div class="container">
+                <a class="navbar-brand" asp-area="" asp-page="/Index">
+                    <img src="/pic/logo/2ndsoullogonoBG.png" alt="Second Soul Logo" style="height: 60px;" />
+                </a>
+                <div class="collapse navbar-collapse">
+                    <ul class="navbar-nav me-auto">
+                        <li class="nav-item"><a class="nav-link" href="#">Shop</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#">Category</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#">Product</a></li>
+                    </ul>
+                    <ul class="navbar-nav">
+                        <li class="nav-item"><a class="nav-link" href="#">Thông Báo</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#">Cart</a></li>
+                        @if (currentUser != null)
+                        {
+                            <li class="nav-item">
+                                <div class="dropdown">
+                                    <button class="btn btn-link dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                                        @if (currentUser?.ImageUrl != null)
+                                        {
+                                            <img src="@currentUser.ImageUrl" alt="Profile Picture" class="rounded-circle" width="30" height="30" />
+                                        }
+                                        else
+                                        {
+                                            <i class="bi bi-person-circle" style="font-size: 30px; color: saddlebrown;"></i>
+                                        }
+                                        @currentUser?.Username
+                                    </button>
+                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                        <li><a class="dropdown-item" href="/UserPage/Profile">My Account</a></li>
+                                        <li><a class="dropdown-item" href="/UserPage/Order">My Purchase</a></li>
+                                        <li><a class="dropdown-item" href="/Logout">Logout</a></li>
+                                    </ul>
+                                </div>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item"><a asp-page="/Login" class="nav-link">Login</a></li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div class="container search-results layout">
+        <div class="filters">
+            <h2>Search Results for "@Model.Query"</h2>
+            <form method="get" class="mb-4">
+                <div class="form-group">
+                    <label for="query">Search</label>
+                    <input type="text" name="query" class="form-control" value="@Model.Query" placeholder="Search products..." />
+                </div>
 
-<form method="get">
-	<div class="form-group">
-		<label for="query">Search</label>
-		<input type="text" name="query" class="form-control" value="@Model.Query" placeholder="Search products..." />
-	</div>
+                <div class="form-group">
+                    <label for="minPrice">Min Price</label>
+                    <input type="number" name="minPrice" class="form-control" value="@Model.MinPrice" min="0" max="999999999" step="1" placeholder="Min Price" />
+                </div>
 
-	<div class="form-group">
-		<label for="minPrice">Min Price</label>
-		<input type="number" name="minPrice" class="form-control" value="@Model.MinPrice" pattern="^(0*([1-9][0-9]*|0)(\.[0-9]*)?)$" placeholder="Min Price" />
-	</div>
+                <div class="form-group">
+                    <label for="maxPrice">Max Price</label>
+                    <input type="number" name="maxPrice" class="form-control" value="@Model.MaxPrice" min="0" max="999999999" step="1" placeholder="Max Price" />
+                </div>
 
-	<div class="form-group">
-		<label for="maxPrice">Max Price</label>
-		<input type="number" name="maxPrice" class="form-control" value="@Model.MaxPrice" pattern="^(0*([1-9][0-9]*|0)(\.[0-9]*)?)$" placeholder="Max Price" />
-	</div>
-	@if (Model.Categories.Count > 0)
-	{
-		<div class="form-group">
-			<label>Category</label>
-			@foreach (var parentCategoryGroup in Model.Categories.GroupBy(c => c.Group.Name))
-			{
-				// Display parent category name
-				<div class="form-check">
-					<strong>@parentCategoryGroup.Key</strong>
-				</div>
-				foreach (var subCategory in parentCategoryGroup)
-				{
-					<div class="form-check pl-4">
-						<input type="checkbox" name="categoryIDs" value="@subCategory.Value" class="form-check-input"
-						@(subCategory.Selected ? "checked" : "") />
-						<label class="form-check-label">@subCategory.Text</label>
-					</div>
-				}
-			}
-		</div>
-	}
+                @if (Model.Categories.Count > 0)
+                {
+                    <div class="form-group">
+                        <label>Category</label>
+                        @foreach (var parentCategoryGroup in Model.Categories.GroupBy(c => c.Group.Name))
+                        {
+                            <div class="form-check">
+                                <strong>@parentCategoryGroup.Key</strong>
+                            </div>
+                            foreach (var subCategory in parentCategoryGroup)
+                            {
+                                <div class="form-check pl-4">
+                                    <input type="checkbox" name="categoryIDs" value="@subCategory.Value" class="form-check-input"
+                                    @(subCategory.Selected ? "checked" : "") />
+                                    <label class="form-check-label">@subCategory.Text</label>
+                                </div>
+                            }
+                        }
+                    </div>
+                }
 
-	@if (Model.Conditions.Count > 0)
-	{
-		<div class="form-group">
-			<label for="condition">Condition</label>
-			@Html.DropDownList("condition", Model.Conditions, "Select Condition", new { @class = "form-control" })
-		</div>
-	}
+                @if (Model.Conditions.Count > 0)
+                {
+                    <div class="form-group">
+                        <label for="condition">Condition</label>
+                        @Html.DropDownList("condition", Model.Conditions, "Select Condition", new { @class = "form-control" })
+                    </div>
+                }
 
-	<div class="form-group">
-		<label for="sellerID">Seller ID</label>
-		<input type="number" name="sellerID" class="form-control" value="@Model.SellerID" placeholder="Seller ID" />
-	</div>
+                @if (Model.Sellers.Count > 0)
+                {
+                    <div class="form-group">
+                        <label for="sellerID">Seller</label>
+                        @Html.DropDownList("sellerID", Model.Sellers, new { @class = "form-control" })
+                    </div>
+                }
 
-	<div class="form-group">
-		<label for="isAvailable">Available</label>
-		<input type="checkbox" name="isAvailable" @(Model.IsAvailable == true ? "checked" : "") />
-	</div>
+                <div class="form-group form-check">
+                    <input type="checkbox" name="isAvailable" class="form-check-input" @(Model.IsAvailable ? "checked" : "") />
+                    <label class="form-check-label" for="isAvailable">Available</label>
+                </div>
 
-	<button type="submit" class="btn btn-primary">Search</button>
-</form>
+                <button type="submit" class="btn btn-primary">Search</button>
+            </form>
+        </div>
 
-<h3>Results</h3>
-<ul>
-	@if (Model.Products.Any())
-	{
-		foreach (var product in Model.Products)
-		{
-			<li>@product.Name - @product.Price</li>
-		}
-	}
-	else
-	{
-		<li>No products found.</li>
-	}
-</ul>
+        <div class="results">
+            <h3>Results</h3>
+            <div>
+                @if (Model.Products.Any())
+                {
+                    foreach (var product in Model.Products)
+                    {
+                        <div class="result-item">
+                            <h5>@product.Name</h5>
+                            <p>Price: @product.Price</p>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div class="result-item"><p>No products found.</p></div>
+                }
+            </div>
 
-<!-- Pagination Controls -->
-<nav aria-label="Page navigation">
-	<ul class="pagination">
-		@if (Model.HasPreviousPage)
-		{
-			<li class="page-item">
-				<a class="page-link" asp-route-query="@Model.Query" asp-route-pageIndex="@(Model.PageIndex - 1)">Previous</a>
-			</li>
-		}
+            <!-- Pagination Controls -->
+            <nav aria-label="Page navigation">
+                <ul class="pagination">
+                    @if (Model.HasPreviousPage)
+                    {
+                        <li class="page-item">
+                            <a class="page-link" asp-route-query="@Model.Query" asp-route-pageIndex="@(Model.PageIndex - 1)">Previous</a>
+                        </li>
+                    }
 
-		@for (var i = 1; i <= Model.TotalPages; i++)
-		{
-			<li class="page-item @(i == Model.PageIndex ? "active" : "")">
-				<a class="page-link" asp-route-query="@Model.Query" asp-route-pageIndex="@i">@i</a>
-			</li>
-		}
+                    @for (var i = 1; i <= Model.TotalPages; i++)
+                    {
+                        <li class="page-item @(i == Model.PageIndex ? "active" : "")">
+                            <a class="page-link" asp-route-query="@Model.Query" asp-route-pageIndex="@i">@i</a>
+                        </li>
+                    }
 
-		@if (Model.HasNextPage)
-		{
-			<li class="page-item">
-				<a class="page-link" asp-route-query="@Model.Query" asp-route-pageIndex="@(Model.PageIndex + 1)">Next</a>
-			</li>
-		}
-	</ul>
-</nav>
-	<footer class="border-top footer text-muted">
-		<div class="container">
-			&copy; 2024 - Second_Soul - <a asp-area="" asp-page="/Privacy">Privacy</a>
-		</div>
-	</footer>
+                    @if (Model.HasNextPage)
+                    {
+                        <li class="page-item">
+                            <a class="page-link" asp-route-query="@Model.Query" asp-route-pageIndex="@(Model.PageIndex + 1)">Next</a>
+                        </li>
+                    }
+                </ul>
+            </nav>
+        </div>
+    </div>
 
-	<script src="~/lib/jquery/dist/jquery.min.js"></script>
-	<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-	<script src="~/js/site.js" asp-append-version="true"></script>
+    <footer class="footer border-top text-muted">
+        <div class="container text-center">
+            &copy; 2024 - Second_Soul - <a asp-area="" asp-page="/Privacy">Privacy</a>
+        </div>
+    </footer>
 
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
 </body>
 </html>

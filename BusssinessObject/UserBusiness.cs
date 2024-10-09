@@ -22,6 +22,8 @@ namespace BusssinessObject
         Task<User?> GetFromCookie(HttpRequest request);
         Task<IBusinessResult> Register(User cate);
         Task<User?> GetUserByToken(string token);
+        Task<IBusinessResult> ReadOnlyActiveSellers();
+
         /*        void UpdateCookie(HttpRequest request, HttpResponse response);
         */
     }
@@ -91,7 +93,33 @@ namespace BusssinessObject
             }
         }
 
-        public async Task<IBusinessResult> GetById(int id)
+		public async Task<IBusinessResult> ReadOnlyActiveSellers()
+		{
+			try
+			{
+                #region Business rule
+                #endregion
+
+                var sellers = await _unitOfWork.UserRepository.GetListWithNoTracking(u => u.IsActive == true && u.Products.Count > 0);
+
+
+				if (sellers == null)
+				{
+					return new BusinessResult(Const.WARNING_NO_DATA_CODE, Const.WARNING_NO_DATA__MSG);
+				}
+				else
+				{
+					return new BusinessResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, sellers);
+				}
+			}
+			catch (Exception ex)
+			{
+				return new BusinessResult(Const.ERROR_EXCEPTION, ex.Message);
+			}
+		}
+
+
+		public async Task<IBusinessResult> GetById(int id)
         {
             try
             {

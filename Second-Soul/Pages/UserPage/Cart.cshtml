@@ -1,4 +1,59 @@
 ﻿@page
 @model Second_Soul.Pages.UserPage.CartModel
 @{
+    ViewData["Title"] = "Shopping Cart";
+}
+
+<div class="container">
+    <h1>Your Shopping Cart</h1>
+    <div id="cart-items">
+        @foreach (var item in Model.ShoppingCarts)
+        {
+            <div class="cart-item">
+                <h2>@item.Product.Name</h2>
+                <p>Quantity: @item.Quantity</p>
+                <p>Price: @item.Product.Price</p>
+            </div>
+        }
+    </div>
+
+    <div id="loading" style="display:none;">Loading more items...</div>
+</div>
+
+@section Scripts {
+    <script>
+        let offset = @Model.ShoppingCarts.Count;
+
+        window.onscroll = async () => {
+            if (document.documentElement.scrollHeight - window.innerHeight <= window.scrollY + 100) {
+                document.getElementById("loading").style.display = "block";
+
+                try {
+                    const response = await fetch(`/Cart?handler=LoadMore&offset=${offset}`);
+                    if (!response.ok) {
+                        throw new Error("Network response was not ok");
+                    }
+                    const newItems = await response.json();
+
+                    newItems.forEach(item => {
+                        const cartItemsDiv = document.getElementById("cart-items");
+                        const itemDiv = document.createElement("div");
+                        itemDiv.className = "cart-item";
+                        itemDiv.innerHTML = `<h2>${item.Product.Name}</h2><p>Quantity: ${item.Quantity}</p><p>Price: ${item.Product.Price}</p>`;
+                        cartItemsDiv.appendChild(itemDiv);
+                    });
+
+                    if (newItems.length > 0) {
+                        offset += newItems.length;
+                    }
+
+                } catch (error) {
+                    console.error("Failed to load more items:", error);
+                    // Optionally, display an error message to the user
+                } finally {
+                    document.getElementById("loading").style.display = "none";
+                }
+            }
+        };
+    </script>
 }
