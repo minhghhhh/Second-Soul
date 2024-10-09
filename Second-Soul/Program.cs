@@ -23,14 +23,7 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.SlidingExpiration = true;
 });
 
-/*builder.Configuration.AddJsonFile("appsettings.Development.json", optional: false, reloadOnChange: true);
-var configuration = builder.Configuration;
-
-
-var payOs = new PayOS(configuration["Environment:PAYOS_CLIENT_ID"] ?? throw new Exception("Cannot find environment client"),
-                    configuration["Environment:PAYOS_API_KEY"] ?? throw new Exception("Cannot find environment api"),
-                    configuration["Environment:PAYOS_CHECKSUM_KEY"] ?? throw new Exception("Cannot find environment sum"));
-builder.Services.AddScoped<PayOS>(_ => payOs);*/
+builder.Services.AddScoped<PayOS>();
 
 var cloudinarySettings = builder.Configuration.GetSection("CloudinaryOptions").Get<CloudinaryOptions>();
 
