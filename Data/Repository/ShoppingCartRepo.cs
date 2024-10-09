@@ -30,5 +30,11 @@ namespace Data.Repository
             }
             return await _dbcontext.ShoppingCarts.Where(s => s.UserId == userId).Include(s => s.Product).ToListAsync();
         }
+        public async Task<ShoppingCart?>GetByUserIdAndProductId(int userId, int productId)
+        {
+            return await _dbcontext.ShoppingCarts
+                .SingleOrDefaultAsync(s => s.UserId == userId && s.ProductId == productId);
+        }
+
     }
 }

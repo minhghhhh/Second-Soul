@@ -24,12 +24,12 @@ namespace Second_Soul.Pages.UserPage
             var user = await _userBusiness.GetFromCookie(Request);
             if (user == null)
             {
-                return RedirectToPage("Login");
+                return RedirectToPage("/Login");
             }
             var result = await _shoppingCartBusiness.GetByUserId(user.UserId, null, null); // Modify this for actual pagination in future
             if (result == null || !(result.Status > 0) || result.Data == null)
             {
-                return RedirectToPage("Login");
+                return RedirectToPage("/Error");
             }
             ShoppingCarts = (List<ShoppingCart>)result.Data;
             return Page();
@@ -40,7 +40,7 @@ namespace Second_Soul.Pages.UserPage
             var user = await _userBusiness.GetFromCookie(Request);
             if (user == null)
             {
-                return RedirectToPage("Login");
+                return RedirectToPage("/Login");
             }
 
             var result = await _shoppingCartBusiness.GetByUserId(user.UserId, offset, limit); // Modify for actual pagination
@@ -49,12 +49,28 @@ namespace Second_Soul.Pages.UserPage
                 var data = result.Data as List<ShoppingCart>;
                 if (data != null)
                 {
-                    var moreItems = data.Skip(offset).Take(limit).ToList(); // Adjusted for pagination
+                    var moreItems = data;
                     return new JsonResult(moreItems);
                 }
             }
 
             return new JsonResult(new List<ShoppingCart>());
+        }
+        public async Task<IActionResult> OnPostDeleteItem(int productId)
+        {
+            var user = await _userBusiness.GetFromCookie(Request);
+            if (user == null)
+            {
+                return RedirectToPage("/Login");
+            }
+
+            var result = await _shoppingCartBusiness.RemoveFromCart(user.UserId, productId);
+            if (result == null || result.Status <= 0)
+            {
+                return RedirectToPage("/Error");
+            }
+
+            return await OnGet();
         }
 
     }

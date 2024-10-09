@@ -4,25 +4,95 @@
     ViewData["Title"] = "Shopping Cart";
 }
 
-<div class="container">
-    <h1>Your Shopping Cart</h1>
-    <div id="cart-items">
-        @foreach (var item in Model.ShoppingCarts)
-        {
-            <div class="cart-item">
-                <h2>@item.Product.Name</h2>
-                <p>Quantity: @item.Quantity</p>
-                <p>Price: @item.Product.Price</p>
-            </div>
-        }
-    </div>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f9f9f9;
+        color: #333;
+    }
 
-    <div id="loading" style="display:none;">Loading more items...</div>
-</div>
+    .cart-content {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+        text-align: center;
+        color: #4a90e2;
+    }
+
+    .cart-item {
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        padding: 15px;
+        margin: 10px 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background-color: #fdfdfd;
+        transition: background 0.3s;
+    }
+
+        .cart-item:hover {
+            background-color: #f1f1f1;
+        }
+
+    .item-details {
+        flex-grow: 1;
+    }
+
+    .delete-button {
+        background-color: #e74c3c;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        padding: 8px 12px;
+        cursor: pointer;
+        transition: background 0.3s;
+    }
+
+        .delete-button:hover {
+            background-color: #c0392b;
+        }
+
+    #loading {
+        text-align: center;
+        font-size: 1.2em;
+        color: #555;
+    }
+</style>
+
+@if (Model.ShoppingCarts.Count > 0)
+{
+    <div class="cart-content">
+        <h1>Your Shopping Cart</h1>
+        <div id="cart-items" class="cart-items-grid">
+            @foreach (var item in Model.ShoppingCarts)
+            {
+                <div class="cart-item" id="item-@item.Product.ProductId">
+                    <div class="item-details">
+                        <h2>@item.Product.Name</h2>
+                        <p>Quantity: @item.Quantity</p>
+                        <p>Price: @item.Product.Price.ToString("C")</p>
+                    </div>
+                    <form asp-page-handler="DeleteItem" method="post" onsubmit="return confirm('Are you sure you want to remove this item?');">
+                        <input type="hidden" name="productId" value="@item.Product.ProductId"/>
+                        <button type="submit" class="delete-button">Remove</button>
+                    </form>
+                </div>
+            }
+        </div>
+        <div id="loading" style="display:none;">Loading more items...</div>
+    </div>
+}
 
 @section Scripts {
     <script>
-        let offset = @Model.ShoppingCarts.Count;
+        let offset = Model.ShoppingCarts.Count;
 
         window.onscroll = async () => {
             if (document.documentElement.scrollHeight - window.innerHeight <= window.scrollY + 100) {
@@ -30,30 +100,28 @@
 
                 try {
                     const response = await fetch(`/Cart?handler=LoadMore&offset=${offset}`);
-                    if (!response.ok) {
-                        throw new Error("Network response was not ok");
-                    }
-                    const newItems = await response.json();
+                    if (!response.ok) throw new Error("Network response was not ok");
 
-                    newItems.forEach(item => {
+                    const { items, hasMore } = await response.json();
+                    items.forEach(item => {
                         const cartItemsDiv = document.getElementById("cart-items");
                         const itemDiv = document.createElement("div");
                         itemDiv.className = "cart-item";
-                        itemDiv.innerHTML = `<h2>${item.Product.Name}</h2><p>Quantity: ${item.Quantity}</p><p>Price: ${item.Product.Price}</p>`;
+                        itemDiv.id = `item-${item.Product.Id}`;
+                        itemDiv.innerHTML = `<div class="item-details"><h2>${item.Product.Name}</h2><p>Quantity: ${item.Quantity}</p><p>Price: ${item.Product.Price.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</p></div><button class="delete-button" onclick="deleteItem(${item.Product.Id})">Remove</button>`;
                         cartItemsDiv.appendChild(itemDiv);
                     });
 
-                    if (newItems.length > 0) {
-                        offset += newItems.length;
+                    if (hasMore) {
+                        offset += items.length;
                     }
-
                 } catch (error) {
                     console.error("Failed to load more items:", error);
-                    // Optionally, display an error message to the user
                 } finally {
                     document.getElementById("loading").style.display = "none";
                 }
             }
         };
+
     </script>
 }

@@ -106,7 +106,7 @@ CREATE TABLE Reviews (
     FOREIGN KEY (UserID) REFERENCES Users(UserID)
 );
 
-CREATE TABLE ShoppingCart (
+CREATE TABLE ShoppingCarts (
      UserID INT,
     ProductID INT,
     Quantity INT NOT NULL,
@@ -193,6 +193,17 @@ VALUES
     (1, 'Sporty Tank Top', 'Breathable tank top for workouts.', 9, 21.99, 70, 'New'),
     (3, 'Elegant High-Heels', 'Stylish high-heels for special occasions.', 17, 74.99, 15, 'New'),
     (3, 'Trendy Skirt', 'Fashionable skirt that pairs well with tops.', 14, 49.99, 50, 'Good');
+Go
+INSERT INTO ShoppingCarts (UserID, ProductID, Quantity)
+VALUES
+    (1, 1, 2), -- customer1 adds 2 Casual T-Shirts
+    (1, 2, 1), -- customer1 adds 1 Denim Jeans
+    (2, 4, 1), -- customer2 adds 1 Summer Dress
+    (2, 6, 3), -- customer2 adds 3 Wool Scarves
+    (1, 10, 1), -- customer1 adds 1 Canvas Backpack
+    (2, 5, 2), -- customer2 adds 2 Sport Sneakers
+    (1, 12, 1), -- customer1 adds 1 Sporty Tank Top
+    (2, 9, 1); -- customer2 adds 1 Elegant High-Heels
 Go
 INSERT INTO Coupons (Code, DiscountPercentage, MaxDiscount, ExpiryDate, IsActive, MinSpendAmount)
 VALUES
