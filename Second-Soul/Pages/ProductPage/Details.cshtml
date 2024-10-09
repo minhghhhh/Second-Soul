@@ -1,0 +1,105 @@
+﻿@page
+@model Second_Soul.Pages.ProductPage.DetailsModel
+@{
+}
+<div class="container mt-5">
+    <!-- Main content section -->
+    <div class="row">
+        
+        <!-- Left section: Product images -->
+        <div class="col-md-6">
+            <div class="product-images">
+                <img src="~/images/product-main.jpg" class="img-fluid" alt="Product Main Image">
+                <!-- Thumbnails -->
+                <div class="thumbnails mt-3 d-flex">
+                    <img src="~/images/product-thumb1.jpg" class="img-thumbnail mr-2" alt="Thumbnail 1">
+                    <img src="~/images/product-thumb2.jpg" class="img-thumbnail mr-2" alt="Thumbnail 2">
+                    <img src="~/images/product-thumb3.jpg" class="img-thumbnail mr-2" alt="Thumbnail 3">
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Right section: Product details -->
+        <div class="col-md-6">
+            <!-- Product Title -->
+            <h1>Móc khóa ếch đan len</h1>
+
+            <!-- Reviews -->
+            <div class="d-flex align-items-center mb-3">
+                <span class="text-warning">
+                    <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
+                </span>
+                <span class="ml-2">28 Đã bán | 15 Đánh giá</span>
+            </div>
+
+            <!-- Price and Discount -->
+            <div class="price-section mb-3">
+                <span class="current-price font-weight-bold text-danger">99.000 VND</span>
+                <span class="original-price text-muted"><del>109.000 VND</del></span>
+                <span class="badge badge-danger ml-2">Giảm 10%</span>
+            </div>
+
+            <!-- Product options (Phân Loại) -->
+            <div class="form-group">
+                <label for="productType">Phân Loại</label>
+                <select id="productType" class="form-control">
+                    <option value="">Chọn loại</option>
+                    <!-- Add more options as needed -->
+                </select>
+            </div>
+
+            <!-- Quantity Selector -->
+            <div class="quantity-selector d-flex align-items-center mb-3">
+                <label for="quantity" class="mr-3">Số lượng:</label>
+                <button class="btn btn-light">-</button>
+                <input type="text" id="quantity" class="form-control mx-2" value="1" style="width: 50px;">
+                <button class="btn btn-light">+</button>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="action-buttons mb-3">
+                <button class="btn btn-outline-primary">Thêm Vào Giỏ Hàng</button>
+                <button class="btn btn-danger">Đặt đơn hàng tùy chọn</button>
+            </div>
+
+            <!-- Seller Information -->
+            <div class="seller-info mb-3">
+                <h5>Len Lời</h5>
+                <span class="text-muted">Yarning_LenLoi</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Product Description Section -->
+    <div class="product-description mt-5">
+        <h3>Mô tả sản phẩm</h3>
+        <p>Thông tin chi tiết về sản phẩm...</p>
+    </div>
+
+</div>
+
+<!-- Include any necessary styles -->
+<style>
+    .product-images img {
+        width: 100%;
+        border-radius: 10px;
+    }
+
+    .thumbnails img {
+        width: 75px;
+        height: 75px;
+        cursor: pointer;
+        border: 2px solid #ccc;
+    }
+
+    .current-price {
+        font-size: 24px;
+    }
+
+    .original-price {
+        font-size: 18px;
+        margin-left: 10px;
+    }
+</style>
+
