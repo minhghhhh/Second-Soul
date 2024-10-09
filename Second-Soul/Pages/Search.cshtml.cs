@@ -13,20 +13,22 @@ namespace Second_Soul.Pages
 	{
 		private readonly IProductBusiness _productBusiness;
 		private readonly ICategoryBusiness _categoryBusiness;
+		private readonly IUserBusiness _userBusiness;
 
 
-		public SearchModel(IProductBusiness productBusiness, ICategoryBusiness categoryBusiness)
+		public SearchModel(IProductBusiness productBusiness, ICategoryBusiness categoryBusiness, IUserBusiness userBusiness)
 		{
 			_productBusiness = productBusiness;
 			_categoryBusiness = categoryBusiness;
+			_userBusiness = userBusiness;
 		}
 		public string? Query { get; set; }
-		public decimal? MinPrice { get; set; }
-		public decimal? MaxPrice { get; set; }
+		public int? MinPrice { get; set; }
+		public int? MaxPrice { get; set; }
 		public List<SelectListItem> Conditions { get; set; } = new List<SelectListItem>();
 		public string? Condition { get; set; }
-		public bool? IsAvailable { get; set; }
-		public int? SellerID { get; set; }
+		public bool IsAvailable { get; set; } = true;
+		public List<SelectListItem> Sellers { get; set; } = new List<SelectListItem>();
 		public List<Product> Products { get; set; } = new List<Product>();
 		public List<SelectListItem> Categories { get; set; } = new List<SelectListItem>();
 		public int PageIndex { get; set; } = 1;
@@ -34,7 +36,7 @@ namespace Second_Soul.Pages
 		public int PageSize { get; set; } = 10; // Default items per page
 
 		// OnGet method to handle the search logic
-		public async Task<IActionResult> OnGetAsync(string? query, decimal? minPrice, decimal? maxPrice, List<int>? categoryIDs, string? condition, bool? isAvailable, int? sellerID, int pageIndex = 1)
+		public async Task<IActionResult> OnGetAsync(string? query, int? minPrice, int? maxPrice, List<int>? categoryIDs, string? condition, bool? isAvailable, int? sellerID, int pageIndex = 1)
 		{
 			Query = query;
 			MinPrice = minPrice;
@@ -48,8 +50,7 @@ namespace Second_Soul.Pages
 				Selected = condition != null ? o == Condition : false
 			}).ToList();
 
-			IsAvailable = isAvailable;
-			SellerID = sellerID;
+			IsAvailable = isAvailable != null && (bool)isAvailable;
 			PageIndex = pageIndex;
 
 			var productResult = await _productBusiness.SearchProduct(query, minPrice, maxPrice, categoryIDs, condition, isAvailable, sellerID, pageIndex, PageSize);
@@ -59,14 +60,14 @@ namespace Second_Soul.Pages
 			}
 
 			// Update the method that fetches categories
-			var result = await _categoryBusiness.GetAll();
-			if (result != null && result.Status > 0 && result.Data != null)
+			var categoryResult = await _categoryBusiness.GetAll();
+			if (categoryResult != null && categoryResult.Status > 0 && categoryResult.Data != null)
 			{
-				var categories = result.Data as List<Category>;
+				var categories = categoryResult.Data as List<Category>;
 				if (categories != null && categories.Count > 0)
 				{
 					var parentCategories = categories.Where(c => c.ParentCategoryId == null).ToList();
- 					foreach (Category parentCategory in parentCategories)
+					foreach (Category parentCategory in parentCategories)
 					{
 						var subCategories = categories.Where(c => c.ParentCategoryId == parentCategory.CategoryId);
 						var selectGroup = new SelectListGroup
@@ -74,7 +75,7 @@ namespace Second_Soul.Pages
 							Name = parentCategory.CategoryName,
 							Disabled = false
 						};
-						foreach(Category subCategory in subCategories)
+						foreach (Category subCategory in subCategories)
 						{
 							Categories.Add(new SelectListItem
 							{
@@ -84,6 +85,23 @@ namespace Second_Soul.Pages
 								Group = selectGroup
 							});
 						}
+					}
+				}
+			}
+			var sellerResult = await _userBusiness.ReadOnlyActiveSellers();
+			if (sellerResult != null && sellerResult.Status > 0 && sellerResult.Data != null)
+			{
+				var sellers = sellerResult.Data as List<User>;
+				if (sellers != null && sellers.Count > 0)
+				{
+					foreach (User seller in sellers)
+					{
+						Sellers.Add(new SelectListItem
+						{
+							Text = seller.Username,
+							Value = seller.UserId.ToString(),
+							Selected = sellerID != null && seller.UserId == sellerID
+						});
 					}
 				}
 			}

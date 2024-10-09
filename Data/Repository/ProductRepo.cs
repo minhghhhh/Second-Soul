@@ -38,7 +38,7 @@ namespace Data.Repository
             return (IQueryable<List<Product>>)_dbcontext.Products.AsQueryable();
         }
 
-		public async Task<List<Product>> SearchProduct(string? query, decimal? minPrice, decimal? maxPrice, List<int>? categoryIDs, string? condition, bool? isAvailable, int? sellerID, int pageIndex = 1, int pageSize = 10)
+		public async Task<List<Product>> SearchProduct(string? query, int? minPrice, int? maxPrice, List<int>? categoryIDs, string? condition, bool? isAvailable, int? sellerID, int pageIndex = 1, int pageSize = 10)
 		{
 			// Validate parameters
 			await ValidateSearchParametersAsync(minPrice, maxPrice, categoryIDs, isAvailable, sellerID);
