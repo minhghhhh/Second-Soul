@@ -331,7 +331,6 @@ public partial class SecondSoulShopContext : DbContext
 
             entity.Property(e => e.UserId).HasColumnName("UserID").IsRequired();
             entity.Property(e => e.ProductId).HasColumnName("ProductID").IsRequired();
-            entity.Property(e => e.Quantity).IsRequired();
             entity.Property(e => e.AddedDate)
                   .HasDefaultValueSql("(getdate())")
                   .HasColumnType("datetime");
