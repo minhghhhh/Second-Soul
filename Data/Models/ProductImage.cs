@@ -17,8 +17,6 @@ namespace Data.Models
         [Required]
         public string ImageUrl { get; set; } = string.Empty;
 
-        public string PublicId { get; set; } = string.Empty;
-
         [Required]
         public int ProductId { get; set; }
 

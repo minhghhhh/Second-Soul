@@ -1,17 +1,11 @@
-﻿using Azure;
-using BusinessObject.Base;
+﻿using BusinessObject.Base;
 using Common;
 using Data;
 using Data.Models;
 using Data.Utils;
 using Data.Utils.HashPass;
 using Microsoft.AspNetCore.Http;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Text.Json;
-using System.Threading.Tasks;
 
 namespace BusssinessObject
 {
@@ -27,6 +21,7 @@ namespace BusssinessObject
         Task<IBusinessResult> GetByEmailAsync(string email);
         Task<User?> GetFromCookie(HttpRequest request);
         Task<IBusinessResult> Register(User cate);
+        Task<User?> GetUserByToken(string token);
         Task<IBusinessResult> ReadOnlyActiveSellers();
 
         /*        void UpdateCookie(HttpRequest request, HttpResponse response);
@@ -57,7 +52,7 @@ namespace BusssinessObject
             try
             {
                 var result = await _unitOfWork.UserRepository.GetByEmailAndPasswordAsync(email, HashPassWithSHA256.HashWithSHA256(password));
-                if (result != null && result.IsActive)
+                if (result != null)
                 {
                     return new BusinessResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, result);
                 }
@@ -268,41 +263,41 @@ namespace BusssinessObject
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.ToString());   
+                Console.WriteLine(ex.ToString());
                 return null;
             }
         }
-/*        public void UpdateCookie(HttpRequest request,HttpResponse response)
-        {
-            try
-            {
-
-                #region Business rule
-                #endregion
-
-                var currentUser = request.Cookies["User"];
-                if (!string.IsNullOrEmpty(currentUser))
-                {   
-                    response.Cookies.Delete("User");
-                    var userJson = JsonSerializer.Serialize(currentUser);
-
-                    var cookieOptions = new CookieOptions
+        /*        public void UpdateCookie(HttpRequest request,HttpResponse response)
+                {
+                    try
                     {
-                        Expires = DateTime.Now.AddDays(30),
-                        HttpOnly = true,
-                        Secure = true,
-                        SameSite = SameSiteMode.Strict
-                    };
 
-                    response.Cookies.Append("User", userJson, cookieOptions);
+                        #region Business rule
+                        #endregion
+
+                        var currentUser = request.Cookies["User"];
+                        if (!string.IsNullOrEmpty(currentUser))
+                        {   
+                            response.Cookies.Delete("User");
+                            var userJson = JsonSerializer.Serialize(currentUser);
+
+                            var cookieOptions = new CookieOptions
+                            {
+                                Expires = DateTime.Now.AddDays(30),
+                                HttpOnly = true,
+                                Secure = true,
+                                SameSite = SameSiteMode.Strict
+                            };
+
+                            response.Cookies.Append("User", userJson, cookieOptions);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.ToString());
+                    }
                 }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.ToString());
-            }
-        }
-*/
+        */
         public async Task<IBusinessResult> GetByEmailAsync(string email)
         {
             try
@@ -330,17 +325,17 @@ namespace BusssinessObject
                 cate.PasswordHash = HashPassWithSHA256.HashWithSHA256(cate.PasswordHash);
                 cate.Token = Guid.NewGuid().ToString();
                 int result = await _unitOfWork.UserRepository.CreateAsync(cate);
-                var confirmationLink =
-                 $"https://secondsoul2nd.azurewebsites.net/confirm?token={cate.Token}";
-                var emailSend = await SendMail.SendConfirmationEmail(cate.Email, confirmationLink);
-                if (!emailSend)
+                if (result != null)
                 {
-                    Console.WriteLine("Email send error");
-                }
-
-                if (result !=null)
-                {
-                    return new BusinessResult(Const.SUCCESS_CREATE_CODE, Const.SUCCESS_CREATE_MSG,result);
+                    var confirmationLink =
+               $"https://localhost:7141/Confirm?token={cate.Token}";
+                    //  $"https://secondsoul2nd.azurewebsites.net/confirm?token={cate.Token}"; //deploy
+                    var emailSend = await SendMail.SendConfirmationEmail(cate.Email, confirmationLink);
+                    if (!emailSend)
+                    {
+                        Console.WriteLine("Email send error");
+                    }
+                    return new BusinessResult(Const.SUCCESS_CREATE_CODE, Const.SUCCESS_CREATE_MSG, result);
                 }
                 else
                 {
@@ -351,6 +346,11 @@ namespace BusssinessObject
             {
                 return new BusinessResult(Const.ERROR_EXCEPTION, ex.ToString());
             }
+        }
+
+        public async Task<User?> GetUserByToken(string token)
+        {
+            return await _unitOfWork.UserRepository.GetUserByToken(token);
         }
     }
 }

@@ -14,5 +14,6 @@ namespace Data.Repository
         public OrderDetailRepo(SecondSoulShopContext context) : base(context)
         {
         }
+        
     }
 }

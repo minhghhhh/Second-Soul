@@ -40,12 +40,17 @@ namespace Second_Soul.Pages
 			if (ModelState.IsValid)
 			{
 				var result = await _userBusiness.GetByEmailAndPasswordAsync(Input.Email, Input.Password);
-				if (result != null)
+                if (result != null)
 				{
 					if (result.Status > 0 && result.Data != null)
-					{
-							var user = result.Data as User;
-							var userJson = JsonSerializer.Serialize(user);
+                    {
+                        var user = result.Data as User;
+                        if (user.IsActive == false)
+                        {
+                            ModelState.AddModelError(string.Empty, "Please confirm email to login.");
+                            return Page();
+                        }
+                        var userJson = JsonSerializer.Serialize(user);
 
 							var cookieOptions = new CookieOptions
 							{

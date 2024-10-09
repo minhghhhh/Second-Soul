@@ -17,7 +17,7 @@ CREATE TABLE Users (
     PasswordHash NVARCHAR(255) NOT NULL,
     Email NVARCHAR(100) UNIQUE NOT NULL,
     PhoneNumber NVARCHAR(15) NULL,
-	Token Nvarchar(200) Null,
+	Token Nvarchar(255) Null,
 	ImageUrl NVARCHAR(255) Null,
     Address NVARCHAR(255) NULL,
     Role NVARCHAR(20) CHECK (Role IN ('Customer','Admin')), 
@@ -49,7 +49,6 @@ CREATE TABLE Products (
 CREATE TABLE ProductImages (
     Id INT IDENTITY(1,1) PRIMARY KEY,
     ImageUrl NVARCHAR(255) NOT NULL,
-    PublicId NVARCHAR(255),
     ProductId INT NOT NULL,
     FOREIGN KEY (ProductId) REFERENCES Products(ProductID) ON DELETE CASCADE
 );
