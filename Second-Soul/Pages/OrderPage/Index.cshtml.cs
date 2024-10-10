@@ -2,6 +2,7 @@ using BusssinessObject;
 using Data.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.Text.Json;
 
 namespace Second_Soul.Pages.OrderPage
 {
@@ -11,19 +12,21 @@ namespace Second_Soul.Pages.OrderPage
         private readonly IOrderDetailBusiness _orderDetailBusiness;
         private readonly IUserBusiness _userBusiness;
         private readonly IPaymentBusiness _paymentBusiness;
-        public IndexModel(IOrderBusiness orderBusiness, IOrderDetailBusiness orderDetailBusiness, IUserBusiness userBusiness, IPaymentBusiness paymentBusiness)
+        private readonly IProductBusiness _productBusiness;
+        public IndexModel(IOrderBusiness orderBusiness,  IOrderDetailBusiness orderDetailBusiness, IUserBusiness userBusiness, IPaymentBusiness paymentBusiness, IProductBusiness productBusiness)
         {
             _orderBusiness = orderBusiness;
             _orderDetailBusiness = orderDetailBusiness;
             _userBusiness = userBusiness;
             _paymentBusiness = paymentBusiness;
+            _productBusiness = productBusiness;
         }
-        public User User { get; set; }
         [BindProperty]
+        public int Total { get; set; } = 0;
         public Order Order { get; set; }
-        [BindProperty]
-        public List<OrderDetail> Details { get; set; }
-        public List<ShoppingCart> CartItems { get; set; }
+        public List<Product> Products { get; set; } = new List<Product>();
+        public User User { get; set; }
+        public List<int> SelectedProductIds { get; set; }
         public async Task<IActionResult> OnGetAsync()
         {
             User = await _userBusiness.GetFromCookie(Request);
@@ -31,7 +34,24 @@ namespace Second_Soul.Pages.OrderPage
             {
                 return RedirectToPage("/Login");
             }
-            Details = new List<OrderDetail>();
+            if (TempData["SelectedProductIds"] != null)
+            {   
+                SelectedProductIds = JsonSerializer.Deserialize<List<int>>(TempData["SelectedProductIds"] as string);
+            }
+            if (SelectedProductIds != null)
+            {
+                foreach (var id in SelectedProductIds)
+                {
+                    var item = await _productBusiness.GetById(id);
+                    var product = item.Data as Product;
+                    Products.Add(product);
+                    Total += product.Price;
+                }
+            }
+            else
+            {
+                return RedirectToPage("/Error");
+            }
             return Page();
         }
     }
