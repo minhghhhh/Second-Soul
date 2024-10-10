@@ -187,6 +187,7 @@ public partial class SecondSoulShopContext : DbContext
                   .HasColumnType("datetime");
             entity.Property(e => e.TotalAmount).HasColumnType("int").IsRequired();
             entity.Property(e => e.Status).HasMaxLength(20);
+            entity.Property(e => e.Descripstions).HasMaxLength(20);
             entity.Property(e => e.PhoneNumber).HasMaxLength(15).IsRequired();
             entity.Property(e => e.Address).HasMaxLength(255).IsRequired();
             entity.Property(e => e.CouponId).HasColumnName("CouponID");
