@@ -15,8 +15,8 @@ public partial class Order
     public DateTime OrderDate { get; set; } = DateTime.Now;
 
     [Required]
-    [Column(TypeName = "decimal(18,2)")]
-    public decimal TotalAmount { get; set; }
+    [Column(TypeName = "int")]
+    public int TotalAmount { get; set; }
 
     [Required]
     [Column(TypeName = "nvarchar(20)")]

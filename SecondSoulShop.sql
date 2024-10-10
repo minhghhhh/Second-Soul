@@ -38,8 +38,7 @@ CREATE TABLE Products (
     Name NVARCHAR(100) NOT NULL,
     Description TEXT,
     CategoryID INT NOT NULL,
-    Price DECIMAL(18, 2) NOT NULL,
-    Quantity INT DEFAULT 0,
+    Price INT NOT NULL,
     Condition NVARCHAR(20) CHECK (Condition IN ('New', 'Like_New', 'Good', 'Fair')),
     AddedDate DATETIME DEFAULT GETDATE(),
     IsAvailable BIT DEFAULT 1,
@@ -66,7 +65,7 @@ CREATE TABLE Orders (
     OrderID INT IDENTITY(1,1) PRIMARY KEY,
     CustomerID INT,
     OrderDate DATETIME DEFAULT GETDATE(),
-    TotalAmount DECIMAL(18, 2) NOT NULL,
+    TotalAmount INT NOT NULL,
     Status NVARCHAR(20) CHECK (Status IN ('Pending', 'Shipped', 'Delivered', 'Cancelled', 'Returned')),
     CouponID INT NULL,
 	    PhoneNumber NVARCHAR(15) NOT NULL,
@@ -79,8 +78,7 @@ CREATE TABLE OrderDetails (
     OrderDetailID INT IDENTITY(1,1) PRIMARY KEY,
     OrderID INT,
     ProductID INT,
-    Quantity INT NOT NULL,
-    Price DECIMAL(18, 2) NOT NULL,
+    Price INT NOT NULL,
     FOREIGN KEY (OrderID) REFERENCES Orders(OrderID),
     FOREIGN KEY (ProductID) REFERENCES Products(ProductID)
 );
@@ -119,7 +117,7 @@ CREATE TABLE Payments (
     PaymentID INT IDENTITY(1,1) PRIMARY KEY,
     OrderID INT NOT NULL,
     PaymentDate DATETIME DEFAULT GETDATE(),
-    Amount DECIMAL(18, 2) NOT NULL,
+    Amount INT NOT NULL,
     PaymentMethod NVARCHAR(50) CHECK (PaymentMethod IN ('COD', 'Banking')),
     Status NVARCHAR(20) CHECK (Status IN ('Pending', 'Completed', 'Failed')),
     FOREIGN KEY (OrderID) REFERENCES Orders(OrderID)
@@ -175,34 +173,34 @@ VALUES
 	('Gloves',6),
 	('Scarf',6);
 Go
-INSERT INTO Products (SellerID, Name, Description, CategoryID, Price, Quantity, Condition)
+INSERT INTO Products (SellerID, Name, Description, CategoryID, Price, Condition)
 VALUES
-    (1, 'Casual T-Shirt', 'Comfortable cotton t-shirt for everyday wear.', 8, 19.99, 100, 'New'),
-    (1, 'Denim Jeans', 'Stylish denim jeans, perfect for casual outings.', 12, 39.99, 50, 'Like_New'),
-    (1, 'Leather Jacket', 'Classic leather jacket for a rugged look.', 7, 129.99, 20, 'Good'),
-    (3, 'Summer Dress', 'Light and breezy summer dress for warm days.', 11, 49.99, 30, 'New'),
-    (3, 'Sport Sneakers', 'Durable sneakers for your active lifestyle.', 15, 59.99, 75, 'New'),
-    (3, 'Wool Scarf', 'Warm wool scarf to keep you cozy in winter.', 24, 29.99, 50, 'Fair'),
-    (3, 'Formal Blouse', 'Elegant blouse suitable for office wear.', 10, 34.99, 60, 'Good'),
-    (3, 'Chino Pants', 'Comfortable chino pants for formal occasions.', 13, 44.99, 40, 'Like_New'),
-    (3, 'Winter Boots', 'Insulated boots for snowy days.', 18, 89.99, 25, 'New'),
-    (1, 'Graphic Croptop', 'Trendy graphic croptop for a casual look.', 9, 24.99, 80, 'New'),
-    (1, 'Canvas Backpack', 'Spacious and stylish canvas backpack.', 23, 39.99, 45, 'Good'),
-    (1, 'Leather Loafers', 'Sophisticated loafers for a polished look.', 16, 69.99, 30, 'Like_New'),
-    (1, 'Sporty Tank Top', 'Breathable tank top for workouts.', 9, 21.99, 70, 'New'),
-    (3, 'Elegant High-Heels', 'Stylish high-heels for special occasions.', 17, 74.99, 15, 'New'),
-    (3, 'Trendy Skirt', 'Fashionable skirt that pairs well with tops.', 14, 49.99, 50, 'Good');
+    (1, 'Casual T-Shirt', 'Comfortable cotton t-shirt for everyday wear.', 8, 19000, 'New'),
+    (1, 'Denim Jeans', 'Stylish denim jeans, perfect for casual outings.', 12, 39000, 'Like_New'),
+    (1, 'Leather Jacket', 'Classic leather jacket for a rugged look.', 7, 129000, 'Good'),
+    (3, 'Summer Dress', 'Light and breezy summer dress for warm days.', 11, 49000, 'New'),
+    (3, 'Sport Sneakers', 'Durable sneakers for your active lifestyle.', 15, 59000, 'New'),
+    (3, 'Wool Scarf', 'Warm wool scarf to keep you cozy in winter.', 24, 29000, 'Fair'),
+    (3, 'Formal Blouse', 'Elegant blouse suitable for office wear.', 10, 34000, 'Good'),
+    (3, 'Chino Pants', 'Comfortable chino pants for formal occasions.', 13, 44000, 'Like_New'),
+    (3, 'Winter Boots', 'Insulated boots for snowy days.', 18, 89000, 'New'),
+    (1, 'Graphic Croptop', 'Trendy graphic croptop for a casual look.', 9, 24000, 'New'),
+    (1, 'Canvas Backpack', 'Spacious and stylish canvas backpack.', 23, 39000, 'Good'),
+    (1, 'Leather Loafers', 'Sophisticated loafers for a polished look.', 16, 69000, 'Like_New'),
+    (1, 'Sporty Tank Top', 'Breathable tank top for workouts.', 9, 21000, 'New'),
+    (3, 'Elegant High-Heels', 'Stylish high-heels for special occasions.', 17, 74000, 'New'),
+    (3, 'Trendy Skirt', 'Fashionable skirt that pairs well with tops.', 14, 49000, 'Good');
 Go
-INSERT INTO ShoppingCarts (UserID, ProductID, Quantity)
+INSERT INTO ShoppingCarts (UserID, ProductID)
 VALUES
-    (1, 1, 2), -- customer1 adds 2 Casual T-Shirts
-    (1, 2, 1), -- customer1 adds 1 Denim Jeans
-    (2, 4, 1), -- customer2 adds 1 Summer Dress
-    (2, 6, 3), -- customer2 adds 3 Wool Scarves
-    (1, 10, 1), -- customer1 adds 1 Canvas Backpack
-    (2, 5, 2), -- customer2 adds 2 Sport Sneakers
-    (1, 12, 1), -- customer1 adds 1 Sporty Tank Top
-    (2, 9, 1); -- customer2 adds 1 Elegant High-Heels
+    (1, 1), -- customer1 adds 2 Casual T-Shirts
+    (1, 2), -- customer1 adds 1 Denim Jeans
+    (2, 4), -- customer2 adds 1 Summer Dress
+    (2, 6), -- customer2 adds 3 Wool Scarves
+    (1, 10), -- customer1 adds 1 Canvas Backpack
+    (2, 5), -- customer2 adds 2 Sport Sneakers
+    (1, 12), -- customer1 adds 1 Sporty Tank Top
+    (2, 9); -- customer2 adds 1 Elegant High-Heels
 Go
 INSERT INTO Coupons (Code, DiscountPercentage, MaxDiscount, ExpiryDate, IsActive, MinSpendAmount)
 VALUES

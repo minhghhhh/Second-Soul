@@ -122,13 +122,9 @@ namespace BusssinessObject
 				{
 					throw new Exception("Order Detail cannot be added.");
 				}
-				if (!(orderDetail.Quantity > 0))
+				if (!(orderDetail.Price > 0))
 				{
-					throw new Exception("Order's quantity is not valid.");
-				}
-				if (!(orderDetail.Quantity > 0))
-				{
-					throw new Exception("Order's quantity is not valid.");
+					throw new Exception("Order's price is not valid.");
 				}
 				int result = await _unitOfWork.OrderDetailRepository.CreateAsync(orderDetail);
 				if (result > 0)

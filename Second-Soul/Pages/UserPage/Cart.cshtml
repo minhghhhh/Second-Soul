@@ -98,7 +98,7 @@
                 document.getElementById("loading").style.display = "block";
 
                 try {
-                    const response = await fetch(`/Cart?handler=LoadMore&offset=${offset}`);
+                    const response = await fetch(`/UserPage/Cart?handler=LoadMore&offset=${offset}`);
                     if (!response.ok) throw new Error("Network response was not ok");
 
                     const { items, hasMore } = await response.json();

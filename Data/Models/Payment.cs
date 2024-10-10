@@ -16,8 +16,8 @@ public partial class Payment
     public DateTime PaymentDate { get; set; } = DateTime.Now;
 
     [Required]
-    [Column(TypeName = "decimal(18,2)")]
-    public decimal Amount { get; set; }
+    [Column(TypeName = "int")]
+    public int Amount { get; set; }
 
     [Required]
     [Column(TypeName = "nvarchar(50)")]
