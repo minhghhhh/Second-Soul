@@ -94,26 +94,34 @@
 {
     <div class="cart-content">
         <h1>Your Shopping Cart</h1>
-        <form method="post" asp-page-handler="ProceedToPayment">
             <div id="cart-items" class="cart-items-grid">
-                @foreach (var item in Model.ShoppingCarts)
+                @if (Model.ShoppingCarts.Count > 0)
                 {
-                    <div class="cart-item" id="item-@item.Product.ProductId">
-                        <input type="checkbox" class="select-checkbox" name="selectedProducts" value="@item.Product.ProductId" />
-                        <div class="item-details">
-                            <h2>@item.Product.Name</h2>
-                            <p>Price: @item.Product.Price.ToString("C")</p>
-                        </div>
-                        <form asp-page-handler="DeleteItem" method="post" onsubmit="return confirm('Are you sure you want to remove this item?');">
-                            <input type="hidden" name="productId" value="@item.Product.ProductId" />
-                            <button type="submit" class="delete-button">Remove</button>
-                        </form>
-                    </div>
+                    <form method="post" asp-page-handler="SubmitSelectedItems">
+                        @foreach (var item in Model.ShoppingCarts)
+                        {
+                            <div class="cart-item" id="item-@item.Product.ProductId">
+                                <input type="checkbox" class="select-checkbox" name="SelectedProducts" value="@item.Product.ProductId" />
+                                <div class="item-details">
+                                    <h2>@item.Product.Name</h2>
+                                    <p>Price: @item.Product.Price.ToString("C")</p>
+                                </div>
+@*                                 <form asp-page-handler="DeleteItem" method="post" onsubmit="return confirm('Are you sure you want to remove this item?');">
+                                    <input type="hidden" name="productId" value="@item.Product.ProductId" />
+                                    <button type="submit" class="delete-button">Remove</button>
+                                </form> *@
+                            </div>
+                        }
+
+                        <button type="submit">Proceed to Payment</button>
+                    </form>
+                }
+                else
+                {
+                    <p>No item in cart</p>
                 }
             </div>
             <div id="loading" style="display:none;">Loading more items...</div>
-            <button type="submit" class="payment-button">Proceed to Payment</button>
-        </form>
     </div>
 }
 else

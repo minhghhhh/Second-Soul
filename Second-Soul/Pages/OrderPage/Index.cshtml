@@ -139,7 +139,7 @@
 
             <div class="input-group">
                 <label>Địa chỉ</label>
-                <input type="text" asp-for="Order.Address" value="@Model.User.Address" />
+                <input type="text" asp-for="Order.Address" value="@Model.User.Address"/>
             </div>
             <div class="input-group">
                 <label>Ghi chú (tuỳ chọn)</label>
@@ -157,9 +157,9 @@
             @if (Model.Products != null && Model.Products.Any())
             {
                 <div class="product-list" id="product-list">
-                    @foreach (var product in Model.CartItems)
+                    @foreach (var product in Model.Products)
                     {
-                        <div class="product-item" id="product-@product.ProductId">
+                        <div class="product-item" id="@product.ProductId">
                             <div>
                                 <h3>@product.Name</h3>
                                 <p>Giá: @product.Price.ToString("C")</p>
@@ -180,9 +180,13 @@
     </div>
 
     <div class="summary">
-        <div>Tổng tiền hàng: @Model.TotalProductAmount.ToString("C")</div>
+        <div>Tổng tiền hàng: @Model.Total.ToString("N0") VND</div>
         <div>Phí vận chuyển: 30.000 VND</div>
-        <div class="total-price">Tổng thanh toán: @(Model.TotalProductAmount + 30000).ToString("C")</div>
+        @{
+            int shippingFee = 30000; 
+            int totalPayment = Model.Total + shippingFee; 
+        }
+        <div class="total-price">Tổng thanh toán: @totalPayment.ToString("N0") VND</div>
         <button type="submit" class="order-button">Đặt hàng</button>
     </div>
     <script>

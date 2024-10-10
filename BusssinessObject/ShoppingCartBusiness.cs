@@ -43,7 +43,7 @@ namespace BusssinessObject
                 var shoppingCarts = await _unitOfWork.ShoppingCartRepository.GetShoppingCartsWithProductByUserId(userId, offset, limit);
 
 
-                if (shoppingCarts == null || shoppingCarts.Count == 0)
+                if (shoppingCarts == null)
                 {
                     return new BusinessResult(Const.WARNING_NO_DATA_CODE, Const.WARNING_NO_DATA__MSG);
                 }

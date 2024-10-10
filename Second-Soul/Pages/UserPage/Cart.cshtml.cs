@@ -3,6 +3,7 @@ using CloudinaryDotNet;
 using Data.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.Text.Json;
 
 namespace Second_Soul.Pages.UserPage
 {
@@ -23,7 +24,7 @@ namespace Second_Soul.Pages.UserPage
 
         public List<ShoppingCart> ShoppingCarts { get; set; } = new List<ShoppingCart>();
         [BindProperty]
-        public List<int> SelectedProducts { get; set; } 
+        public List<int> SelectedProducts { get; set; }
         public async Task<IActionResult> OnGet()
         {
             var user = await _userBusiness.GetFromCookie(Request);
@@ -31,7 +32,7 @@ namespace Second_Soul.Pages.UserPage
             {
                 return RedirectToPage("/Login");
             }
-            var result = await _shoppingCartBusiness.GetByUserId(user.UserId, null, null); 
+            var result = await _shoppingCartBusiness.GetByUserId(user.UserId, null, null);
             if (result == null || !(result.Status > 0) || result.Data == null)
             {
                 return RedirectToPage("/Error");
@@ -48,7 +49,7 @@ namespace Second_Soul.Pages.UserPage
                 return RedirectToPage("/Login");
             }
 
-            var result = await _shoppingCartBusiness.GetByUserId(user.UserId, offset, limit); // Modify for actual pagination
+            var result = await _shoppingCartBusiness.GetByUserId(user.UserId, offset, limit);
             if (result != null && result.Status > 0 && result.Data != null)
             {
                 var data = result.Data as List<ShoppingCart>;
@@ -77,20 +78,21 @@ namespace Second_Soul.Pages.UserPage
 
             return await OnGet();
         }
-        public async Task<IActionResult> OnPostProceedToPaymentAsync()
+        public async  Task<IActionResult> OnPostSubmitSelectedItems()
         {
             var user = await _userBusiness.GetFromCookie(Request);
             if (user == null)
             {
                 return RedirectToPage("/Login");
             }
+
             if (SelectedProducts != null && SelectedProducts.Count > 0)
             {
-                
-                return RedirectToPage("/OrderPage", new { selectedProducts = SelectedProducts });
+                TempData["SelectedProductIds"] = JsonSerializer.Serialize(SelectedProducts);
+                return RedirectToPage("/OrderPage/Index");
             }
 
-            ModelState.AddModelError("", "Please select at least one product to proceed.");
+            ModelState.AddModelError(string.Empty, "Please select at least one product.");
             return Page();
         }
 
