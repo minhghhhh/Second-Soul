@@ -93,33 +93,33 @@ namespace BusssinessObject
             }
         }
 
-		public async Task<IBusinessResult> ReadOnlyActiveSellers()
-		{
-			try
-			{
+        public async Task<IBusinessResult> ReadOnlyActiveSellers()
+        {
+            try
+            {
                 #region Business rule
                 #endregion
 
                 var sellers = await _unitOfWork.UserRepository.GetListWithNoTracking(u => u.IsActive == true && u.Products.Count > 0);
 
 
-				if (sellers == null)
-				{
-					return new BusinessResult(Const.WARNING_NO_DATA_CODE, Const.WARNING_NO_DATA__MSG);
-				}
-				else
-				{
-					return new BusinessResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, sellers);
-				}
-			}
-			catch (Exception ex)
-			{
-				return new BusinessResult(Const.ERROR_EXCEPTION, ex.Message);
-			}
-		}
+                if (sellers == null)
+                {
+                    return new BusinessResult(Const.WARNING_NO_DATA_CODE, Const.WARNING_NO_DATA__MSG);
+                }
+                else
+                {
+                    return new BusinessResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, sellers);
+                }
+            }
+            catch (Exception ex)
+            {
+                return new BusinessResult(Const.ERROR_EXCEPTION, ex.Message);
+            }
+        }
 
 
-		public async Task<IBusinessResult> GetById(int id)
+        public async Task<IBusinessResult> GetById(int id)
         {
             try
             {
@@ -188,7 +188,6 @@ namespace BusssinessObject
         {
             try
             {
-                //int result = await _currencyRepository.UpdateAsync(currency);
                 int result = await _unitOfWork.UserRepository.Update(cate);
 
                 if (result > 0)
@@ -302,14 +301,14 @@ namespace BusssinessObject
         {
             try
             {
-                var result = await _unitOfWork.UserRepository.GetByEmailAsync(email.ToLower());
+                var result = await _unitOfWork.UserRepository.GetByEmailAsync(email.Trim().ToLower());
                 if (result == null)
                 {
-                    return new BusinessResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, result);
+                    return new BusinessResult(Const.FAIL_READ_CODE, Const.FAIL_READ_MSG);
                 }
                 else
                 {
-                    return new BusinessResult(Const.FAIL_READ_CODE, Const.FAIL_READ_MSG);
+                    return new BusinessResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, result);
                 }
             }
             catch (Exception ex)
@@ -347,7 +346,6 @@ namespace BusssinessObject
                 return new BusinessResult(Const.ERROR_EXCEPTION, ex.ToString());
             }
         }
-
         public async Task<User?> GetUserByToken(string token)
         {
             return await _unitOfWork.UserRepository.GetUserByToken(token);
