@@ -28,6 +28,8 @@ public partial class Order
     [Required]
     [MaxLength(15)]
     public string PhoneNumber { get; set; } = string.Empty;
+    [MaxLength(100)]
+    public string Descripstions { get; set; } = string.Empty;
 
     [Required]
     [MaxLength(255)]

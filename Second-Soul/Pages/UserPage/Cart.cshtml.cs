@@ -10,15 +10,20 @@ namespace Second_Soul.Pages.UserPage
     {
         private readonly IShoppingCartBusiness _shoppingCartBusiness;
         private readonly IUserBusiness _userBusiness;
+        private readonly IOrderBusiness _orderBusiness;
+        private readonly IOrderDetailBusiness _orderDetailBusiness;
 
-        public CartModel(IShoppingCartBusiness shoppingCartBusiness, IUserBusiness userBusiness)
+        public CartModel(IShoppingCartBusiness shoppingCartBusiness, IUserBusiness userBusiness, IOrderBusiness orderBusiness, IOrderDetailBusiness orderDetailBusiness)
         {
             _shoppingCartBusiness = shoppingCartBusiness;
             _userBusiness = userBusiness;
+            _orderBusiness = orderBusiness;
+            _orderDetailBusiness = orderDetailBusiness;
         }
 
         public List<ShoppingCart> ShoppingCarts { get; set; } = new List<ShoppingCart>();
-
+        [BindProperty]
+        public List<int> SelectedProducts { get; set; } 
         public async Task<IActionResult> OnGet()
         {
             var user = await _userBusiness.GetFromCookie(Request);
@@ -80,6 +85,23 @@ namespace Second_Soul.Pages.UserPage
 
             return await OnGet();
         }
+        public async Task<IActionResult> OnPostProceedToPaymentAsync()
+        {
+            var user = await _userBusiness.GetFromCookie(Request);
+            if (user == null)
+            {
+                return RedirectToPage("/Login");
+            }
+            if (SelectedProducts != null && SelectedProducts.Count > 0)
+            {
+                
+                return RedirectToPage("/OrderPage", new { selectedProducts = SelectedProducts });
+            }
+
+            ModelState.AddModelError("", "Please select at least one product to proceed.");
+            return Page();
+        }
+
 
     }
 }

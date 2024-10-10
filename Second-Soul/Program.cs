@@ -23,8 +23,13 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.SlidingExpiration = true;
 });
 
-//builder.Services.AddScoped<PayOS>();
+IConfiguration configuration = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
 
+PayOS payOS = new PayOS(configuration["Environment:PAYOS_CLIENT_ID"] ?? throw new Exception("Cannot find environment"),
+                    configuration["Environment:PAYOS_API_KEY"] ?? throw new Exception("Cannot find environment"),
+                    configuration["Environment:PAYOS_CHECKSUM_KEY"] ?? throw new Exception("Cannot find environment"));
+builder.Services.AddSingleton(payOS);
+builder.Services.AddControllers();
 var cloudinarySettings = builder.Configuration.GetSection("CloudinaryOptions").Get<CloudinaryOptions>();
 
 // Create Cloudinary account
@@ -33,6 +38,7 @@ Account account = new Account(
     cloudinarySettings.ApiKey,
     cloudinarySettings.ApiSecret
 );
+builder.Services.AddControllers(); // This enables API controller
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddHostedService<BackGround>(); // Add the background service
 Cloudinary cloudinary = new Cloudinary(account);
@@ -54,7 +60,6 @@ builder.Services.AddScoped<PaymentRepo>();
 builder.Services.AddScoped<CategoryRepo>();
 builder.Services.AddScoped<UserRepo>();
 builder.Services.AddScoped<OrderRepo>();
-builder.Services.AddScoped<FavoriteShopsRepo>();
 builder.Services.AddScoped<OrderDetailRepo>();
 builder.Services.AddScoped<CouponRepo>();
 builder.Services.AddScoped<ProductImageRepo>();
@@ -65,6 +70,7 @@ builder.Services.AddScoped<OrderDetailRepo>();
 builder.Services.AddScoped<ShoppingCartRepo>();
 builder.Services.AddScoped<FavoriteShopsRepo>();
 builder.Services.AddMvcCore();
+
 builder.Services.AddRazorPages();
 var app = builder.Build();
 

@@ -68,7 +68,8 @@ CREATE TABLE Orders (
     TotalAmount INT NOT NULL,
     Status NVARCHAR(20) CHECK (Status IN ('Pending', 'Shipped', 'Delivered', 'Cancelled', 'Returned')),
     CouponID INT NULL,
-	    PhoneNumber NVARCHAR(15) NOT NULL,
+	Descriptions NVARCHAR(100) null,
+	PhoneNumber NVARCHAR(15) NOT NULL,
     Address NVARCHAR(255) NOT NULL,
     FOREIGN KEY (CustomerID) REFERENCES Users(UserID),
     FOREIGN KEY (CouponID) REFERENCES Coupons(CouponID)

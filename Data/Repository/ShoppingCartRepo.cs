@@ -30,11 +30,34 @@ namespace Data.Repository
             }
             return await _dbcontext.ShoppingCarts.Where(s => s.UserId == userId).Include(s => s.Product).ToListAsync();
         }
-        public async Task<ShoppingCart?>GetByUserIdAndProductId(int userId, int productId)
+        public async Task<ShoppingCart?> GetByUserIdAndProductId(int userId, int productId)
         {
             return await _dbcontext.ShoppingCarts
                 .SingleOrDefaultAsync(s => s.UserId == userId && s.ProductId == productId);
         }
 
+        public async Task<int> GetTotalCartFromSelectedId(int userId,List<int> productIds)
+        {
+            var total = 0;
+            if (userId == null) { throw new Exception("No User Found"); }
+            if (userId < 0) { throw new Exception("UserId must be positive"); }
+            foreach (var productId in productIds)
+            {
+              var cartItem =  await GetByUserIdAndProductId(userId, productId);
+                if (cartItem != null)
+                total += cartItem.Product.Price;
+            }           
+            return  total;
+        }
+        public async Task DeleteItemsFromCart(int userId, List<int> productIds)
+        {
+            if (userId < 0) { throw new Exception("UserId must be positive"); }
+            foreach (var productId in productIds)
+            {
+                var cartItem = await GetByUserIdAndProductId(userId, productId);
+                if (cartItem != null)
+                    await Delete(cartItem);
+            }
+        }
     }
 }
