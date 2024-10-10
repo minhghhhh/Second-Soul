@@ -117,8 +117,7 @@ public partial class SecondSoulShopContext : DbContext
             entity.Property(e => e.Name).HasMaxLength(100).IsRequired();
             entity.Property(e => e.Description).HasColumnType("text");
             entity.Property(e => e.CategoryId).HasColumnName("CategoryID").IsRequired();
-            entity.Property(e => e.Price).HasColumnType("decimal(18, 2)").IsRequired();
-            entity.Property(e => e.Quantity).HasDefaultValue(0);
+            entity.Property(e => e.Price).HasColumnType("int").IsRequired();
             entity.Property(e => e.Condition)
                   .HasMaxLength(20);
              entity.Property(e => e.AddedDate).HasDefaultValueSql("(getdate())").HasColumnType("datetime");
@@ -186,7 +185,7 @@ public partial class SecondSoulShopContext : DbContext
             entity.Property(e => e.OrderDate)
                   .HasDefaultValueSql("(getdate())")
                   .HasColumnType("datetime");
-            entity.Property(e => e.TotalAmount).HasColumnType("decimal(18, 2)").IsRequired();
+            entity.Property(e => e.TotalAmount).HasColumnType("int").IsRequired();
             entity.Property(e => e.Status).HasMaxLength(20);
             entity.Property(e => e.PhoneNumber).HasMaxLength(15).IsRequired();
             entity.Property(e => e.Address).HasMaxLength(255).IsRequired();
@@ -216,8 +215,7 @@ public partial class SecondSoulShopContext : DbContext
             entity.Property(e => e.OrderDetailId).HasColumnName("OrderDetailID");
             entity.Property(e => e.OrderId).HasColumnName("OrderID");
             entity.Property(e => e.ProductId).HasColumnName("ProductID").IsRequired();
-            entity.Property(e => e.Quantity).IsRequired();
-            entity.Property(e => e.Price).HasColumnType("decimal(18, 2)").IsRequired();
+            entity.Property(e => e.Price).HasColumnType("int").IsRequired();
 
             entity.HasOne(d => d.Order)
                   .WithMany(p => p.OrderDetails)
@@ -241,7 +239,7 @@ public partial class SecondSoulShopContext : DbContext
             entity.Property(e => e.PaymentDate)
                   .HasDefaultValueSql("(getdate())")
                   .HasColumnType("datetime");
-            entity.Property(e => e.Amount).HasColumnType("decimal(18, 2)").IsRequired();
+            entity.Property(e => e.Amount).HasColumnType("int").IsRequired();
             entity.Property(e => e.PaymentMethod).HasMaxLength(50);
             entity.Property(e => e.Status).HasMaxLength(20);
 
