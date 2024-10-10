@@ -5,7 +5,7 @@
 <div class="product-container">
     <div class="product-details">
         <div class="image-gallery">
-            @if (Model.Images.Count==0)
+            @if (Model.Images.Count == 0)
             {
                 <div class="placeholder-frame">
                     No Image Available
@@ -13,16 +13,13 @@
             }
             else
             {
-                <img src="@Model.Images.First()" alt="Ao khoac da icon" class="main-image">
+                <img src="@Model.Images.First()" alt="@Model.Product.Name" class="main-image">
             }
             <div class="thumbnail-list">
-                <!-- Thumbnails can be handled similarly -->
                 <img src="your-thumbnail-link-here.png" alt="Thumbnail 1">
                 <img src="your-thumbnail-link-here.png" alt="Thumbnail 2">
             </div>
         </div>
-
-
         <div class="info">
             <h1>@Model.Product.Name</h1>
             <p>@Model.Product.Condition • @Model.Product.Category.CategoryName</p>
@@ -30,10 +27,10 @@
             <p><strong>Address: </strong>@Model.Product.Seller.Address</p>
             <p><strong>Upload at: </strong>@Model.Product.AddedDate</p>
             <form method="post">
-                <input type="hidden" name="id" value="@Model.Product.ProductId"/>
-                <button type="submit" name="action" value="addToCart" class="btn-add-to-cart">Add to Cart</button>
+                <input type="hidden" name="id" value="@Model.Product.ProductId" />
+                <button id="addToCartButton"  type="submit" name="action" value="addToCart" class="btn-add-to-cart">Add to Cart</button>
                 <button type="submit" name="action" value="buyNow" class="btn-buy-now">Buy Now</button>
-            </form>           
+            </form>
             <div class="seller-info">
                 <h3>@Model.Product.Seller.Username</h3>
                 <p>Phản hồi: 75% • 103 đã bán</p>
@@ -177,5 +174,61 @@
         border-radius: 5px;
         cursor: pointer;
     }
+    <style>
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed;
+    z-index: 999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5); /* Overlay effect */
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background-color: white;
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+    position: relative;
+    animation: fadeIn 0.3s ease-out;
+}
+
+.checkmark {
+    font-size: 40px;
+    color: #00C851;
+}
+
+p {
+    margin-top: 10px;
+    font-size: 18px;
+    color: #333;
+}
 </style>
 
+<div id="addToCartModal" class="modal">
+    <div class="modal-content">
+        <div class="checkmark">
+            &#10003;
+        </div>
+        <p>Item has been added to your shopping cart</p>
+    </div>
+</div>
+<script>
+    function showAddToCartModal() {
+        var modal = document.getElementById("addToCartModal");
+        modal.style.display = "flex";
+
+        // Hide modal after 3 seconds
+        setTimeout(function() {
+            modal.style.display = "none";
+        }, 3000);
+    }
+
+    document.getElementById("addToCartButton").addEventListener("click", function() {
+        showAddToCartModal();
+    });
+</script>

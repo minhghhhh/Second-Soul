@@ -107,7 +107,7 @@
                         const itemDiv = document.createElement("div");
                         itemDiv.className = "cart-item";
                         itemDiv.id = `item-${item.Product.Id}`;
-                        itemDiv.innerHTML = `<div class="item-details"><h2>${item.Product.Name}</h2><p>Quantity: ${item.Quantity}</p><p>Price: ${item.Product.Price.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</p></div><button class="delete-button" onclick="deleteItem(${item.Product.Id})">Remove</button>`;
+                        itemDiv.innerHTML = `<div class="item-details"><h2>${item.Product.Name}</h2><p>Quantity: ${item.Quantity}</p><p>Price: ${item.Product.Price.toLocaleString('en-US', { style: 'currency', currency: 'VND' })}</p></div><button class="delete-button" onclick="deleteItem(${item.Product.Id})">Remove</button>`;
                         cartItemsDiv.appendChild(itemDiv);
                     });
 
