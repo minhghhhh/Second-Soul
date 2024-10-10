@@ -27,7 +27,15 @@ namespace Second_Soul.Pages.UserPage
                 return RedirectToPage("/Login");
             }
             var result = await _shoppingCartBusiness.GetByUserId(user.UserId, null, null); // Modify this for actual pagination in future
-            if (result == null || !(result.Status > 0) || result.Data == null)
+            if (result == null || !(result.Status > 0))
+            {
+                return RedirectToPage("/Error");
+            }
+            if (result.Status == 4)
+            {
+                return Page();
+            }
+            if (result.Data == null)
             {
                 return RedirectToPage("/Error");
             }

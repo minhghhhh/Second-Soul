@@ -1,126 +1,132 @@
 ﻿@page
 @model Second_Soul.Pages.UserPage.CartModel
 @{
-    ViewData["Title"] = "Shopping Cart";
+	ViewData["Title"] = "Shopping Cart";
 }
 
 <style>
-    body {
-        font-family: Arial, sans-serif;
-        background-color: #f9f9f9;
-        color: #333;
-    }
+	body {
+		font-family: Arial, sans-serif;
+		background-color: #f9f9f9;
+		color: #333;
+	}
 
-    .cart-content {
-        max-width: 800px;
-        margin: 0 auto;
-        padding: 20px;
-        background: white;
-        border-radius: 8px;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    }
+	.cart-content {
+		max-width: 800px;
+		margin: 0 auto;
+		padding: 20px;
+		background: white;
+		border-radius: 8px;
+		box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+	}
 
-    h1 {
-        text-align: center;
-        color: #4a90e2;
-    }
+	h1 {
+		text-align: center;
+		color: #4a90e2;
+	}
 
-    .cart-item {
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        padding: 15px;
-        margin: 10px 0;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        background-color: #fdfdfd;
-        transition: background 0.3s;
-    }
+	.cart-item {
+		border: 1px solid #ccc;
+		border-radius: 5px;
+		padding: 15px;
+		margin: 10px 0;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		background-color: #fdfdfd;
+		transition: background 0.3s;
+	}
 
-        .cart-item:hover {
-            background-color: #f1f1f1;
-        }
+		.cart-item:hover {
+			background-color: #f1f1f1;
+		}
 
-    .item-details {
-        flex-grow: 1;
-    }
+	.item-details {
+		flex-grow: 1;
+	}
 
-    .delete-button {
-        background-color: #e74c3c;
-        color: white;
-        border: none;
-        border-radius: 5px;
-        padding: 8px 12px;
-        cursor: pointer;
-        transition: background 0.3s;
-    }
+	.delete-button {
+		background-color: #e74c3c;
+		color: white;
+		border: none;
+		border-radius: 5px;
+		padding: 8px 12px;
+		cursor: pointer;
+		transition: background 0.3s;
+	}
 
-        .delete-button:hover {
-            background-color: #c0392b;
-        }
+		.delete-button:hover {
+			background-color: #c0392b;
+		}
 
-    #loading {
-        text-align: center;
-        font-size: 1.2em;
-        color: #555;
-    }
+	#loading {
+		text-align: center;
+		font-size: 1.2em;
+		color: #555;
+	}
 </style>
 
-@if (Model.ShoppingCarts.Count > 0)
-{
-    <div class="cart-content">
-        <h1>Your Shopping Cart</h1>
-        <div id="cart-items" class="cart-items-grid">
-            @foreach (var item in Model.ShoppingCarts)
-            {
-                <div class="cart-item" id="item-@item.Product.ProductId">
-                    <div class="item-details">
-                        <h2>@item.Product.Name</h2>
-                        <p>Price: @item.Product.Price.ToString("C")</p>
-                    </div>
-                    <form asp-page-handler="DeleteItem" method="post" onsubmit="return confirm('Are you sure you want to remove this item?');">
-                        <input type="hidden" name="productId" value="@item.Product.ProductId"/>
-                        <button type="submit" class="delete-button">Remove</button>
-                    </form>
-                </div>
-            }
-        </div>
-        <div id="loading" style="display:none;">Loading more items...</div>
-    </div>
-}
+	<div class="cart-content">
+		<h1>Your Shopping Cart</h1>
+	@if (Model.ShoppingCarts.Count > 0)
+	{
+			<div id="cart-items" class="cart-items-grid">
+			@foreach (var item in Model.ShoppingCarts)
+			{
+						<div class="cart-item" id="item-@item.Product.ProductId">
+							<div class="item-details">
+								<h2>@item.Product.Name</h2>
+								<p>Price: @item.Product.Price.ToString("C")</p>
+							</div>
+							<form asp-page-handler="DeleteItem" method="post" onsubmit="return confirm('Are you sure you want to remove this item?');">
+								<input type="hidden" name="productId" value="@item.Product.ProductId"/>
+								<button type="submit" class="delete-button">Remove</button>
+							</form>
+						</div>
+			}
+			</div>
+		<div id="loading" style="display:none;">Loading more items...</div>
+	}
+	else
+	{
+		<p>No Data</p>
+	}
+</div>
 
-@section Scripts {
-    <script>
-        let offset = Model.ShoppingCarts.Count;
 
-        window.onscroll = async () => {
-            if (document.documentElement.scrollHeight - window.innerHeight <= window.scrollY + 100) {
-                document.getElementById("loading").style.display = "block";
+@section Scripts 
+	{
+		<script>
+			let offset = Model.ShoppingCarts.Count;
 
-                try {
-                    const response = await fetch(`/UserPage/Cart?handler=LoadMore&offset=${offset}`);
-                    if (!response.ok) throw new Error("Network response was not ok");
+			window.onscroll = async () => {
+				if (document.documentElement.scrollHeight - window.innerHeight <= window.scrollY + 100) {
+					document.getElementById("loading").style.display = "block";
 
-                    const { items, hasMore } = await response.json();
-                    items.forEach(item => {
-                        const cartItemsDiv = document.getElementById("cart-items");
-                        const itemDiv = document.createElement("div");
-                        itemDiv.className = "cart-item";
-                        itemDiv.id = `item-${item.Product.Id}`;
-                        itemDiv.innerHTML = `<div class="item-details"><h2>${item.Product.Name}</h2><p>Quantity: ${item.Quantity}</p><p>Price: ${item.Product.Price.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</p></div><button class="delete-button" onclick="deleteItem(${item.Product.Id})">Remove</button>`;
-                        cartItemsDiv.appendChild(itemDiv);
-                    });
+					try {
+						const response = await fetch(`/UserPage/Cart?handler=LoadMore&offset=${offset}`);
+						if (!response.ok) throw new Error("Network response was not ok");
 
-                    if (hasMore) {
-                        offset += items.length;
-                    }
-                } catch (error) {
-                    console.error("Failed to load more items:", error);
-                } finally {
-                    document.getElementById("loading").style.display = "none";
-                }
-            }
-        };
+						const { items, hasMore } = await response.json();
+						items.forEach(item => {
+							const cartItemsDiv = document.getElementById("cart-items");
+							const itemDiv = document.createElement("div");
+							itemDiv.className = "cart-item";
+							itemDiv.id = `item-${item.Product.Id}`;
+							itemDiv.innerHTML = `<div class="item-details"><h2>${item.Product.Name}</h2><p>Quantity: ${item.Quantity}</p><p>Price: ${item.Product.Price.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</p></div><button class="delete-button" onclick="deleteItem(${item.Product.Id})">Remove</button>`;
+							cartItemsDiv.appendChild(itemDiv);
+						});
 
-    </script>
+						if (hasMore) {
+							offset += items.length;
+						}
+					} catch (error) {
+						console.error("Failed to load more items:", error);
+					} finally {
+						document.getElementById("loading").style.display = "none";
+					}
+				}
+			};
+
+		</script>
 }
