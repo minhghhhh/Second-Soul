@@ -28,6 +28,7 @@ namespace Second_Soul.Pages.OrderPage
             _paymentBusiness = paymentBusiness;
             _productBusiness = productBusiness;
         }
+        public string PopupMessage {  get; set; } 
         [BindProperty]
         public string CouponCode { get; set; }
 
@@ -50,87 +51,53 @@ namespace Second_Soul.Pages.OrderPage
             }
             if (await GetOrderInfo(id) == true)
             {
-                return 
+                return Page();
             }
-            return Page();
+            return RedirectToPage("/Error");
         }
-        public async Task<IActionResult> OnPostApplyCouponAsync(int id)
+     
+
+        public async Task<IActionResult> OnPostAsync(string action)
         {
             User1 = await _userBusiness.GetFromCookie(Request);
             if (User1 == null)
             {
                 return RedirectToPage("/Login");
             }
-            if (Order1 == null)
+
+            switch (action)
             {
-                return NotFound();
+                case "saveDetails":
+                    User1.FullName = Order1.FullName;
+                    User1.Address = Order1.Address;
+                    User1.PhoneNumber = Order1.PhoneNumber;
+                  var result =  await _userBusiness.Update(User1).ConfigureAwait(false);
+                    if(result.Status>0)
+                    {
+                        PopupMessage = "Thông tin đã được lưu!";
+
+                    }
+                    else
+                    {
+                        PopupMessage = "Có lỗi xảy ra!";
+
+                    }
+                    return await OnGetAsync(Order1.OrderId);
+                case "applyCoupon":
+                    // Handle applying coupon
+                    break;
+                case "placeOrder":
+                    // Handle placing the order
+                    break;
+                case "removeProduct_":
+                    {
+                        var productId = int.Parse(action.Split('_')[1]);
+                    }
+                    break;
             }
-
-            var orderDetails = await _context.OrderDetails
-                .Where(od => od.OrderId == id)
-                .Include(od => od.Product)
-                .ToListAsync();
-
-            Products = orderDetails.Select(od => od.Product).ToList();
-            Total = orderDetails.Sum(od => od.Price);
-
-            // Apply Coupon Logic
-            if (!string.IsNullOrEmpty(CouponCode))
-            {
-                var coupon = await context.Coupons.FirstOrDefaultAsync(c => c.Code == CouponCode && c.IsActive && c.ExpiryDate > DateTime.Now);
-                if (coupon != null)
-                {
-                    // Apply discount
-                    int discount = (int)(Total * (coupon.DiscountPercentage / 100.0));
-                    discount = discount > coupon.MaxDiscount ? coupon.MaxDiscount : discount;
-                    TotalWithDiscount = Total - discount;
-
-                    // Update the Order1 with applied Coupon
-                    Order1.CouponId = coupon.CouponId;
-                    _context.Orders.Update(Order1);
-                    await _context.SaveChangesAsync();
-
-                    CouponMessage = $"Coupon applied! You saved {discount.ToString("C")}";
-                }
-                else
-                {
-                    TotalWithDiscount = Total;
-                    CouponMessage = "Invalid or expired coupon.";
-                }
-            }
-            else
-            {
-                TotalWithDiscount = Total;
-            }
-
-            return Page();
+            return RedirectToPage(); // Reload the page after the action
         }
 
-
-        public async Task<IActionResult> OnPostAsync()
-        {
-            /*            User1 = await _userBusiness.GetFromCookie(Request);
-                        if (User1 == null)
-                        {
-                            return RedirectToPage("/Login");
-                        }
-                        var TotalShip = Total + 30000;
-                        var order = new Order1
-                            {
-
-
-                            };
-                        ItemData item = new ItemData("Mì tôm hảo hảo ly", 1, 1000);
-                        List<ItemData> items = new List<ItemData>();
-                        items.Add(item);
-                        PaymentData paymentData = new PaymentData(orderCode, TotalShip, "Thanh toan don hang",
-                             items, cancelUrl = "https://localhost:7141", returnUrl = "https://localhost:7141");
-
-                        CreatePaymentResult createPayment = await payOS.createPaymentLink(paymentData);
-
-            */
-            return Page();
-        }
         public async Task<bool> GetOrderInfo(int orderId)
         {
             

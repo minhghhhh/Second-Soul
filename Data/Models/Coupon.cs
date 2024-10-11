@@ -22,5 +22,5 @@ public partial class Coupon
     public bool IsActive { get; set; } = true;
 
     public int MinSpendAmount { get; set; } = 0;
-    public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
+    public virtual ICollection<Order> Orders { get; set; } = [];
 }

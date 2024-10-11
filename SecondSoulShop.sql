@@ -14,7 +14,7 @@ Go
 CREATE TABLE Users (
     UserID INT IDENTITY(1,1) PRIMARY KEY,
     Username NVARCHAR(50) UNIQUE NOT NULL,
-
+	FullName NVARCHAR(50) NOT NULL,
     PasswordHash NVARCHAR(255) NOT NULL,
     Email NVARCHAR(100) UNIQUE NOT NULL,
     PhoneNumber NVARCHAR(15) NULL,
@@ -67,8 +67,9 @@ CREATE TABLE Orders (
     CustomerID INT,
     OrderDate DATETIME DEFAULT GETDATE(),
     TotalAmount INT NOT NULL,
-    Status NVARCHAR(20) CHECK (Status IN ('Pending', 'Shipped', 'Delivered', 'Cancelled', 'Returned')),
+    Status NVARCHAR(20) CHECK (Status IN ('Pending','Refunded','Payed', 'Shipped', 'Completed', 'Cancelled', 'Returned')),
     CouponID INT NULL,
+	FullName NVARCHAR(50) Not null,
 	Descriptions NVARCHAR(100) null,
 	PhoneNumber NVARCHAR(15) NOT NULL,
     Address NVARCHAR(255) NOT NULL,
@@ -139,12 +140,12 @@ CREATE TABLE Messages (
 
 -- Password is 1
 Go
-INSERT INTO [SecondSoulShop].[dbo].[Users]  (Username, PasswordHash, Email, PhoneNumber, [Address], [Role])
+INSERT INTO [SecondSoulShop].[dbo].[Users]  (Username, FullName, PasswordHash, Email, PhoneNumber, [Address], [Role])
 VALUES 
-('customer1', '6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b', 'customer1@example.com', '1234567890', '123 Customer St, City', 'Customer'),
-('admin1', '6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b', 'admin1@example.com', '0987654321', '456 Admin Ave, City', 'Admin'),
-('customer2', '6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b', 'customer2@example.com', NULL, NULL, 'Customer'),
-('admin2', '6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b', 'admin2@example.com', NULL, NULL, 'Admin');
+('customer1','Khach hang 1', '6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b', 'customer1@example.com', '1234567890', '123 Customer St, City', 'Customer'),
+('admin1','Admin1' ,'6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b', 'admin1@example.com', '0987654321', '456 Admin Ave, City', 'Admin'),
+('customer2','Khach hang 2' ,'6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b', 'customer2@example.com', NULL, NULL, 'Customer'),
+('admin2','Admin2','6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b', 'admin2@example.com', NULL, NULL, 'Admin');
 
 INSERT INTO [SecondSoulShop].[dbo].[Categories] 
     ([CategoryName], [ParentCategoryID])
@@ -206,8 +207,8 @@ VALUES
 Go
 INSERT INTO Coupons (Code, DiscountPercentage, MaxDiscount, ExpiryDate, IsActive, MinSpendAmount)
 VALUES
-    ('SUMMER2024', 15.00, 50000, '2024-07-31', 1, 0),         -- Giảm 15%, tối đa 50,000 VND
-    ('NEWUSER', 20.00, 100000, '2024-11-30', 1, 0),           -- Giảm 20%, tối đa 100,000 VND
-    ('FLASHSALE', 10.00, 25000, '2024-10-15', 1, 0),          -- Giảm 10%, tối đa 25,000 VND
-    ('EXPIREDCOUPON', 5.00, 10000, '2023-12-31', 0, 0),       -- Giảm 5%, tối đa 10,000 VND, đã hết hạn
-    ('BIGSPENDER', 20.00, 200000, '2024-12-31', 1, 1000000);   -- Giảm 10%, tối đa 100,000 VND, yêu cầu chi tiêu 500,000 VND
+    ('SUMMER2024', 15, 50000, '2024-07-31', 1, 0),         -- Giảm 15%, tối đa 50,000 VND
+    ('NEWUSER', 20, 100000, '2024-11-30', 1, 0),           -- Giảm 20%, tối đa 100,000 VND
+    ('FLASHSALE', 10, 25000, '2024-10-15', 1, 0),          -- Giảm 10%, tối đa 25,000 VND
+    ('EXPIREDCOUPON', 5, 10000, '2023-12-31', 0, 0),       -- Giảm 5%, tối đa 10,000 VND, đã hết hạn
+    ('BIGSPENDER', 20, 200000, '2024-12-31', 1, 1000000);   -- Giảm 10%, tối đa 100,000 VND, yêu cầu chi tiêu 500,000 VND

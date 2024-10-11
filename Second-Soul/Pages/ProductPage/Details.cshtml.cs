@@ -12,13 +12,15 @@ namespace Second_Soul.Pages.ProductPage
         private readonly IProductBusiness _productBusiness;
         private readonly IProductImageBusiness _productImageBusiness;
         private readonly IShoppingCartBusiness _shoppingCartBusiness;
+        private readonly IOrderBusiness _orderBusiness;
         private readonly IUserBusiness _userBusiness;
-        public DetailsModel(IProductBusiness productBusiness,IUserBusiness userBusiness, IProductImageBusiness productImageBusiness, IShoppingCartBusiness shoppingCartBusiness)
+        public DetailsModel(IProductBusiness productBusiness , IUserBusiness userBusiness, IProductImageBusiness productImageBusiness, IShoppingCartBusiness shoppingCartBusiness, IOrderBusiness orderBusiness)
         {
             _userBusiness = userBusiness;
             _productBusiness = productBusiness;
             _productImageBusiness = productImageBusiness;
             _shoppingCartBusiness = shoppingCartBusiness;
+            _orderBusiness = orderBusiness;
         }
 
         [BindProperty]
@@ -64,9 +66,13 @@ namespace Second_Soul.Pages.ProductPage
                     await _shoppingCartBusiness.Save(newCartProduct);
                     return await OnGetAsync(id);
                 case "buyNow":
-                    return RedirectToPage("/Order");
+                    List<int> temp = [id];
+                    var phone = user.PhoneNumber ?? string.Empty; 
+                    var address = user.Address ?? string.Empty;
+                    int orderId = await _orderBusiness.CreateOrderAsync(user.UserId, temp, phone, address, 0, null);
+                    return RedirectToPage("/OrderPage/Index", new { id = orderId });
             }
-           return await OnGetAsync(id);
+            return await OnGetAsync(id);
         }
     }
 }

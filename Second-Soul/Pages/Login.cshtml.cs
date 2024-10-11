@@ -27,7 +27,6 @@ namespace Second_Soul.Pages
 			}
 
 			[Required]
-			[EmailAddress]
 			public string Email { get; set; } = string.Empty;
 
 			[Required]
@@ -39,7 +38,7 @@ namespace Second_Soul.Pages
 		{
 			if (ModelState.IsValid)
 			{
-				var result = await _userBusiness.GetByEmailAndPasswordAsync(Input.Email, Input.Password);
+				var result = await _userBusiness.GetByEmailOrUserNameAndPasswordAsync(Input.Email, Input.Password);
                 if (result != null)
 				{
 					if (result.Status > 0 && result.Data != null)

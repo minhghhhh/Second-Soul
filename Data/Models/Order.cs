@@ -13,6 +13,10 @@ public partial class Order
     public int CustomerId { get; set; }
 
     public DateTime OrderDate { get; set; } = DateTime.Now;
+    [Required]
+    [MaxLength(50)]
+    public string FullName { get; set; } = string.Empty;
+
 
     [Required]
     [Column(TypeName = "int")]

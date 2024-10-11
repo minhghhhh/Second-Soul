@@ -62,6 +62,7 @@ public partial class SecondSoulShopContext : DbContext
 
             entity.Property(e => e.UserId).HasColumnName("UserID");
             entity.Property(e => e.Username).HasMaxLength(50).IsRequired();
+            entity.Property(e => e.FullName).HasMaxLength(50).IsRequired();
             entity.Property(e => e.PasswordHash).HasMaxLength(255).IsRequired();
             entity.Property(e => e.Email).HasMaxLength(100).IsRequired();
             entity.Property(e => e.PhoneNumber).HasMaxLength(15);
@@ -188,6 +189,7 @@ public partial class SecondSoulShopContext : DbContext
             entity.Property(e => e.TotalAmount).HasColumnType("int").IsRequired();
             entity.Property(e => e.Status).HasMaxLength(20);
             entity.Property(e => e.Descriptions).HasMaxLength(20);
+            entity.Property(e => e.FullName).HasMaxLength(50).IsRequired();
             entity.Property(e => e.PhoneNumber).HasMaxLength(15).IsRequired();
             entity.Property(e => e.Address).HasMaxLength(255).IsRequired();
             entity.Property(e => e.CouponId).HasColumnName("CouponID");

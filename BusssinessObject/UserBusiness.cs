@@ -17,7 +17,7 @@ namespace BusssinessObject
         Task<IBusinessResult> Update(User cate);
         Task<IBusinessResult> DeleteById(int id);
         Task<bool> IdExists(int id);
-        Task<IBusinessResult> GetByEmailAndPasswordAsync(string email, string password);
+        Task<IBusinessResult> GetByEmailOrUserNameAndPasswordAsync(string email, string password);
         Task<IBusinessResult> GetByEmailAsync(string email);
         Task<User?> GetFromCookie(HttpRequest request);
         Task<IBusinessResult> Register(User cate);
@@ -47,11 +47,11 @@ namespace BusssinessObject
 
             return Task.FromResult(token);
         }
-        public async Task<IBusinessResult> GetByEmailAndPasswordAsync(string email, string password)
+        public async Task<IBusinessResult> GetByEmailOrUserNameAndPasswordAsync(string email, string password)
         {
             try
             {
-                var result = await _unitOfWork.UserRepository.GetByEmailAndPasswordAsync(email, HashPassWithSHA256.HashWithSHA256(password));
+                var result = await _unitOfWork.UserRepository.GetByEmailOrUserNameAndPasswordAsync(email, HashPassWithSHA256.HashWithSHA256(password));
                 if (result != null)
                 {
                     return new BusinessResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, result);

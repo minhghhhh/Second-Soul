@@ -22,6 +22,10 @@ namespace Second_Soul.Pages
             [MaxLength(50)]
             public string Username { get; set; } = string.Empty;
             [Required]
+            [MaxLength(50)]
+            public string FullName { get; set; } = string.Empty;
+
+            [Required]
             [DataType(DataType.Password)]
             public string Password { get; set; } = string.Empty;
             [Required]
@@ -45,6 +49,7 @@ namespace Second_Soul.Pages
                 var newUser = new User
                 {
                     Username = Input.Username,
+                    FullName = Input.FullName,
                     PasswordHash = Input.Password,
                     Email = Input.Email,
                     PhoneNumber = Input.PhoneNumber,
