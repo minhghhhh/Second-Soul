@@ -1,63 +1,63 @@
 ﻿@page
 @model Second_Soul.Pages.UserPage.CartModel
 @{
-    ViewData["Title"] = "Shopping Cart";
+	ViewData["Title"] = "Shopping Cart";
 }
 
 <style>
-    body {
-        font-family: Arial, sans-serif;
-        background-color: #f9f9f9;
-        color: #333;
-    }
+	body {
+		font-family: Arial, sans-serif;
+		background-color: #f9f9f9;
+		color: #333;
+	}
 
-    .cart-content {
-        max-width: 800px;
-        margin: 0 auto;
-        padding: 20px;
-        background: white;
-        border-radius: 8px;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    }
+	.cart-content {
+		max-width: 800px;
+		margin: 0 auto;
+		padding: 20px;
+		background: white;
+		border-radius: 8px;
+		box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+	}
 
-    h1 {
-        text-align: center;
-        color: #4a90e2;
-    }
+	h1 {
+		text-align: center;
+		color: #4a90e2;
+	}
 
-    .cart-item {
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        padding: 15px;
-        margin: 10px 0;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        background-color: #fdfdfd;
-        transition: background 0.3s;
-    }
+	.cart-item {
+		border: 1px solid #ccc;
+		border-radius: 5px;
+		padding: 15px;
+		margin: 10px 0;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		background-color: #fdfdfd;
+		transition: background 0.3s;
+	}
 
-        .cart-item:hover {
-            background-color: #f1f1f1;
-        }
+		.cart-item:hover {
+			background-color: #f1f1f1;
+		}
 
-    .item-details {
-        flex-grow: 1;
-    }
+	.item-details {
+		flex-grow: 1;
+	}
 
-    .delete-button {
-        background-color: #e74c3c;
-        color: white;
-        border: none;
-        border-radius: 5px;
-        padding: 8px 12px;
-        cursor: pointer;
-        transition: background 0.3s;
-    }
+	.delete-button {
+		background-color: #e74c3c;
+		color: white;
+		border: none;
+		border-radius: 5px;
+		padding: 8px 12px;
+		cursor: pointer;
+		transition: background 0.3s;
+	}
 
-        .delete-button:hover {
-            background-color: #c0392b;
-        }
+		.delete-button:hover {
+			background-color: #c0392b;
+		}
 
     .payment-button {
         background-color: #4a90e2;
@@ -131,17 +131,18 @@ else
     </div>
 }
 
-@section Scripts {
-    <script>
-        let offset = Model.ShoppingCarts.Count;
+@section Scripts 
+	{
+		<script>
+			let offset = Model.ShoppingCarts.Count;
 
-        window.onscroll = async () => {
-            if (document.documentElement.scrollHeight - window.innerHeight <= window.scrollY + 100) {
-                document.getElementById("loading").style.display = "block";
+			window.onscroll = async () => {
+				if (document.documentElement.scrollHeight - window.innerHeight <= window.scrollY + 100) {
+					document.getElementById("loading").style.display = "block";
 
-                try {
-                    const response = await fetch(`/UserPage/Cart?handler=LoadMore&offset=${offset}`);
-                    if (!response.ok) throw new Error("Network response was not ok");
+					try {
+						const response = await fetch(`/UserPage/Cart?handler=LoadMore&offset=${offset}`);
+						if (!response.ok) throw new Error("Network response was not ok");
 
                     const { items, hasMore } = await response.json();
                     items.forEach(item => {
@@ -153,16 +154,16 @@ else
                         cartItemsDiv.appendChild(itemDiv);
                     });
 
-                    if (hasMore) {
-                        offset += items.length;
-                    }
-                } catch (error) {
-                    console.error("Failed to load more items:", error);
-                } finally {
-                    document.getElementById("loading").style.display = "none";
-                }
-            }
-        };
+						if (hasMore) {
+							offset += items.length;
+						}
+					} catch (error) {
+						console.error("Failed to load more items:", error);
+					} finally {
+						document.getElementById("loading").style.display = "none";
+					}
+				}
+			};
 
-    </script>
+		</script>
 }

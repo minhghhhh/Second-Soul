@@ -81,6 +81,78 @@ namespace Data.Utils
 				}
 			}
 		}
+		public static async Task<bool> SendTokenEmail(
+	string toEmail,
+	string token
+)
+		{
+			var userName = "Second Soul";
+			var emailFrom = "chechminh1136@gmail.com";
+			var password = "fnwl dkyf sqps wgoq";
+
+			var message = new MimeMessage();
+			message.From.Add(new MailboxAddress(userName, emailFrom));
+			message.To.Add(new MailboxAddress("", toEmail));
+			message.Subject = "Your Password Reset Token";
+			message.Body = new TextPart("html")
+			{
+				Text =
+					@"
+    <html>
+        <head>
+            <style>
+                body {
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    height: 100vh;
+                    margin: 0;
+                    font-family: Arial, sans-serif;
+                }
+                .content {
+                    text-align: center;
+                }
+                .token {
+                    display: inline-block;
+                    padding: 10px 20px;
+                    background-color: #f0f0f0;
+                    border: 1px solid #ccc;
+                    border-radius: 5px;
+                    font-size: 16px;
+                    margin-top: 20px;
+                }
+            </style>
+        </head>
+        <body>
+            <div class='content'>
+                <p>You have requested a password reset. Please use the token below:</p>
+                <div class='token'>" + token + @"</div>
+                <p>If you did not request this, please ignore this email.</p>
+            </div>
+        </body>
+    </html>
+"
+			};
+
+			using var client = new SmtpClient();
+			try
+			{
+				await client.ConnectAsync("smtp.gmail.com", 587, SecureSocketOptions.StartTls);
+				await client.AuthenticateAsync(emailFrom, password);
+				await client.SendAsync(message);
+				return true;
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine($"Error sending email: {ex.Message}");
+				return false;
+			}
+			finally
+			{
+				await client.DisconnectAsync(true);
+			}
+		}
+
 		public static async Task<bool> SendConfirmationEmail(
 			string toEmail,
 			string confirmationLink
