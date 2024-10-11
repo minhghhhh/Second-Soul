@@ -14,6 +14,7 @@ Go
 CREATE TABLE Users (
     UserID INT IDENTITY(1,1) PRIMARY KEY,
     Username NVARCHAR(50) UNIQUE NOT NULL,
+
     PasswordHash NVARCHAR(255) NOT NULL,
     Email NVARCHAR(100) UNIQUE NOT NULL,
     PhoneNumber NVARCHAR(15) NULL,
@@ -54,7 +55,7 @@ CREATE TABLE ProductImages (
 CREATE TABLE Coupons (
     CouponID INT IDENTITY(1,1) PRIMARY KEY,
     Code NVARCHAR(50) UNIQUE NOT NULL,
-    DiscountPercentage DECIMAL(4, 2) DEFAULT 0, 
+    DiscountPercentage Int default 0,
     MaxDiscount INT DEFAULT 0,             
     ExpiryDate DATETIME,
     IsActive BIT DEFAULT 1,

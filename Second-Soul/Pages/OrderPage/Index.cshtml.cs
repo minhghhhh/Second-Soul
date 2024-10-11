@@ -1,8 +1,13 @@
-using BusssinessObject;
+﻿using BusssinessObject;
 using Data.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Net.payOS.Types;
+using Net.payOS;
 using System.Text.Json;
+using Microsoft.EntityFrameworkCore;
+using MailKit.Search;
+using System.Runtime.Intrinsics.X86;
 
 namespace Second_Soul.Pages.OrderPage
 {
@@ -13,8 +18,10 @@ namespace Second_Soul.Pages.OrderPage
         private readonly IUserBusiness _userBusiness;
         private readonly IPaymentBusiness _paymentBusiness;
         private readonly IProductBusiness _productBusiness;
-        public IndexModel(IOrderBusiness orderBusiness,  IOrderDetailBusiness orderDetailBusiness, IUserBusiness userBusiness, IPaymentBusiness paymentBusiness, IProductBusiness productBusiness)
+        private readonly ICouponBusiness _couponBusiness;
+        public IndexModel(IOrderBusiness orderBusiness, ICouponBusiness couponBusiness, IOrderDetailBusiness orderDetailBusiness, IUserBusiness userBusiness, IPaymentBusiness paymentBusiness, IProductBusiness productBusiness)
         {
+            _couponBusiness = couponBusiness;
             _orderBusiness = orderBusiness;
             _orderDetailBusiness = orderDetailBusiness;
             _userBusiness = userBusiness;
@@ -22,27 +29,123 @@ namespace Second_Soul.Pages.OrderPage
             _productBusiness = productBusiness;
         }
         [BindProperty]
+        public string CouponCode { get; set; }
+
+        public string CouponMessage { get; set; }
+        public int Discount { get; set; } = 0;
+
+        [BindProperty]
         public int Total { get; set; } = 0;
-        public Order Order { get; set; }
+        [BindProperty]
+        public Order Order1 { get; set; } = new Order();
+        public List<OrderDetail> Details { get; set; } = new List<OrderDetail>();
         public List<Product> Products { get; set; } = new List<Product>();
-        public User User { get; set; }
-        public List<int> SelectedProductIds { get; set; }
-        public async Task<IActionResult> OnGetAsync()
+        public User User1 { get; set; } = new User();
+        public async Task<IActionResult> OnGetAsync(int id)
         {
-            User = await _userBusiness.GetFromCookie(Request);
-            if (User == null)
+            User1 = await _userBusiness.GetFromCookie(Request);
+            if (User1 == null)
             {
                 return RedirectToPage("/Login");
             }
-            if (TempData["SelectedProductIds"] != null)
-            {   
-                SelectedProductIds = JsonSerializer.Deserialize<List<int>>(TempData["SelectedProductIds"] as string);
-            }
-            if (SelectedProductIds != null)
+            if (await GetOrderInfo(id) == true)
             {
-                foreach (var id in SelectedProductIds)
+                return 
+            }
+            return Page();
+        }
+        public async Task<IActionResult> OnPostApplyCouponAsync(int id)
+        {
+            User1 = await _userBusiness.GetFromCookie(Request);
+            if (User1 == null)
+            {
+                return RedirectToPage("/Login");
+            }
+            if (Order1 == null)
+            {
+                return NotFound();
+            }
+
+            var orderDetails = await _context.OrderDetails
+                .Where(od => od.OrderId == id)
+                .Include(od => od.Product)
+                .ToListAsync();
+
+            Products = orderDetails.Select(od => od.Product).ToList();
+            Total = orderDetails.Sum(od => od.Price);
+
+            // Apply Coupon Logic
+            if (!string.IsNullOrEmpty(CouponCode))
+            {
+                var coupon = await context.Coupons.FirstOrDefaultAsync(c => c.Code == CouponCode && c.IsActive && c.ExpiryDate > DateTime.Now);
+                if (coupon != null)
                 {
-                    var item = await _productBusiness.GetById(id);
+                    // Apply discount
+                    int discount = (int)(Total * (coupon.DiscountPercentage / 100.0));
+                    discount = discount > coupon.MaxDiscount ? coupon.MaxDiscount : discount;
+                    TotalWithDiscount = Total - discount;
+
+                    // Update the Order1 with applied Coupon
+                    Order1.CouponId = coupon.CouponId;
+                    _context.Orders.Update(Order1);
+                    await _context.SaveChangesAsync();
+
+                    CouponMessage = $"Coupon applied! You saved {discount.ToString("C")}";
+                }
+                else
+                {
+                    TotalWithDiscount = Total;
+                    CouponMessage = "Invalid or expired coupon.";
+                }
+            }
+            else
+            {
+                TotalWithDiscount = Total;
+            }
+
+            return Page();
+        }
+
+
+        public async Task<IActionResult> OnPostAsync()
+        {
+            /*            User1 = await _userBusiness.GetFromCookie(Request);
+                        if (User1 == null)
+                        {
+                            return RedirectToPage("/Login");
+                        }
+                        var TotalShip = Total + 30000;
+                        var order = new Order1
+                            {
+
+
+                            };
+                        ItemData item = new ItemData("Mì tôm hảo hảo ly", 1, 1000);
+                        List<ItemData> items = new List<ItemData>();
+                        items.Add(item);
+                        PaymentData paymentData = new PaymentData(orderCode, TotalShip, "Thanh toan don hang",
+                             items, cancelUrl = "https://localhost:7141", returnUrl = "https://localhost:7141");
+
+                        CreatePaymentResult createPayment = await payOS.createPaymentLink(paymentData);
+
+            */
+            return Page();
+        }
+        public async Task<bool> GetOrderInfo(int orderId)
+        {
+            
+            var order1 = await _orderBusiness.GetById(orderId);
+            Order1 = order1.Data as Order;
+            if (Order1 == null)
+            {
+                return false;
+            }
+            Details = await _orderDetailBusiness.GetDetailsByOrderId(orderId);
+            if (Details != null)
+            {
+                foreach (var order in Details)
+                {
+                    var item = await _productBusiness.GetById(order.ProductId);
                     var product = item.Data as Product;
                     Products.Add(product);
                     Total += product.Price;
@@ -50,9 +153,11 @@ namespace Second_Soul.Pages.OrderPage
             }
             else
             {
-                return RedirectToPage("/Error");
+                return false;
             }
-            return Page();
+            return true;
         }
+
     }
 }
+

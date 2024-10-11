@@ -165,7 +165,7 @@ public partial class SecondSoulShopContext : DbContext
             entity.Property(e => e.Code).HasMaxLength(50).IsRequired();
             entity.Property(e => e.DiscountPercentage)
                   .HasDefaultValue(0m)
-                  .HasColumnType("decimal(4, 2)");
+                  .HasColumnType("int");
             entity.Property(e => e.MaxDiscount)
                   .HasDefaultValue(0)
                   .HasColumnType("int");

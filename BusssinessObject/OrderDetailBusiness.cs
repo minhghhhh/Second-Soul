@@ -16,8 +16,10 @@ namespace BusssinessObject
 		Task<IBusinessResult> ReadOnlyById(int orderDetailId);
 		Task<IBusinessResult> ReadOnlyOrderDetailsByOrderId(int orderId);
 		Task<IBusinessResult> Save(OrderDetail orderDetail);
-	}
-	public class OrderDetailBusiness : IOrderDetailBusiness
+		 Task<List<OrderDetail>> GetDetailsByOrderId(int orderId);
+
+    }
+    public class OrderDetailBusiness : IOrderDetailBusiness
 	{
 
 		private readonly UnitOfWork _unitOfWork;
@@ -25,7 +27,12 @@ namespace BusssinessObject
 		{
 			_unitOfWork = unitOfWork;
 		}
-		public async Task<IBusinessResult> GetById(int orderDetailId)
+        public async Task<List<OrderDetail>> GetDetailsByOrderId(int orderId)
+		{
+			return await _unitOfWork.OrderDetailRepository.GetDetailsByOrderId(orderId);
+		}
+
+        public async Task<IBusinessResult> GetById(int orderDetailId)
 		{
 			try
 			{

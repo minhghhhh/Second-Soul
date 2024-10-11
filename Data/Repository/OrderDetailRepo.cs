@@ -14,6 +14,9 @@ namespace Data.Repository
         public OrderDetailRepo(SecondSoulShopContext context) : base(context)
         {
         }
-        
+        public async Task<List<OrderDetail>> GetDetailsByOrderId(int orderId)
+        {
+            return await context.OrderDetails.Where(a=>a.OrderId == orderId).ToListAsync();
+        }
     }
 }

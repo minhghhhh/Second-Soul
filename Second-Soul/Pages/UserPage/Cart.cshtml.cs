@@ -1,8 +1,10 @@
 using BusssinessObject;
 using CloudinaryDotNet;
 using Data.Models;
+using MailKit.Search;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
 using System.Text.Json;
 
 namespace Second_Soul.Pages.UserPage
@@ -11,11 +13,13 @@ namespace Second_Soul.Pages.UserPage
     {
         private readonly IShoppingCartBusiness _shoppingCartBusiness;
         private readonly IUserBusiness _userBusiness;
+        private readonly IProductBusiness _productBusiness;
         private readonly IOrderBusiness _orderBusiness;
         private readonly IOrderDetailBusiness _orderDetailBusiness;
 
-        public CartModel(IShoppingCartBusiness shoppingCartBusiness, IUserBusiness userBusiness, IOrderBusiness orderBusiness, IOrderDetailBusiness orderDetailBusiness)
+        public CartModel(IShoppingCartBusiness shoppingCartBusiness, IProductBusiness productBusiness, IUserBusiness userBusiness, IOrderBusiness orderBusiness, IOrderDetailBusiness orderDetailBusiness)
         {
+            _productBusiness = productBusiness;
             _shoppingCartBusiness = shoppingCartBusiness;
             _userBusiness = userBusiness;
             _orderBusiness = orderBusiness;
@@ -78,7 +82,7 @@ namespace Second_Soul.Pages.UserPage
 
             return await OnGet();
         }
-        public async  Task<IActionResult> OnPostSubmitSelectedItems()
+        public async Task<IActionResult> OnPostSubmitSelectedItems()
         {
             var user = await _userBusiness.GetFromCookie(Request);
             if (user == null)
@@ -88,14 +92,13 @@ namespace Second_Soul.Pages.UserPage
 
             if (SelectedProducts != null && SelectedProducts.Count > 0)
             {
-                TempData["SelectedProductIds"] = JsonSerializer.Serialize(SelectedProducts);
-                return RedirectToPage("/OrderPage/Index");
+                var phone = user.PhoneNumber ?? string.Empty;
+                var address = user.Address ?? string.Empty;
+                int orderId = await _orderBusiness.CreateOrderAsync(user.UserId, SelectedProducts, phone, address, 0, null);
+                return RedirectToPage("/OrderPage/Index", new { id = orderId });
             }
-
             ModelState.AddModelError(string.Empty, "Please select at least one product.");
             return Page();
         }
-
-
     }
 }

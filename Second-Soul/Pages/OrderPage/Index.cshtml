@@ -1,4 +1,4 @@
-﻿@page
+﻿@page "{id:int}"
 @model Second_Soul.Pages.OrderPage.IndexModel
 @{
 }
@@ -130,7 +130,7 @@
 
             <div class="input-group">
                 <label>Tên</label>
-                <input type="text" value="@Model.User.Username" readonly />
+                <input type="text" value="@Model.User.Username"/>
             </div>
             <div class="input-group">
                 <label>Số điện thoại</label>
@@ -162,7 +162,7 @@
                         <div class="product-item" id="@product.ProductId">
                             <div>
                                 <h3>@product.Name</h3>
-                                <p>Giá: @product.Price.ToString("C")</p>
+                                <p>Giá: @product.Price.ToString("C") VND</p>
                             </div>
                             <!-- Remove button -->
                             <span class="remove-icon" onclick="removeProduct(@product.ProductId)">
@@ -178,16 +178,32 @@
             }
         </div>
     </div>
+    <form method="post" asp-page-handler="ApplyCoupon">
+        <div>
+            <input type="hidden" name="id" value="@Model.Order.OrderId" />
+            <label for="couponCode">Coupon Code:</label>
+            <input type="text" id="couponCode" name="CouponCode" value="@Model.CouponCode" />
+        </div>
+        @if (!string.IsNullOrEmpty(Model.CouponMessage))
+        {
+            <div>@Model.CouponMessage</div>
+        }
+        <button type="submit">Apply Coupon</button>
+    </form>
 
     <div class="summary">
+        <form method="post" asp-page-handler="PlaceOrder">
+            <input type="hidden" asp-for="Order" value="@Model.Order" />
         <div>Tổng tiền hàng: @Model.Total.ToString("N0") VND</div>
+        <div>Giảm giá: Model.Discount %</div>
         <div>Phí vận chuyển: 30.000 VND</div>
         @{
             int shippingFee = 30000; 
-            int totalPayment = Model.Total + shippingFee; 
-        }
+            int totalPayment = Model.Total - (Model.Total * Model.Coupon) + shippingFee;
+            }
         <div class="total-price">Tổng thanh toán: @totalPayment.ToString("N0") VND</div>
-        <button type="submit" class="order-button">Đặt hàng</button>
+            <button type="submit" class="order-button">Đặt hàng</button>
+        </form>
     </div>
     <script>
         async function removeProduct(productId) {

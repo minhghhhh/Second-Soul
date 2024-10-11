@@ -17,15 +17,22 @@ namespace BusssinessObject
 		Task<IBusinessResult> ReadOnlyById(int orderId);
 		Task<IBusinessResult> ReadOnlyOrdersByUserId(int userId);
 		Task<IBusinessResult> Save(Order order);
-	}
-	public class OrderBusiness : IOrderBusiness
+		 Task<int> CreateOrderAsync(int customerId, List<int> productIds, string phoneNumber, string address, int totalAmount, int? couponId);
+
+    }
+    public class OrderBusiness : IOrderBusiness
 	{
 		private readonly UnitOfWork _unitOfWork;
 		public OrderBusiness(UnitOfWork unitOfWork)
 		{
 			_unitOfWork = unitOfWork;
 		}
-		public async Task<IBusinessResult> GetById(int orderId)
+        public async Task<int> CreateOrderAsync(int customerId, List<int> productIds, string phoneNumber, string address, int totalAmount, int? couponId)
+		{
+			return await _unitOfWork.OrderRepository.CreateOrderAsync(customerId, productIds, phoneNumber, address, totalAmount, couponId);
+		}
+
+        public async Task<IBusinessResult> GetById(int orderId)
 		{
 			try
 			{

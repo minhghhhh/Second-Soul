@@ -13,9 +13,7 @@ public partial class Coupon
     [Required]
     [MaxLength(50)]
     public string Code { get; set; } = string.Empty;
-
-    [Column(TypeName = "decimal(4,2)")]
-    public decimal DiscountPercentage { get; set; } = 0;
+    public int DiscountPercentage { get; set; } = 0;
 
     public int MaxDiscount { get; set; } = 0;
 
