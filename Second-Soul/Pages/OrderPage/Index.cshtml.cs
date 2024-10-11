@@ -50,62 +50,10 @@ namespace Second_Soul.Pages.OrderPage
             }
             if (await GetOrderInfo(id) == true)
             {
-                return 
+                return Page(); 
             }
             return Page();
         }
-        public async Task<IActionResult> OnPostApplyCouponAsync(int id)
-        {
-            User1 = await _userBusiness.GetFromCookie(Request);
-            if (User1 == null)
-            {
-                return RedirectToPage("/Login");
-            }
-            if (Order1 == null)
-            {
-                return NotFound();
-            }
-
-            var orderDetails = await _context.OrderDetails
-                .Where(od => od.OrderId == id)
-                .Include(od => od.Product)
-                .ToListAsync();
-
-            Products = orderDetails.Select(od => od.Product).ToList();
-            Total = orderDetails.Sum(od => od.Price);
-
-            // Apply Coupon Logic
-            if (!string.IsNullOrEmpty(CouponCode))
-            {
-                var coupon = await context.Coupons.FirstOrDefaultAsync(c => c.Code == CouponCode && c.IsActive && c.ExpiryDate > DateTime.Now);
-                if (coupon != null)
-                {
-                    // Apply discount
-                    int discount = (int)(Total * (coupon.DiscountPercentage / 100.0));
-                    discount = discount > coupon.MaxDiscount ? coupon.MaxDiscount : discount;
-                    TotalWithDiscount = Total - discount;
-
-                    // Update the Order1 with applied Coupon
-                    Order1.CouponId = coupon.CouponId;
-                    _context.Orders.Update(Order1);
-                    await _context.SaveChangesAsync();
-
-                    CouponMessage = $"Coupon applied! You saved {discount.ToString("C")}";
-                }
-                else
-                {
-                    TotalWithDiscount = Total;
-                    CouponMessage = "Invalid or expired coupon.";
-                }
-            }
-            else
-            {
-                TotalWithDiscount = Total;
-            }
-
-            return Page();
-        }
-
 
         public async Task<IActionResult> OnPostAsync()
         {

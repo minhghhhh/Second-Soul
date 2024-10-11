@@ -26,7 +26,7 @@ namespace Second_Soul.Pages.UserPage
             _orderDetailBusiness = orderDetailBusiness;
         }
 
-        public List<ShoppingCart> ShoppingCarts { get; set; } = new List<ShoppingCart>();
+        public List<ShoppingCart> ShoppingCarts { get; set; } = [];
         [BindProperty]
         public List<int> SelectedProducts { get; set; }
         public async Task<IActionResult> OnGet()
@@ -74,7 +74,7 @@ namespace Second_Soul.Pages.UserPage
 
             return new JsonResult(new List<ShoppingCart>());
         }
-        public async Task<IActionResult> OnPostDeleteItem(int productId)
+        public async Task<IActionResult> OnPostSubmitSelectedItems(string action)
         {
             var user = await _userBusiness.GetFromCookie(Request);
             if (user == null)
@@ -82,30 +82,35 @@ namespace Second_Soul.Pages.UserPage
                 return RedirectToPage("/Login");
             }
 
-            var result = await _shoppingCartBusiness.RemoveFromCart(user.UserId, productId);
-            if (result == null || result.Status <= 0)
+            switch(action)
             {
-                return RedirectToPage("/Error");
-            }
+                case "payment":
+					if (SelectedProducts != null && SelectedProducts.Count > 0)
+					{
+						var phone = user.PhoneNumber ?? string.Empty;
+						var address = user.Address ?? string.Empty;
+						int orderId = await _orderBusiness.CreateOrderAsync(user.UserId, SelectedProducts, phone, address, 0, null);
+						return RedirectToPage("/OrderPage/Index", new { id = orderId });
+					}
+                    break;
+                case "delete":
+					if (SelectedProducts != null && SelectedProducts.Count > 0)
+					{
+                        foreach(var product in SelectedProducts)
+                        {
+							var result = await _shoppingCartBusiness.RemoveFromCart(user.UserId, product);
+							if (result == null || result.Status <= 0)
+							{
+								ModelState.AddModelError(string.Empty, "Removing a product from cart has failed.");
+								return Page();
+							}
+						}
+                        return Page();
+					}
+					break;
+			}
 
-            return await OnGet();
-        }
-        public async Task<IActionResult> OnPostSubmitSelectedItems()
-        {
-            var user = await _userBusiness.GetFromCookie(Request);
-            if (user == null)
-            {
-                return RedirectToPage("/Login");
-            }
-
-            if (SelectedProducts != null && SelectedProducts.Count > 0)
-            {
-                var phone = user.PhoneNumber ?? string.Empty;
-                var address = user.Address ?? string.Empty;
-                int orderId = await _orderBusiness.CreateOrderAsync(user.UserId, SelectedProducts, phone, address, 0, null);
-                return RedirectToPage("/OrderPage/Index", new { id = orderId });
-            }
-            ModelState.AddModelError(string.Empty, "Please select at least one product.");
+			ModelState.AddModelError(string.Empty, "Please select at least one product.");
             return Page();
         }
     }

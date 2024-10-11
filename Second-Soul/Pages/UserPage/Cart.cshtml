@@ -106,14 +106,11 @@
                                     <h2>@item.Product.Name</h2>
                                     <p>Price: @item.Product.Price.ToString("C")</p>
                                 </div>
-@*                                 <form asp-page-handler="DeleteItem" method="post" onsubmit="return confirm('Are you sure you want to remove this item?');">
-                                    <input type="hidden" name="productId" value="@item.Product.ProductId" />
-                                    <button type="submit" class="delete-button">Remove</button>
-                                </form> *@
                             </div>
                         }
 
-                        <button type="submit">Proceed to Payment</button>
+                        <button type="submit" name="action" value="payment" class="btn btn-primary">Proceed to Payment</button>
+					<button type="submit" name="action" value="delete" class="btn btn-danger">Remove From Cart</button>
                     </form>
                 }
                 else

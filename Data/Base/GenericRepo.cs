@@ -63,7 +63,16 @@ namespace Data.Base
             _ = await context.SaveChangesAsync();
         }
 
-        public void UpdateE(T entity)
+		public async Task<bool> RemoveRangeAsync(IEnumerable<T> entities)
+		{
+			if (entities == null || !entities.Any())
+				throw new ArgumentException("The entities parameter cannot be null or empty.", nameof(entities));
+
+			_dbSet.RemoveRange(entities);
+			return await context.SaveChangesAsync() > 0;
+		}
+
+		public void UpdateE(T entity)
         {
             _dbSet.Update(entity);
         }

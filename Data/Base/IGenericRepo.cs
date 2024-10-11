@@ -14,7 +14,8 @@ namespace Data.Base
         Task AddAsync(T entity);
         Task Update(T entity);
         Task Remove(T entity);
-        void UpdateE(T entity);
+        Task<bool> RemoveRangeAsync(IEnumerable<T> entities);
+		void UpdateE(T entity);
         Task<T?> GetSingleOrDefaultWithNoTracking(Expression<Func<T, bool>>? func = null);
         Task<List<T>> GetListWithNoTracking(Expression<Func<T, bool>>? func = null);
 

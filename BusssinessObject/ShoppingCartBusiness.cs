@@ -16,7 +16,7 @@ namespace BusssinessObject
         Task<IBusinessResult> GetByUserId(int userId, int? offset, int? limit);
         Task<IBusinessResult> Save(ShoppingCart cart);
         Task<IBusinessResult> RemoveFromCart(int userId, int productId);
-    }
+	}
 
     public class ShoppingCartBusiness : IShoppingCartBusiness
     {
@@ -104,5 +104,6 @@ namespace BusssinessObject
                 return new BusinessResult(Const.ERROR_EXCEPTION, ex.Message);
             }
         }
-    }
+
+	}
 }
