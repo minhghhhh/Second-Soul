@@ -43,7 +43,7 @@ namespace Second_Soul.Pages
 				{
 					if (result.Status > 0 && result.Data != null)
                     {
-                        var user = result.Data as User;
+                        var user = (User)result.Data;
                         if (user.IsActive == false)
                         {
                             ModelState.AddModelError(string.Empty, "Please confirm email to login.");
