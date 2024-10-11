@@ -119,7 +119,7 @@ namespace Second_Soul.Pages.OrderPage
 		{
 
 			var order1 = await _orderBusiness.GetById(orderId);
-			if (order1 == null || order1.Status > 0 || order1.Data == null)
+			if (order1 == null || !(order1.Status > 0) || order1.Data == null)
 			{
 				return false;
 
