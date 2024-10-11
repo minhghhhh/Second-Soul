@@ -17,7 +17,7 @@ namespace BusssinessObject
         Task<IBusinessResult> GetById(int id);
         Task<IBusinessResult> Save(Coupon cate);
         Task<IBusinessResult> Update(Coupon cate);
-        Task<(bool isSuccess, string message, int discount,int totalWithDiscount, int? couponId)> ApplyCouponAsync(string couponCode, int total);
+        Task<(bool isSuccess, string message, int discount, int totalWithDiscount, int? couponId)> ApplyCouponAsync(string couponCode, int total);
 
     }
     public class CouponBusiness : ICouponBusiness

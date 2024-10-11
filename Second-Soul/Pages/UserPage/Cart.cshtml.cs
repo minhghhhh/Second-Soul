@@ -105,7 +105,7 @@ namespace Second_Soul.Pages.UserPage
 								return await OnGet();
 							}
 						}
-                        return Page();
+                        return await OnGet();
 					}
 					break;
 			}
