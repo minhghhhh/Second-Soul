@@ -28,7 +28,7 @@ namespace Second_Soul.Pages.OrderPage
             _paymentBusiness = paymentBusiness;
             _productBusiness = productBusiness;
         }
-        public string PopupMessage {  get; set; } 
+        public string PopupMessage { get; set; }
         [BindProperty]
         public string CouponCode { get; set; }
 
@@ -43,11 +43,16 @@ namespace Second_Soul.Pages.OrderPage
         public List<Product> Products { get; set; } = new List<Product>();
         public User User1 { get; set; } = new User();
         public async Task<IActionResult> OnGetAsync(int id)
-        {
-            User1 = await _userBusiness.GetFromCookie(Request);
-            if (User1 == null)
+       {
+            var user = await _userBusiness.GetFromCookie(Request);
+            var result = await _userBusiness.GetById(user.UserId);
+            if (result.Data == null || result.Status < 0)
             {
                 return RedirectToPage("/Login");
+            }
+            else
+            {
+                User1 = (User)result.Data;
             }
             if (await GetOrderInfo(id) == true)
             {
@@ -55,24 +60,28 @@ namespace Second_Soul.Pages.OrderPage
             }
             return RedirectToPage("/Error");
         }
-     
 
-        public async Task<IActionResult> OnPostAsync(string action)
+
+        public async Task<IActionResult> OnPostAsync(string action,int id,int total)
         {
-            User1 = await _userBusiness.GetFromCookie(Request);
-            if (User1 == null)
+            var user = await _userBusiness.GetFromCookie(Request);
+            var results = await _userBusiness.GetById(user.UserId);
+            if (results.Data == null || results.Status < 0)
             {
                 return RedirectToPage("/Login");
             }
-
+            else
+            {
+                User1 = (User)results.Data;
+            }
             switch (action)
             {
                 case "saveDetails":
                     User1.FullName = Order1.FullName;
                     User1.Address = Order1.Address;
                     User1.PhoneNumber = Order1.PhoneNumber;
-                  var result =  await _userBusiness.Update(User1).ConfigureAwait(false);
-                    if(result.Status>0)
+                    var result = await _userBusiness.Update(User1).ConfigureAwait(false);
+                    if (result.Status > 0)
                     {
                         PopupMessage = "Thông tin đã được lưu!";
 
@@ -82,10 +91,13 @@ namespace Second_Soul.Pages.OrderPage
                         PopupMessage = "Có lỗi xảy ra!";
 
                     }
-                    return await OnGetAsync(Order1.OrderId);
+                    return await OnGetAsync(id);
                 case "applyCoupon":
-                    // Handle applying coupon
-                    break;
+                    var coupon = await _couponBusiness.ApplyCouponAsync(CouponCode, total);
+                    CouponMessage = coupon.message;
+                    Total = coupon.totalWithDiscount;
+                    Discount = coupon.discount;
+                    return await OnGetAsync(id);
                 case "placeOrder":
                     // Handle placing the order
                     break;
@@ -100,7 +112,7 @@ namespace Second_Soul.Pages.OrderPage
 
         public async Task<bool> GetOrderInfo(int orderId)
         {
-            
+
             var order1 = await _orderBusiness.GetById(orderId);
             Order1 = order1.Data as Order;
             if (Order1 == null)

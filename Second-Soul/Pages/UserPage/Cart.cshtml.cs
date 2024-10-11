@@ -102,7 +102,7 @@ namespace Second_Soul.Pages.UserPage
 							if (result == null || result.Status <= 0)
 							{
 								ModelState.AddModelError(string.Empty, "Removing a product from cart has failed.");
-								return Page();
+								return await OnGet();
 							}
 						}
                         return Page();

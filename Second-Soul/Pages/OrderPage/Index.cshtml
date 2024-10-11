@@ -115,14 +115,14 @@
 		cursor: pointer;
 	}
 </style>
-
 <body>
+    <!-- Main Form -->
     <form method="post">
-
         <!-- Shipping Information Section -->
         <div class="container">
             <div class="shipping-info">
                 <div class="section-title">Thông tin nhận hàng</div>
+                <input type="hidden" name="id" value="@Model.Order1.OrderId" />
 
                 <div class="input-group">
                     <label>Email</label>
@@ -132,7 +132,6 @@
                     <label>UserName</label>
                     <input type="text" value="@Model.User1.Username" readonly />
                 </div>
-
                 <div class="input-group">
                     <label>Họ và Tên</label>
                     <input type="text" asp-for="Order1.FullName" value="@Model.User1.FullName" />
@@ -141,28 +140,23 @@
                     <label>Số điện thoại</label>
                     <input type="text" asp-for="Order1.PhoneNumber" value="@Model.User1.PhoneNumber" />
                 </div>
-
                 <div class="input-group">
                     <label>Địa chỉ</label>
                     <input type="text" asp-for="Order1.Address" value="@Model.User1.Address" />
                 </div>
-
                 <div class="input-group">
                     <label>Ghi chú (tuỳ chọn)</label>
                     <textarea asp-for="Order1.Descriptions" placeholder="Ghi chú (tuỳ chọn)"></textarea>
                 </div>
-
-                <!-- Button for saving details -->
+                <!-- Save details button -->
                 <button type="submit" name="action" value="saveDetails" class="save-button">Lưu thông tin</button>
             </div>
 
             <!-- Payment and Product Details Section -->
             <div class="payment-info">
                 <div class="section-title">Thanh toán</div>
-
                 <div class="product-details">
                     <div class="section-title">Chi tiết sản phẩm</div>
-
                     @if (Model.Products != null && Model.Products.Any())
                     {
                         <div class="product-list" id="product-list">
@@ -171,7 +165,7 @@
                                 <div class="product-item" id="@product.ProductId">
                                     <div>
                                         <h3>@product.Name</h3>
-                                        <p>Giá: @product.Price.ToString("C") VND</p>
+                                        <p>Giá: @product.Price.ToString("N0") VND</p>
                                     </div>
                                     <!-- Remove button -->
                                     <button type="submit" name="action" value="removeProduct_@product.ProductId" class="remove-icon">❌</button>
@@ -195,29 +189,25 @@
                         <div class="coupon-message">@Model.CouponMessage</div>
                     }
                 </div>
-
-                <!-- Button for applying coupon -->
                 <button type="submit" name="action" value="applyCoupon" class="btn-apply-coupon">Apply Coupon</button>
             </div>
         </div>
 
         <!-- Summary and Order Button -->
         <div class="summary">
-            <input type="hidden" asp-for="Order1.OrderId" />
+            <input type="hidden" name="total" value="@Model.Total" />
             <div>Tổng tiền hàng: @Model.Total.ToString("N0") VND</div>
             <div>Giảm giá: @Model.Discount %</div>
             <div>Phí vận chuyển: 30.000 VND</div>
 
             @{
-                int shippingFee = 30000;
-                int totalPayment = Model.Total - (Model.Total * Model.Discount / 100) + shippingFee;
+                int totalPayment = Model.Total - (Model.Total * Model.Discount / 100) + 30000;
             }
-
             <div class="total-price">Tổng thanh toán: @totalPayment.ToString("N0") VND</div>
-
-            <!-- Button for placing the order -->
             <button type="submit" name="action" value="placeOrder" class="order-button">Đặt hàng</button>
         </div>
+
+        <!-- Modal Popup -->
         <div id="popupModal" class="modal">
             <div class="modal-content">
                 <div class="modal-header">Notification</div>
@@ -225,8 +215,8 @@
                 <button class="close-btn" onclick="closeModal()">Close</button>
             </div>
         </div>
-
     </form>
+
     <script>
         // Show the popup if there is a message
         document.addEventListener('DOMContentLoaded', function () {

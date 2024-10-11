@@ -18,7 +18,7 @@ namespace Second_Soul
         {
             _logger.LogInformation("Background Service is starting.");
             while (!stoppingToken.IsCancellationRequested)
-            {
+            { 
                 try
                 {
                     using (var scope = _serviceProvider.CreateScope())
