@@ -2,6 +2,7 @@
 using Common;
 using Data;
 using Data.Models;
+using MailKit.Search;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,7 +18,7 @@ namespace BusssinessObject
         Task<IBusinessResult> GetById(int id);
         Task<IBusinessResult> Save(Coupon cate);
         Task<IBusinessResult> Update(Coupon cate);
-        Task<(bool isSuccess, string message, int discount, int totalWithDiscount, int? couponId)> ApplyCouponAsync(string couponCode, int total);
+        Task<(bool isSuccess, string message, int discount, int? couponId)> ApplyCouponAsync(string couponCode, int orderId);
 
     }
     public class CouponBusiness : ICouponBusiness
@@ -31,9 +32,17 @@ namespace BusssinessObject
         {
             return _unitOfWork.CouponRepository.DisableExpiredCoupons();   
         }
-        public async Task<(bool isSuccess, string message,int discount, int totalWithDiscount, int? couponId)> ApplyCouponAsync(string couponCode, int total)
+        public async Task<(bool isSuccess, string message,int discount, int? couponId)> ApplyCouponAsync(string couponCode, int orderId)
         {
-            return await _unitOfWork.CouponRepository.ApplyCouponAsync(couponCode, total);  
+            try
+            {
+				return await _unitOfWork.CouponRepository.ApplyCouponAsync(couponCode, orderId);
+
+            }
+            catch (Exception ex) 
+            {
+                return (false, "Something went wrong: " + ex.Message, 0, null);
+            }
         }
         public async Task<IBusinessResult> GetAll()
         {

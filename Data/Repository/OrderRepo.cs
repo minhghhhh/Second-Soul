@@ -53,5 +53,10 @@ namespace Data.Repository
             return order.OrderId;
         }
 
+        public async Task<Order?> GetOrderWithOrderDetailsById(int orderId)
+        {
+            return await context.Orders.Include(o => o.OrderDetails).SingleOrDefaultAsync(o => o.OrderId == orderId);
+        }
+
     }
 }

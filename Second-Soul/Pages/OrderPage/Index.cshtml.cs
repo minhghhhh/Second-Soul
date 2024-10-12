@@ -8,6 +8,7 @@ using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
 using MailKit.Search;
 using System.Runtime.Intrinsics.X86;
+using static Azure.Core.HttpHeader;
 
 namespace Second_Soul.Pages.OrderPage
 {
@@ -34,10 +35,7 @@ namespace Second_Soul.Pages.OrderPage
 
 		public string CouponMessage { get; set; } = string.Empty;
 		public int Discount { get; set; } = 0;
-
-		[BindProperty]
 		public int Total { get; set; } = 0;
-		[BindProperty]
 		public Order Order1 { get; set; } = new Order();
 		public List<OrderDetail> Details { get; set; } = new List<OrderDetail>();
 		public List<Product> Products { get; set; } = new List<Product>();
@@ -94,23 +92,25 @@ namespace Second_Soul.Pages.OrderPage
 					else
 					{
 						PopupMessage = "Có lỗi xảy ra!";
-
 					}
 					return await OnGetAsync(id);
 				case "applyCoupon":
-					var coupon = await _couponBusiness.ApplyCouponAsync(CouponCode, total);
+					var coupon = await _couponBusiness.ApplyCouponAsync(CouponCode, id);
 					CouponMessage = coupon.message;
-					Total = coupon.totalWithDiscount;
 					Discount = coupon.discount;
 					return await OnGetAsync(id);
 				case "placeOrder":
 					// Handle placing the order
 					break;
-				case "removeProduct_":
+				case string a when a.Contains("removeProduct_"):
 					{
-						var productId = int.Parse(action.Split('_')[1]);
+						int productId = int.Parse(action.Split('_')[1]);
+						if (productId > 0)
+						{
+							await _orderDetailBusiness.DeleteByProductIdAndOrderId(id, productId);
+						}
+						return await OnGetAsync(id);
 					}
-					break;
 			}
 			return RedirectToPage(); // Reload the page after the action
 		}
@@ -122,9 +122,28 @@ namespace Second_Soul.Pages.OrderPage
 			if (order1 == null || !(order1.Status > 0) || order1.Data == null)
 			{
 				return false;
-
 			}
 			Order1 = (Order)order1.Data;
+			if (Order1.CouponId != null)
+			{
+				var result = await _couponBusiness.GetById((int)Order1.CouponId);
+				if (result == null || !(result.Status > 0) || result.Data == null)
+				{
+					Order1.CouponId = null;
+					var orderResult = await _orderBusiness.Update(Order1);
+					if (orderResult == null || !(orderResult.Status > 0)) 
+					{ 
+						return false; 
+					}
+				}
+				else
+				{
+					var coupon = (Coupon)result.Data;
+                    CouponCode = coupon.Code;
+					CouponMessage = $"Coupon applied! You saved {coupon.DiscountPercentage}%";
+
+                }
+			}
 			Details = await _orderDetailBusiness.GetDetailsByOrderId(orderId);
 			if (Details == null || !(Details.Count > 0))
 			{
@@ -139,10 +158,11 @@ namespace Second_Soul.Pages.OrderPage
 				}
 				var product = (Product)item.Data;
 				Products.Add(product);
-				if (!CouponMessage.Contains("Coupon applied"))
-				{
-					Total += product.Price;
-				}
+				Total += order.Price;
+			}
+			if (Total > Order1.TotalAmount)
+			{
+				Discount = Total - Order1.TotalAmount;
 			}
 			return true;
 		}

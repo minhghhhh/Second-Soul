@@ -1,7 +1,7 @@
 ﻿@page "{id:int}"
 @model Second_Soul.Pages.OrderPage.IndexModel
 @{
-    var popupMessage = Model.PopupMessage;
+	var popupMessage = Model.PopupMessage;
 
 }
 <style>
@@ -82,9 +82,9 @@
 		height: 80px;
 	}
 
-    .voucher {
-        margin-bottom: 20px;
-    }
+	.voucher {
+		margin-bottom: 20px;
+	}
 
 		.voucher input {
 			width: calc(100% - 10px);
@@ -116,119 +116,122 @@
 	}
 </style>
 <body>
-    <!-- Main Form -->
-    <form method="post">
-        <!-- Shipping Information Section -->
-        <div class="container">
-            <div class="shipping-info">
-                <div class="section-title">Thông tin nhận hàng</div>
-                <input type="hidden" name="id" value="@Model.Order1.OrderId" />
+	<!-- Main Form -->
+	<form method="post">
+		<!-- Shipping Information Section -->
+		<div class="container">
+			<div class="shipping-info">
+				<div class="section-title">Thông tin nhận hàng</div>
+				<input type="hidden" name="id" value="@Model.Order1.OrderId" />
 
-                <div class="input-group">
-                    <label>Email</label>
-                    <input type="email" value="@Model.User1.Email" readonly />
-                </div>
-                <div class="input-group">
-                    <label>UserName</label>
-                    <input type="text" value="@Model.User1.Username" readonly />
-                </div>
-                <div class="input-group">
-                    <label>Họ và Tên</label>
-                    <input type="text" asp-for="Order1.FullName" value="@Model.User1.FullName" />
-                </div>
-                <div class="input-group">
-                    <label>Số điện thoại</label>
-                    <input type="text" asp-for="Order1.PhoneNumber" value="@Model.User1.PhoneNumber" />
-                </div>
-                <div class="input-group">
-                    <label>Địa chỉ</label>
-                    <input type="text" asp-for="Order1.Address" value="@Model.User1.Address" />
-                </div>
-                <div class="input-group">
-                    <label>Ghi chú (tuỳ chọn)</label>
-                    <textarea asp-for="Order1.Descriptions" placeholder="Ghi chú (tuỳ chọn)"></textarea>
-                </div>
-                <!-- Save details button -->
-                <button type="submit" name="action" value="saveDetails" class="save-button">Lưu thông tin</button>
-            </div>
+				<div class="input-group">
+					<label>Email</label>
+					<input type="email" value="@Model.User1.Email" readonly />
+				</div>
+				<div class="input-group">
+					<label>UserName</label>
+					<input type="text" value="@Model.User1.Username" readonly />
+				</div>
+				<div class="input-group">
+					<label>Họ và Tên</label>
+					<input type="text" asp-for="Order1.FullName" value="@Model.User1.FullName" />
+				</div>
+				<div class="input-group">
+					<label>Số điện thoại</label>
+					<input type="text" asp-for="Order1.PhoneNumber" value="@Model.User1.PhoneNumber" />
+				</div>
+				<div class="input-group">
+					<label>Địa chỉ</label>
+					<input type="text" asp-for="Order1.Address" value="@Model.User1.Address" />
+				</div>
+				<div class="input-group">
+					<label>Ghi chú (tuỳ chọn)</label>
+					<textarea asp-for="Order1.Descriptions" placeholder="Ghi chú (tuỳ chọn)"></textarea>
+				</div>
+				<!-- Save details button -->
+				<button type="submit" name="action" value="saveDetails" class="save-button">Lưu thông tin</button>
+			</div>
 
-            <!-- Payment and Product Details Section -->
-            <div class="payment-info">
-                <div class="section-title">Thanh toán</div>
-                <div class="product-details">
-                    <div class="section-title">Chi tiết sản phẩm</div>
-                    @if (Model.Products != null && Model.Products.Any())
-                    {
-                        <div class="product-list" id="product-list">
-                            @foreach (var product in Model.Products)
-                            {
-                                <div class="product-item" id="@product.ProductId">
-                                    <div>
-                                        <h3>@product.Name</h3>
-                                        <p>Giá: @product.Price.ToString("N0") VND</p>
-                                    </div>
-                                    <!-- Remove button -->
-                                    <button type="submit" name="action" value="removeProduct_@product.ProductId" class="remove-icon">❌</button>
-                                </div>
-                            }
-                        </div>
-                    }
-                    else
-                    {
-                        <p>Giỏ hàng của bạn đang trống.</p>
-                    }
-                </div>
+			<!-- Payment and Product Details Section -->
+			<div class="payment-info">
+				<div class="section-title">Thanh toán</div>
+				<div class="product-details">
+					<div class="section-title">Chi tiết sản phẩm</div>
+					@if (Model.Products != null && Model.Products.Any())
+					{
+						<div class="product-list" id="product-list">
+							@foreach (var product in Model.Products)
+							{
+								<div class="product-item" id="@product.ProductId">
+									<div>
+										<h3>@product.Name</h3>
+										<p>Giá: @product.Price.ToString("N0") VND</p>
+									</div>
+									<!-- Remove button -->
+									<button type="submit" name="action" value="removeProduct_@product.ProductId" class="remove-icon">❌</button>
+								</div>
+							}
+						</div>
+					}
+					else
+					{
+						<p>Giỏ hàng của bạn đang trống.</p>
+					}
+				</div>
 
-                <!-- Coupon Code Section -->
-                <div>
-                    <label for="couponCode">Coupon Code:</label>
-                    <input type="text" id="couponCode" name="CouponCode" value="@Model.CouponCode" placeholder="Enter coupon code" />
+				<!-- Coupon Code Section -->
+				<div>
+					<label for="couponCode">Coupon Code:</label>
+					<input type="text" id="couponCode" name="CouponCode" value="@Model.CouponCode" placeholder="Enter coupon code" />
 
-                    @if (!string.IsNullOrEmpty(Model.CouponMessage))
-                    {
-                        <div class="coupon-message">@Model.CouponMessage</div>
-                    }
-                </div>
-                <button type="submit" name="action" value="applyCoupon" class="btn-apply-coupon">Apply Coupon</button>
-            </div>
-        </div>
+					@if (!string.IsNullOrEmpty(Model.CouponMessage))
+					{
+						<div class="coupon-message">@Model.CouponMessage</div>
+					}
+				</div>
+				<button type="submit" name="action" value="applyCoupon" class="btn-apply-coupon">Apply Coupon</button>
+			</div>
+		</div>
 
-        <!-- Summary and Order Button -->
-        <div class="summary">
-            <input type="hidden" name="total" value="@Model.Total" />
-            <div>Tổng tiền hàng: @Model.Total.ToString("N0") VND</div>
-            <div>Giảm giá: @Model.Discount %</div>
-            <div>Phí vận chuyển: 30.000 VND</div>
+		<!-- Summary and Order Button -->
+		<div class="summary">
+			<input type="hidden" name="total" value="@Model.Total" />
+			<div>Tổng tiền hàng: @Model.Total.ToString("N0") VND</div>
+			@if (Model.Order1.CouponId != null)
+			{
+				<div>Giảm giá: -@Model.Discount.ToString("N0") VND</div>
+				<div>Còn lại: @Model.Order1.TotalAmount.ToString("N0") VND</div>
+			}
+			<div>Phí vận chuyển: 30.000 VND</div>
+			@{
+				int totalPayment = Model.Order1.TotalAmount + 30000;
+			}
+			<div class="total-price">Tổng thanh toán: @totalPayment.ToString("N0") VND</div>
+			<button type="submit" name="action" value="placeOrder" class="order-button">Đặt hàng</button>
+		</div>
 
-            @{
-                int totalPayment = Model.Total - (Model.Total * Model.Discount / 100) + 30000;
-            }
-            <div class="total-price">Tổng thanh toán: @totalPayment.ToString("N0") VND</div>
-            <button type="submit" name="action" value="placeOrder" class="order-button">Đặt hàng</button>
-        </div>
+		<!-- Modal Popup -->
+		<div id="popupModal" class="modal">
+			<div class="modal-content">
+				<div class="modal-header">Notification</div>
+				<div class="modal-body">@popupMessage</div>
+				<button class="close-btn" onclick="closeModal()">Close</button>
+			</div>
+		</div>
+	</form>
 
-        <!-- Modal Popup -->
-        <div id="popupModal" class="modal">
-            <div class="modal-content">
-                <div class="modal-header">Notification</div>
-                <div class="modal-body">@popupMessage</div>
-                <button class="close-btn" onclick="closeModal()">Close</button>
-            </div>
-        </div>
-    </form>
+	<script>
+		// Show the popup if there is a message
+		document.addEventListener('DOMContentLoaded', function () {
+			var popupMessage = "@popupMessage";
+			if (popupMessage) {
+				document.getElementById('popupModal').style.display = 'flex';
+			}
+		});
 
-    <script>
-        // Show the popup if there is a message
-        document.addEventListener('DOMContentLoaded', function () {
-            var popupMessage = "@popupMessage";
-            if (popupMessage) {
-                document.getElementById('popupModal').style.display = 'flex';
-            }
-        });
-
-        // Function to close the popup
-        function closeModal() {
-            document.getElementById('popupModal').style.display = 'none';
-        }
-    </script>
+		// Function to close the popup
+		function closeModal() {
+			document.getElementById('popupModal').style.display = 'none';
+		}
+	</script>
 </body>

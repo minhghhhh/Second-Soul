@@ -16,10 +16,11 @@ namespace BusssinessObject
 		Task<IBusinessResult> ReadOnlyById(int orderDetailId);
 		Task<IBusinessResult> ReadOnlyOrderDetailsByOrderId(int orderId);
 		Task<IBusinessResult> Save(OrderDetail orderDetail);
-		 Task<List<OrderDetail>> GetDetailsByOrderId(int orderId);
-
-    }
-    public class OrderDetailBusiness : IOrderDetailBusiness
+		Task<List<OrderDetail>> GetDetailsByOrderId(int orderId);
+		Task<IBusinessResult> DeleteById(int id);
+		Task<IBusinessResult> DeleteByProductIdAndOrderId(int orderId, int productId);
+	}
+	public class OrderDetailBusiness : IOrderDetailBusiness
 	{
 
 		private readonly UnitOfWork _unitOfWork;
@@ -27,12 +28,12 @@ namespace BusssinessObject
 		{
 			_unitOfWork = unitOfWork;
 		}
-        public async Task<List<OrderDetail>> GetDetailsByOrderId(int orderId)
+		public async Task<List<OrderDetail>> GetDetailsByOrderId(int orderId)
 		{
 			return await _unitOfWork.OrderDetailRepository.GetDetailsByOrderId(orderId);
 		}
 
-        public async Task<IBusinessResult> GetById(int orderDetailId)
+		public async Task<IBusinessResult> GetById(int orderDetailId)
 		{
 			try
 			{
@@ -148,7 +149,63 @@ namespace BusssinessObject
 				return new BusinessResult(Const.ERROR_EXCEPTION, ex.ToString());
 			}
 		}
-
-
+		public async Task<IBusinessResult> DeleteById(int id)
+		{
+			try
+			{
+				var orderDetail = await _unitOfWork.OrderDetailRepository.GetByIdAsync(id);
+				if (orderDetail != null)
+				{
+					var result = await _unitOfWork.OrderDetailRepository.RemoveAsync(orderDetail);
+					if (result)
+					{
+						return new BusinessResult(Const.SUCCESS_DELETE_CODE, Const.SUCCESS_DELETE_MSG);
+					}
+					else
+					{
+						return new BusinessResult(Const.FAIL_DELETE_CODE, Const.FAIL_DELETE_MSG);
+					}
+				}
+				else
+				{
+					return new BusinessResult(Const.WARNING_NO_DATA_CODE, Const.WARNING_NO_DATA__MSG);
+				}
+			}
+			catch (Exception ex)
+			{
+				return new BusinessResult(Const.ERROR_EXCEPTION, ex.ToString());
+			}
+		}
+		public async Task<IBusinessResult> DeleteByProductIdAndOrderId(int orderId, int productId)
+		{
+			try
+			{
+				if (!(productId > 0 && orderId > 0))
+				{
+					return new BusinessResult(Const.WARNING_NO_DATA_CODE, Const.WARNING_NO_DATA__MSG);
+				}
+				var orderDetail = await _unitOfWork.OrderDetailRepository.GetDetailByProductIdAndOrderId(orderId, productId);
+				if (orderDetail != null)
+				{
+					var result = await _unitOfWork.OrderDetailRepository.RemoveOrderDetailAsync(orderDetail);
+					if (result)
+					{
+						return new BusinessResult(Const.SUCCESS_DELETE_CODE, Const.SUCCESS_DELETE_MSG);
+					}
+					else
+					{
+						return new BusinessResult(Const.FAIL_DELETE_CODE, Const.FAIL_DELETE_MSG);
+					}
+				}
+				else
+				{
+					return new BusinessResult(Const.WARNING_NO_DATA_CODE, Const.WARNING_NO_DATA__MSG);
+				}
+			}
+			catch (Exception ex)
+			{
+				return new BusinessResult(Const.ERROR_EXCEPTION, ex.ToString());
+			}
+		}
 	}
 }

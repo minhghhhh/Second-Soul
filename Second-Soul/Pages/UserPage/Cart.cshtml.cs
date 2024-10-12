@@ -89,7 +89,17 @@ namespace Second_Soul.Pages.UserPage
 					{
 						var phone = user.PhoneNumber ?? string.Empty;
 						var address = user.Address ?? string.Empty;
-						int orderId = await _orderBusiness.CreateOrderAsync(user.UserId, SelectedProducts, phone, address, 0, null);
+                        int total = 0;
+                        foreach(var productId in SelectedProducts)
+                        {
+                            var result = await _productBusiness.GetById(productId);
+                            if (result == null || result.Status <= 0 || result.Data == null) 
+                            {
+                                return await OnGet();
+                            }
+							total += ((Product)result.Data).Price;
+						}
+						int orderId = await _orderBusiness.CreateOrderAsync(user.UserId, SelectedProducts, phone, address, total, null);
 						return RedirectToPage("/OrderPage/Index", new { id = orderId });
 					}
                     break;
