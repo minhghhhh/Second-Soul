@@ -18,7 +18,7 @@ namespace Data.Repository
 		}
 		public async Task<List<OrderDetail>> GetDetailsByOrderId(int orderId)
 		{
-			return await context.OrderDetails.Where(a => a.OrderId == orderId).ToListAsync();
+			return await context.OrderDetails.Where(a => a.OrderId == orderId).Include(a => a.Product).ToListAsync();
 		}
 		public async Task<OrderDetail?> GetDetailByProductIdAndOrderId(int orderId, int productId)
 		{

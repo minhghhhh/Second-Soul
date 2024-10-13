@@ -101,7 +101,8 @@ namespace Second_Soul.Pages.OrderPage
 					return await OnGetAsync(id);
 				case "placeOrder":
 					// Handle placing the order
-					break;
+					var paymentLink = await _paymentBusiness.CreatePaymentLink(id);
+					return RedirectToPage(paymentLink.checkoutUrl);
 				case string a when a.Contains("removeProduct_"):
 					{
 						int productId = int.Parse(action.Split('_')[1]);
