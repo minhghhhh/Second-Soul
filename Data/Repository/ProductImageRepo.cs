@@ -14,7 +14,7 @@ namespace Data.Repository
         public ProductImageRepo(SecondSoulShopContext context) : base(context)
         {
         }
-        public async Task<List<ProductImage?>> GetAllProductImageByProductId(int id)
+        public async Task<List<ProductImage>> GetAllProductImageByProductId(int id)
         {
             return await context.ProductImages.Where(p => p.ProductId == id).ToListAsync();
         }
