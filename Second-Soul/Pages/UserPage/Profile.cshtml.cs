@@ -2,11 +2,13 @@ using BusssinessObject;
 using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
 using Data.Models;
+using Data.Utils;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Text.Json;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Second_Soul.Pages.UserPage
 {
@@ -22,7 +24,6 @@ namespace Second_Soul.Pages.UserPage
         }
 
         public User? UserProfile { get; set; } = null;
-
         [BindProperty]
         public string ErrorMessage { get; set; } = string.Empty;
         [BindProperty]
@@ -38,41 +39,57 @@ namespace Second_Soul.Pages.UserPage
             return Page();
         }
 
-        public async Task<IActionResult> OnPostAsync(IFormFile PictureFile)
+        public async Task<IActionResult> OnPostAsync(string action, IFormFile PictureFile)
         {
             UserProfile = await _userBusiness.GetFromCookie(Request);
-            if (UserProfile == null )
+            if (UserProfile == null)
             {
                 return RedirectToPage("/Login");
             }
-            
-            if (PictureFile != null)
+
+            switch (action)
             {
-                var allowedExtensions = new[] { ".png", ".jpg", ".jpeg" };
-                var fileExtension = Path.GetExtension(PictureFile.FileName).ToLower();
-                if (!allowedExtensions.Contains(fileExtension))
-                {
-                    ErrorMessage = "Only PNG, JPG, and JPEG formats are allowed.";
+                case "UpdateEmail":
+                    var confirmationLink =
+$"https://localhost:7141/UserPage/ChangeEmail/{UserProfile.UserId}";
+                    //  $"https://secondsoul2nd.azurewebsites.net/UserPage/ChangeEmail/{UserProfile.UserId}"; //deploy
+                    var emailSend = await SendMail.SendToChangeEmail(UserProfile.Email, confirmationLink);
+                    SuccessMessage = "Change Email Link has been sent to your current email.";
                     return Page();
-                }
-                var uploadParams = new ImageUploadParams()
-                {
-                    File = new FileDescription(PictureFile.FileName, PictureFile.OpenReadStream())
-                };
+                case "UpdatePassword":
+                    return Page();
+                case "UpdateProfile":
 
-                var uploadResult = await _cloudinary.UploadAsync(uploadParams);
-                UserProfile.ImageUrl = uploadResult.SecureUrl.ToString();
-                await _userBusiness.Update(UserProfile);
-/*                 _userBusiness.UpdateCookie(Request,Response);
-*/            }
-            else
-            {
-                ErrorMessage = "Please select a file to upload.";
-                return Page();
+                    return Page();
+                case "UpdatePicture":
+                    if (PictureFile != null)
+                    {
+                        var allowedExtensions = new[] { ".png", ".jpg", ".jpeg" };
+                        var fileExtension = Path.GetExtension(PictureFile.FileName).ToLower();
+                        if (!allowedExtensions.Contains(fileExtension))
+                        {
+                            ErrorMessage = "Only PNG, JPG, and JPEG formats are allowed.";
+                            return Page();
+                        }
+                        var uploadParams = new ImageUploadParams()
+                        {
+                            File = new FileDescription(PictureFile.FileName, PictureFile.OpenReadStream())
+                        };
+
+                        var uploadResult = await _cloudinary.UploadAsync(uploadParams);
+                        UserProfile.ImageUrl = uploadResult.SecureUrl.ToString();
+                        await _userBusiness.Update(UserProfile);
+                    }
+                    else
+                    {
+                        ErrorMessage = "Please select a file to upload.";
+                        return Page();
+                    }
+
+                    SuccessMessage = "Profile picture successfully changed.";
+                    return RedirectToPage();
             }
-
-            SuccessMessage = "Profile picture successfully changed.";
-            return RedirectToPage();
+            return Page();
         }
     }
 }

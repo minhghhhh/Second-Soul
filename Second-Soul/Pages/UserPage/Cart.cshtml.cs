@@ -100,7 +100,7 @@ namespace Second_Soul.Pages.UserPage
 							total += ((Product)result.Data).Price;
 						}
 						int orderId = await _orderBusiness.CreateOrderAsync(user.UserId, SelectedProducts, phone, address, total, null);
-						return RedirectToPage("/OrderPage/Index", new { id = orderId });
+						return RedirectToPage("/OrderPage", new { id = orderId });
 					}
                     break;
                 case "delete":
@@ -111,8 +111,9 @@ namespace Second_Soul.Pages.UserPage
 							var result = await _shoppingCartBusiness.RemoveFromCart(user.UserId, product);
 							if (result == null || result.Status <= 0)
 							{
+
 								ModelState.AddModelError(string.Empty, "Removing a product from cart has failed.");
-								return await OnGet();
+                                return await OnGet();
 							}
 						}
                         return await OnGet();
