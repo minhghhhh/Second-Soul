@@ -10,28 +10,32 @@ namespace Data.Utils
             return Regex.Replace(input.Trim(), @"\s+", " ");
         }
 
-		public static string RemoveLastParagraph(string input)
+		public static string GenerateRandomCodeWithExpiration(int minutesToExpire)
 		{
-			int lastIndex = input.LastIndexOf("\n\n");
+			var tokenId = Guid.NewGuid().ToString();
+			var expirationDate = DateTime.UtcNow.AddMinutes(minutesToExpire);
 
-			if (lastIndex == -1)
-			{
-				return input;
-			}
+			var token = $"{tokenId}|{expirationDate:o}";
 
-			return input[..lastIndex].TrimEnd();
+			return token;
 		}
 
-		public static string ExtractLastParagraph(string input)
+		public static bool ValidateToken(string token)
 		{
-			int lastIndex = input.LastIndexOf("\n\n");
 
-			if (lastIndex == -1)
-			{
-				return string.Empty;
-			}
+			var parts = token.Split('|');
+			if (parts.Length != 2)
+				return false;
 
-			return input[lastIndex..];
+			var tokenId = parts[0];
+			if (!DateTime.TryParse(parts[1], out var expirationDate))
+				return false;
+
+			if (DateTime.UtcNow > expirationDate)
+				return false;
+
+			return true;
 		}
+
 	}
 }

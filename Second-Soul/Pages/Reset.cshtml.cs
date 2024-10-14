@@ -7,13 +7,14 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.ComponentModel.DataAnnotations;
 using System.Security.Cryptography;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Second_Soul.Pages
 {
-    public class ResetPasswordModel : PageModel
+    public class ResetModel : PageModel
     {
         private readonly IUserBusiness _userBusiness;
-        public ResetPasswordModel(IUserBusiness userBusiness)
+        public ResetModel(IUserBusiness userBusiness)
         {
             _userBusiness = userBusiness;
         }
@@ -23,6 +24,7 @@ namespace Second_Soul.Pages
 
         public void OnGet()
         {
+            ViewData["TokenError"] = TempData["TokenError"];
         }
         public async Task<IActionResult> OnPostRequestToken(string Email)
         {
@@ -40,13 +42,15 @@ namespace Second_Soul.Pages
             }
 
             var user = (User)userResult.Data;
-            user.Token = GenerateTokenAsync();
+            user.Token = FormatUtilities.GenerateRandomCodeWithExpiration(20);
 
             var result = await _userBusiness.Update(user);
 
             if (result != null && result.Status > 0)
             {
-                bool emailSent = await SendMail.SendTokenEmail(Input.Email, user.Token);
+				var resetLink =
+					$"{Request.Scheme}://{Request.Host}/Verify?token={HashPassWithSHA256.HashWithSHA256(user.Token)}";
+				bool emailSent = await SendMail.SendResetLinkEmail(user.Email, resetLink);
                 if (emailSent)
                 {
                     return Page();
