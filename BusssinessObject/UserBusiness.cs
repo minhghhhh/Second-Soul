@@ -6,6 +6,7 @@ using Data.Utils;
 using Data.Utils.HashPass;
 using Microsoft.AspNetCore.Http;
 using System.Text.Json;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace BusssinessObject
 {
@@ -23,7 +24,7 @@ namespace BusssinessObject
         Task<IBusinessResult> Register(User cate);
         Task<User?> GetUserByToken(string token);
         Task<IBusinessResult> ReadOnlyActiveSellers();
-
+        Task<IBusinessResult> ChangeEmail(User cate, string newEmail);
         /*        void UpdateCookie(HttpRequest request, HttpResponse response);
         */
     }
@@ -183,6 +184,34 @@ namespace BusssinessObject
                 return new BusinessResult(Const.ERROR_EXCEPTION, ex.ToString());
             }
         }
+        public async Task<IBusinessResult> ChangeEmail(User cate,string newEmail)
+        {
+            try
+            {
+                cate.Token = Guid.NewGuid().ToString();
+                cate.Email = newEmail;
+                cate.IsActive = false;
+                int result = await _unitOfWork.UserRepository.Update(cate);
+
+                if (result > 0)
+                {
+                    var confirmationLink =
+                    $"https://localhost:7141/confirm?token={cate.Token}";
+                    //  $"https://secondsoul2nd.azurewebsites.net/confirm?token={cate.Token}"; //deploy
+                    var emailSend = await SendMail.SendConfirmationEmail(cate.Email, confirmationLink);
+
+                    return new BusinessResult(Const.SUCCESS_UPDATE_CODE, Const.SUCCESS_UPDATE_MSG);
+                }
+                else
+                {
+                    return new BusinessResult(Const.FAIL_UPDATE_CODE, Const.FAIL_UPDATE_MSG);
+                }
+            }
+            catch (Exception ex)
+            {
+                return new BusinessResult(-4, ex.ToString());
+            }
+        }
 
         public async Task<IBusinessResult> Update(User cate)
         {
@@ -327,7 +356,7 @@ namespace BusssinessObject
                 if (result != null)
                 {
                     var confirmationLink =
-               $"https://localhost:7141/Confirm?token={cate.Token}";
+                    $"https://localhost:7141/Confirm?token={cate.Token}";
                     //  $"https://secondsoul2nd.azurewebsites.net/confirm?token={cate.Token}"; //deploy
                     var emailSend = await SendMail.SendConfirmationEmail(cate.Email, confirmationLink);
                     if (!emailSend)

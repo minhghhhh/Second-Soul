@@ -178,7 +178,7 @@ VALUES
 Go
 INSERT INTO Products (SellerID, Name, Description, CategoryID, Price, Condition)
 VALUES
-    (1, 'Casual T-Shirt', 'Comfortable cotton t-shirt for everyday wear.', 8, 19000, 'New'),
+    (1, 'Casual T-Shirt', 'Comfortable cotton t-shirt for everyday wear.', 8, 2000, 'New'),
     (1, 'Denim Jeans', 'Stylish denim jeans, perfect for casual outings.', 12, 39000, 'Like_New'),
     (1, 'Leather Jacket', 'Classic leather jacket for a rugged look.', 7, 129000, 'Good'),
     (3, 'Summer Dress', 'Light and breezy summer dress for warm days.', 11, 49000, 'New'),
