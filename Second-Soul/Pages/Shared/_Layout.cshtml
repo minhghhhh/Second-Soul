@@ -33,7 +33,10 @@
                 <a class="navbar-brand" asp-area="" asp-page="/Index">
                     <img src="/pic/logo/2ndsoullogonoBG.png" alt="Second Soul Logo" style="height: 60px;" />
                 </a>
-                <div class="collapse navbar-collapse">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav me-auto">
                         <li class="nav-item">
                             <a class="nav-link" href="#" style="color: saddlebrown;">Shop</a>
@@ -45,13 +48,13 @@
                             <a class="nav-link" href="#" style="color: saddlebrown;">Product</a>
                         </li>
                     </ul>
-                    <form method="get" asp-page="/Search" class="d-flex" style="flex-grow: 1; margin-left: 20px;">
+                    <form method="get" asp-page="/Search" class="d-flex flex-grow-1 mx-3">
                         <input class="form-control me-2" type="search" name="query" style="color: saddlebrown" placeholder="Tìm kiếm..." aria-label="Search" />
-                        <button class="btn btn-outline-light" style="color: saddlebrown" type="submit">Search</button>
+                        <button class="btn btn-outline-light" style="color: saddlebrown;" type="submit">Search</button>
                     </form>
-                    <ul class="navbar-nav">
-                        <li class="nav-item">
-                            <a href="/Cart" class="cart-icon" style="text-decoration: none;">
+                    <ul class="navbar-nav d-flex align-items-center">
+                        <li class="nav-item me-3">
+                            <a href="/UserPage/Cart" class="cart-icon" style="text-decoration: none; color: saddlebrown;">
                                 <i class="fas fa-shopping-cart"></i>
                                 <span class="badge"></span>
                             </a>
@@ -60,14 +63,14 @@
                         {
                             <li class="nav-item">
                                 <div class="dropdown">
-                                    <button class="btn btn-link dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <button class="btn btn-link dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false" style="color: saddlebrown;">
                                         @if (currentUser?.ImageUrl != null)
                                         {
                                             <img src="@currentUser.ImageUrl" alt="Profile Picture" class="rounded-circle" width="30" height="30" />
                                         }
                                         else
                                         {
-                                            <i class="bi bi-person-circle" style="font-size: 30px; color: white;"></i>
+                                            <i class="bi bi-person-circle" style="font-size: 30px; color: saddlebrown;"></i>
                                         }
                                         @currentUser?.Username
                                     </button>
@@ -85,12 +88,13 @@
                                 <a asp-page="/Login" class="nav-link" style="color: saddlebrown;">Login</a>
                             </li>
                         }
-
                     </ul>
                 </div>
             </div>
         </nav>
     </header>
+
+
 
     <div class="container">
         <main role="main" class="pb-3">

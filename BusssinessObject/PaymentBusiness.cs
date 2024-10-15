@@ -46,6 +46,7 @@ namespace BusssinessObject
 		}
 		public async Task<IBusinessResult> CreatePaymentLink(int orderId, string cancelUrl, string successUrl, int? userId)
 		{
+			var total = 0;
 			try
 			{
 				var result = await _orderBusiness.GetPendingOrder(orderId, userId);
@@ -62,10 +63,12 @@ namespace BusssinessObject
 
 				foreach (var orderDetails in order.OrderDetails)
 				{
+					 total = total + orderDetails.Price;
 					var item = new ItemData(orderDetails.Product.Name, 1, orderDetails.Price);
 					itemlist.Add(item);
 				}
-				var paymentData = new PaymentData(orderId, order.TotalAmount, order.Descriptions, itemlist, cancelUrl, successUrl);
+				total = total + 30000;
+				var paymentData = new PaymentData(orderId, total, order.Descriptions, itemlist, cancelUrl, successUrl);
 				var paymentResult = await _payOS.createPaymentLink(paymentData);
 				if (paymentResult != null)
 				{

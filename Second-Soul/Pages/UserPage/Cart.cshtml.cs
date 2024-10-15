@@ -100,7 +100,7 @@ namespace Second_Soul.Pages.UserPage
 							total += ((Product)result.Data).Price;
 						}
 						int orderId = await _orderBusiness.CreateOrderAsync(user.UserId, SelectedProducts, phone, address, total, null);
-						return RedirectToPage("/OrderPage", new { id = orderId });
+						return RedirectToPage("/OrderPage/index", new { id = orderId });
 					}
                     break;
                 case "delete":

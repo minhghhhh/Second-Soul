@@ -36,7 +36,8 @@ namespace Second_Soul.Pages.OrderPage
 		public string CouponMessage { get; set; } = string.Empty;
 		public int Discount { get; set; } = 0;
 		public int Total { get; set; } = 0;
-		public Order Order1 { get; set; } = new Order();
+		[BindProperty]
+		public Order Order1 { get; set; }
 		public List<OrderDetail> Details { get; set; } = new List<OrderDetail>();
 		public List<Product> Products { get; set; } = new List<Product>();
 		public User User1 { get; set; } = new User();
@@ -108,7 +109,7 @@ namespace Second_Soul.Pages.OrderPage
 						PopupMessage = paymentLink != null && !string.IsNullOrEmpty(paymentLink.Message) ? paymentLink.Message : "Something went wrong. Payments cannot be done as of this moment.";
 						return await OnGetAsync(id);
 					}
-					return RedirectToPage(((CreatePaymentResult)paymentLink.Data).checkoutUrl);
+					return Redirect(((CreatePaymentResult)paymentLink.Data).checkoutUrl);
 				case string a when a.Contains("removeProduct_"):
 					{
 						int productId = int.Parse(action.Split('_')[1]);
