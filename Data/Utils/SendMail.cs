@@ -1,4 +1,5 @@
-﻿using MailKit.Net.Smtp;
+﻿using Data.Utils.HashPass;
+using MailKit.Net.Smtp;
 using MailKit.Security;
 using Microsoft.Extensions.Caching.Memory;
 using MimeKit;
@@ -13,24 +14,6 @@ namespace Data.Utils
 {
 	public class SendMail
 	{
-		public static string GenerateRandomCodeWithExpiration(string token, int minutesToExpire)
-		{
-			Random random = new Random();
-			StringBuilder codeWithExpiration = new StringBuilder();
-
-			List<char> digitChars = token.Where(char.IsDigit).ToList();
-
-			for (int i = 0; i < 6; i++)
-			{
-				char randomDigit = digitChars[random.Next(0, digitChars.Count)];
-				codeWithExpiration.Append(randomDigit);
-			}
-
-			DateTime expirationTime = DateTime.Now.AddMinutes(minutesToExpire);
-			string code = codeWithExpiration.ToString();
-
-			return code;
-		}
 		public static async Task<bool> SendResetPass(IMemoryCache cache, string toEmail, string code, bool showExpirationTime)
 		{
 			var userName = "Second Soul";
@@ -81,9 +64,9 @@ namespace Data.Utils
 				}
 			}
 		}
-		public static async Task<bool> SendTokenEmail(
+		public static async Task<bool> SendResetLinkEmail(
 	string toEmail,
-	string token
+	string resetLink
 )
 		{
 			var userName = "Second Soul";
@@ -124,11 +107,15 @@ namespace Data.Utils
             </style>
         </head>
         <body>
-            <div class='content'>
-                <p>You have requested a password reset. Please use the token below:</p>
-                <div class='token'>" + token + @"</div>
-                <p>If you did not request this, please ignore this email.</p>
-            </div>
+            <body>
+                <div class='content'>
+                    <p>Please click the button below to reset your password:</p>                    
+                      <a class='button' href='"
+					+ resetLink
+					+ "'>Reset Password</a>"
+					+ @"
+                </div>
+            </body>
         </body>
     </html>
 "

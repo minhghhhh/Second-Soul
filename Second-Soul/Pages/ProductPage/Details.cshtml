@@ -13,11 +13,11 @@
             }
             else
             {
-                <img src="@Model.Images.First()" alt="@Model.Product.Name" class="main-image">
+                @* <img src="@Model.Images.First()" alt="@Model.Product.Name" class="main-image"> *@
             }
             <div class="thumbnail-list">
-                <img src="your-thumbnail-link-here.png" alt="Thumbnail 1">
-                <img src="your-thumbnail-link-here.png" alt="Thumbnail 2">
+                @* <img src="https://static.vecteezy.com/system/resources/previews/008/847/318/non_2x/isolated-black-t-shirt-front-free-png.png" alt="Thumbnail 1"> *@
+                <img src="https://purepng.com/public/uploads/large/purepng.com-black-t-shirtclothingblack-t-shirtfashion-dress-shirt-black-cloth-tshirt-631522326884bzr0p.png" alt="Thumbnail 2">
             </div>
         </div>
         <div class="info">
@@ -81,8 +81,9 @@
     }
 
     .thumbnail-list img {
-        width: 100px;
-        margin: 5px;
+        width: 300px;
+        height: 300px;
+        margin: 100px;
     }
 
     .placeholder-frame {

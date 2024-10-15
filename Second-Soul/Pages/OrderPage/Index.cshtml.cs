@@ -101,8 +101,14 @@ namespace Second_Soul.Pages.OrderPage
 					return await OnGetAsync(id);
 				case "placeOrder":
 					// Handle placing the order
-					var paymentLink = await _paymentBusiness.CreatePaymentLink(id);
-					return RedirectToPage(paymentLink.checkoutUrl);
+					var paymentLink = await _paymentBusiness.CreatePaymentLink(id, $"{Request.Scheme}://{Request.Host}/CancelPayment/{id}", $"{Request.Scheme}://{Request.Host}" , user.UserId);
+
+					if (paymentLink == null || !(paymentLink.Status > 0) || paymentLink.Data == null)
+					{
+						PopupMessage = paymentLink != null && !string.IsNullOrEmpty(paymentLink.Message) ? paymentLink.Message : "Something went wrong. Payments cannot be done as of this moment.";
+						return await OnGetAsync(id);
+					}
+					return RedirectToPage(((CreatePaymentResult)paymentLink.Data).checkoutUrl);
 				case string a when a.Contains("removeProduct_"):
 					{
 						int productId = int.Parse(action.Split('_')[1]);

@@ -53,9 +53,9 @@ namespace Data.Repository
             return order.OrderId;
         }
 
-        public async Task<Order?> GetOrderWithOrderDetailsById(int orderId)
+        public async Task<Order?> GetOrderWithOrderDetailsAndProductsById(int orderId)
         {
-            return await context.Orders.Include(o => o.OrderDetails).SingleOrDefaultAsync(o => o.OrderId == orderId);
+            return await context.Orders.Include(o => o.OrderDetails).ThenInclude(od => od.Product).SingleOrDefaultAsync(o => o.OrderId == orderId);
         }
 
     }
