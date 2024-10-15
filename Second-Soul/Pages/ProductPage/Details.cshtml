@@ -5,20 +5,22 @@
 <div class="product-container">
     <div class="product-details">
         <div class="image-gallery">
-            @if (Model.Images.Count == 0)
+            @if (Model.Images.Count != 0)
             {
+
                 <div class="placeholder-frame">
                     No Image Available
                 </div>
             }
             else
             {
+                <div class="thumbnail-list">
+                    @* <img src="https://static.vecteezy.com/system/resources/previews/008/847/318/non_2x/isolated-black-t-shirt-front-free-png.png" alt="Thumbnail 1"> *@
+                    <img src="https://purepng.com/public/uploads/large/purepng.com-black-t-shirtclothingblack-t-shirtfashion-dress-shirt-black-cloth-tshirt-631522326884bzr0p.png" alt="Thumbnail 2" class="main-image">
+                </div>
                 @* <img src="@Model.Images.First()" alt="@Model.Product.Name" class="main-image"> *@
             }
-            <div class="thumbnail-list">
-                @* <img src="https://static.vecteezy.com/system/resources/previews/008/847/318/non_2x/isolated-black-t-shirt-front-free-png.png" alt="Thumbnail 1"> *@
-                <img src="https://purepng.com/public/uploads/large/purepng.com-black-t-shirtclothingblack-t-shirtfashion-dress-shirt-black-cloth-tshirt-631522326884bzr0p.png" alt="Thumbnail 2">
-            </div>
+            
         </div>
         <div class="info">
             <h1>@Model.Product.Name</h1>
