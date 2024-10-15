@@ -19,6 +19,7 @@ namespace BusssinessObject
 		Task<IBusinessResult> ReadOnlyOrdersByUserId(int userId);
 		Task<IBusinessResult> Save(Order order);
 		Task<IBusinessResult> Update(Order order);
+		Task<IBusinessResult> GetPendingOrder(int orderId, int? userId);
 		Task<int> CreateOrderAsync(int customerId, List<int> productIds, string phoneNumber, string address, int totalAmount, int? couponId);
 
 	}
@@ -177,20 +178,80 @@ namespace BusssinessObject
 			}
 		}
 
-		public async Task<Order?> ValidatePendingOrder(Order? order)
+		public async Task<IBusinessResult> GetPendingOrder(int orderId, int? userId)
 		{
+			try
+			{
+				#region Business rule
+				#endregion
 
+				if (!(orderId > 0))
+				{
+					throw new Exception("Order cannot be found.");
+				}
+
+				var order = await _unitOfWork.OrderRepository.GetOrderWithOrderDetailsAndProductsById(orderId);
+
+				if (order == null)
+				{
+					return new BusinessResult(Const.WARNING_NO_DATA_CODE, Const.WARNING_NO_DATA__MSG);
+				}
+				else
+				{
+					var result = await ValidatePendingOrder(order, userId);
+					if (result.order == null || !string.IsNullOrEmpty(result.error))
+					{
+						return new BusinessResult(Const.FAIL_READ_CODE, !string.IsNullOrEmpty(result.error) ? result.error : Const.FAIL_READ_MSG);
+					}
+					return new BusinessResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, result.order);
+				}
+			}
+			catch (Exception ex)
+			{
+				return new BusinessResult(Const.ERROR_EXCEPTION, ex.Message);
+			}
+
+		}
+
+		public async Task<(Order? order, System.String? error)> ValidatePendingOrder(Order? order, int? userId)
+		{
+			System.String? error = null;
 			if (order != null)
 			{
 				if (order.Status != "Pending")
 				{
-					return null;
+					await _unitOfWork.OrderRepository.RemoveAsync(order);
+					return (null, "This is not a pending order.");
 				}
-				var orderDetails = await _unitOfWork.OrderDetailRepository.GetListWithNoTracking(o => o.OrderId == order.OrderId);
+				if (userId != null && order.CustomerId != userId)
+				{
+					return (null, "This order cannot be accessed by any other customer but its own.");
+				}
+				var orderDetails = await _unitOfWork.OrderDetailRepository.GetDetailsByOrderId(order.OrderId);
 				if (orderDetails == null || orderDetails.Count <= 0)
 				{
 					await _unitOfWork.OrderRepository.RemoveAsync(order);
-					return null;
+					return (null, "This order contains no valid and available items.");
+				}
+				var errorMessage = new StringBuilder("Unavailable Product(s):");
+				foreach (var orderDetail in orderDetails)
+				{
+					if (orderDetail.Product == null || orderDetail.Product.IsAvailable == false)
+					{
+						errorMessage.Append(orderDetail.Product == null ? string.Empty : " " + orderDetail.Product.Name + ",");
+						await _unitOfWork.OrderDetailRepository.RemoveAsync(orderDetail);
+						await _unitOfWork.SaveChangeAsync();
+					}
+				}
+				if (orderDetails == null || orderDetails.Count <= 0)
+				{
+					await _unitOfWork.OrderRepository.RemoveAsync(order);
+					return (null, "This order contains no valid and available items.");
+				}
+				if (errorMessage.Length > "Unavailable Product(s):".Length)
+				{
+					errorMessage[errorMessage.Length - 1] = '.';
+					error += errorMessage.ToString();
 				}
 				if (order.CouponId != null && order.CouponId > 0)
 				{
@@ -200,12 +261,12 @@ namespace BusssinessObject
 					{
 						order.CouponId = null;
 						order.TotalAmount = total;
-						await _unitOfWork.SaveChangeAsync();
+						await _unitOfWork.OrderRepository.UpdateAsync(order);
 					}
-
 				}
-			}  
-			return order;
+				await _unitOfWork.SaveChangeAsync();
+			}
+			return (order, error);
 		}
 	}
 }

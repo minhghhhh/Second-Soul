@@ -1,4 +1,5 @@
-﻿using MailKit.Net.Smtp;
+﻿using Data.Utils.HashPass;
+using MailKit.Net.Smtp;
 using MailKit.Security;
 using Microsoft.Extensions.Caching.Memory;
 using MimeKit;
@@ -13,24 +14,6 @@ namespace Data.Utils
 {
 	public class SendMail
 	{
-		public static string GenerateRandomCodeWithExpiration(string token, int minutesToExpire)
-		{
-			Random random = new Random();
-			StringBuilder codeWithExpiration = new StringBuilder();
-
-			List<char> digitChars = token.Where(char.IsDigit).ToList();
-
-			for (int i = 0; i < 6; i++)
-			{
-				char randomDigit = digitChars[random.Next(0, digitChars.Count)];
-				codeWithExpiration.Append(randomDigit);
-			}
-
-			DateTime expirationTime = DateTime.Now.AddMinutes(minutesToExpire);
-			string code = codeWithExpiration.ToString();
-
-			return code;
-		}
 		public static async Task<bool> SendResetPass(IMemoryCache cache, string toEmail, string code, bool showExpirationTime)
 		{
 			var userName = "Second Soul";
@@ -81,9 +64,9 @@ namespace Data.Utils
 				}
 			}
 		}
-		public static async Task<bool> SendTokenEmail(
+		public static async Task<bool> SendResetLinkEmail(
 	string toEmail,
-	string token
+	string resetLink
 )
 		{
 			var userName = "Second Soul";
@@ -124,11 +107,15 @@ namespace Data.Utils
             </style>
         </head>
         <body>
-            <div class='content'>
-                <p>You have requested a password reset. Please use the token below:</p>
-                <div class='token'>" + token + @"</div>
-                <p>If you did not request this, please ignore this email.</p>
-            </div>
+            <body>
+                <div class='content'>
+                    <p>Please click the button below to reset your password:</p>                    
+                      <a class='button' href='"
+					+ resetLink
+					+ "'>Reset Password</a>"
+					+ @"
+                </div>
+            </body>
         </body>
     </html>
 "
@@ -226,7 +213,81 @@ namespace Data.Utils
 				}
 			}
 		}
-		public static async Task<bool> SendRegistrationSuccessEmail(string toEmail)
+        public static async Task<bool> SendToChangeEmail(
+    string toEmail,
+    string confirmationLink
+)
+        {
+            var userName = "Second Soul";
+            var emailFrom = "chechminh1136@gmail.com";
+            var password = "fnwl dkyf sqps wgoq";
+
+            var message = new MimeMessage();
+            message.From.Add(new MailboxAddress(userName, emailFrom));
+            message.To.Add(new MailboxAddress("", toEmail));
+            message.Subject = "Change Email";
+            message.Body = new TextPart("html")
+            {
+                Text =
+                    @"
+        <html>
+            <head>
+                <style>
+                    body {
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        height: 100vh;
+                        margin: 0;
+                        font-family: Arial, sans-serif;
+                    }
+                    .content {
+                        text-align: center;
+                    }
+                    .button {
+                        display: inline-block;
+                        padding: 10px 20px;
+                        background-color: #000;
+                        color: #ffffff;
+                        text-decoration: none;
+                        border-radius: 5px;
+                        font-size: 16px;
+                    }
+                </style>
+            </head>
+            <body>
+                <div class='content'>
+                    <p>Please click the button below to change your email:</p>                    
+                      <a class='button' href='"
+                    + confirmationLink
+                    + "'>Confirm Email</a>"
+                    + @"
+                </div>
+            </body>
+        </html>
+    "
+            };
+            using (var client = new SmtpClient())
+            {
+                client.Connect("smtp.gmail.com", 587, SecureSocketOptions.StartTls);
+                //authenticate account email
+                client.Authenticate(emailFrom, password);
+
+                try
+                {
+                    await client.SendAsync(message);
+                    await client.DisconnectAsync(true);
+                    return true;
+                }
+                catch (Exception ex)
+                {
+                    System.Console.WriteLine(ex.Message);
+                    return false;
+                }
+            }
+        }
+
+        public static async Task<bool> SendRegistrationSuccessEmail(string toEmail)
 		{
 			var userName = "Second Soul";
 			var emailFrom = "chechminh1136@gmail.com";
