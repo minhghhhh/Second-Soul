@@ -12,6 +12,7 @@ namespace BusssinessObject
 {
     public interface IUserBusiness
     {
+        Task<List<Product>> GetAllProduct();
         Task<IBusinessResult> GetAll();
         Task<IBusinessResult> GetById(int id);
         Task<IBusinessResult> Save(User cate);
@@ -68,6 +69,10 @@ namespace BusssinessObject
             {
                 return new BusinessResult(Const.ERROR_EXCEPTION, ex.Message);
             }
+        }
+        public async Task<List<Product>> GetAllProduct()
+        {
+            return await _unitOfWork.ProductRepository.GetAllProduct();
         }
         public async Task<IBusinessResult> GetAll()
         {

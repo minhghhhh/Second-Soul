@@ -60,7 +60,6 @@ namespace Second_Soul.Pages.UserPage
                 }
                 await _userBusiness.ChangeEmail(user, NewEmail);
                 SuccessMessage = "Your email has been updated successfully.Confirm your email and login again to continue";
-                    await Task.Delay(2000);
                 Response.Cookies.Delete("User");
                 return RedirectToPage("/Index");
             }

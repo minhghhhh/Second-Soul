@@ -1,0 +1,99 @@
+﻿@page
+@model Second_Soul.Pages.UserPage.AddProductModel
+@{
+    ViewData["Title"] = "Add Product";
+}
+
+<h2>Add Product</h2>
+
+<!-- Product Form -->
+<form id="productForm" method="post">
+    <div class="form-group">
+        <label asp-for="Product.Name"></label>
+        <input asp-for="Product.Name" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Product.Description"></label>
+        <textarea asp-for="Product.Description" class="form-control"></textarea>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Product.Price"></label>
+        <input asp-for="Product.Price" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Product.CategoryID">Category</label>
+        <select asp-for="Product.CategoryID" class="form-control">
+            @foreach (var category in Model.Categories)
+            {
+                <option value="@category.CategoryId">@category.CategoryName</option>
+            }
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Product.Condition"></label>
+        <select asp-for="Product.Condition" class="form-control">
+            <option value="New">New</option>
+            <option value="Like_New">Like New</option>
+            <option value="Good">Good</option>
+            <option value="Fair">Fair</option>
+        </select>
+    </div>
+
+    <!-- FilePond Input for Images -->
+    <div class="form-group">
+        <label for="photos">Upload Images</label>
+        <input type="file" class="filepond" asp-for="Photos" multiple />
+    </div>
+
+    <button type="submit" id="saveProduct" class="btn btn-primary">Save Product</button>
+</form>
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
+    <script src="https://unpkg.com/filepond/dist/filepond.min.js"></script>
+    <link href="https://unpkg.com/filepond/dist/filepond.css" rel="stylesheet" />
+    <script>
+        // FilePond Configuration
+        const pond = FilePond.create(
+            document.querySelector('input.filepond'), {
+                allowMultiple: true,
+                instantUpload: false,
+            });
+
+        // Handle Save Product Action
+        $('#saveProduct').click(function () {
+            // let formData = new FormData();
+            // // Collect Product Info
+            // formData.append('Name', $('input[name="Product.Name"]').val());
+            // formData.append('Description', $('textarea[name="Product.Description"]').val());
+            // formData.append('Price', $('input[name="Product.Price"]').val());
+            // formData.append('CategoryID', $('select[name="Product.CategoryID"]').val());
+            // formData.append('Condition', $('select[name="Product.Condition"]').val());
+
+            // Collect Uploaded Files from FilePond
+            let pondFiles = pond.getFiles();
+            for (let i = 0; i < pondFiles.length; i++) {
+                formData.append('Photos', pondFiles[i].file);
+            }
+
+            // Ajax Request to Save Product
+            // $.ajax({
+            //     url: '/UserPage/AddProduct', 
+            //     type: 'POST',
+            //     data: formData,
+            //     contentType: false,
+            //     processData: false,
+            //     success: function (response) {
+            //         alert('Product saved successfully!');
+            //     },
+            //     error: function (error) {
+            //         alert('Error while saving product.');
+            //     }
+            // });
+        });
+    </script>
+}

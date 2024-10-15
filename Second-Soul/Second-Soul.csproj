@@ -21,6 +21,7 @@
   <ItemGroup>
     <Folder Include="Controllers\" />
     <Folder Include="Models\" />
+    <Folder Include="wwwroot\images\temp\" />
   </ItemGroup>
 
   <ItemGroup>

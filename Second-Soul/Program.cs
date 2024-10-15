@@ -13,15 +13,6 @@ using FluentAssertions.Common;
 using Net.payOS;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.ConfigureApplicationCookie(options =>
-{
-    options.Cookie.HttpOnly = true;
-    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-    options.Cookie.SameSite = SameSiteMode.Strict;
-    options.Cookie.Name = "SecondSoul";
-    options.ExpireTimeSpan = TimeSpan.FromDays(30);
-    options.SlidingExpiration = true;
-});
 
 IConfiguration configuration = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
 
@@ -72,6 +63,23 @@ builder.Services.AddScoped<FavoriteShopsRepo>();
 builder.Services.AddMvcCore();
 
 builder.Services.AddRazorPages();
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30); // Set timeout for session
+    //options.Cookie.HttpOnly = true; // Cookie settings
+    options.Cookie.IsEssential = true; // Make the session cookie essential
+});
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.Cookie.HttpOnly = true;
+    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+    options.Cookie.SameSite = SameSiteMode.Strict;
+    options.Cookie.Name = "SecondSoul";
+    options.ExpireTimeSpan = TimeSpan.FromDays(30);
+    options.SlidingExpiration = true;
+});
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

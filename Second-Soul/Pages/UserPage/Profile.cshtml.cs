@@ -59,7 +59,6 @@ $"https://localhost:7141/UserPage/ChangeEmail/{UserProfile.UserId}";
                 case "UpdatePassword":
                     return Page();
                 case "UpdateProfile":
-
                     return Page();
                 case "UpdatePicture":
                     if (PictureFile != null)

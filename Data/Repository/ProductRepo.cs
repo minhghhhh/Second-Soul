@@ -20,7 +20,10 @@ namespace Data.Repository
             _dbcontext = context;
             _userRepo = userRepo;
         }
-
+		public async Task<List<Product>> GetAllProduct()
+		{
+			return await _dbcontext.Products.Include(a=> a.Category).ToListAsync();
+		} 
         public async Task<List<Product>> GetProductsNewest()
         {
             return await _dbcontext.Products.AsNoTracking().OrderByDescending(p=>p.AddedDate).Where(p=> p.IsAvailable == true).ToListAsync();

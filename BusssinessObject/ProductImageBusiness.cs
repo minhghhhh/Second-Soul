@@ -1,4 +1,6 @@
 ﻿using BusinessObject.Base;
+using CloudinaryDotNet.Actions;
+using CloudinaryDotNet;
 using Common;
 using Data;
 using Data.Models;
@@ -7,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 
 namespace BusssinessObject
 {
@@ -16,13 +19,40 @@ namespace BusssinessObject
         Task<IBusinessResult> Save(ProductImage cate);
         Task<IBusinessResult> Update(ProductImage cate);
         Task<IBusinessResult> DeleteById(int id);
+        Task<string> UploadImageAsync(IFormFile file);
+
     }
     public class ProductImageBusiness : IProductImageBusiness
     {
         private readonly UnitOfWork _unitOfWork;
-        public ProductImageBusiness(UnitOfWork unitOfWork)
+        private readonly Cloudinary _cloudinary;
+        public ProductImageBusiness(UnitOfWork unitOfWork, Cloudinary cloudinary)
         {
             _unitOfWork = unitOfWork;
+            _cloudinary = cloudinary;
+        }
+
+        public async Task<string> UploadImageAsync(IFormFile file)
+        {
+            // Create a memory stream to read the file
+            using (var stream = new MemoryStream())
+            {
+                // Copy the file to the memory stream
+                await file.CopyToAsync(stream);
+                stream.Position = 0; // Reset stream position to the beginning
+
+                var uploadParams = new ImageUploadParams
+                {
+                    File = new FileDescription(file.FileName, stream),
+                    Folder = "products",
+                    UseFilename = true,
+                    UniqueFilename = false,
+                    Overwrite = true
+                };
+
+                var uploadResult = await _cloudinary.UploadAsync(uploadParams);
+                return uploadResult.SecureUrl.ToString();
+            }
         }
 
         public async Task<IBusinessResult> GetByProductId(int id)

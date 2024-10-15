@@ -21,11 +21,16 @@
             <div style="color: red;">@Model.ErrorMessage</div>
         }
 
+
         @if (!string.IsNullOrEmpty(Model.SuccessMessage))
         {
-            <div style="color: lawngreen;">@Model.SuccessMessage</div>
+            <div style="color: green;">@Model.SuccessMessage</div>
+            <script>
+                setTimeout(function () {
+                    window.location.href = '/UserPage/Profile';
+                }, 3000);
+            </script>
         }
-
     </div>
 
     <style>
