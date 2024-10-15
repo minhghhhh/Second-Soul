@@ -4,7 +4,206 @@
     ViewData["Title"] = "Home page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        #carouselExampleIndicators {
+            height: 600px; /* Bạn có thể điều chỉnh giá trị này theo nhu cầu */
+            overflow: hidden;
+        }
+
+        .carousel-inner {
+            height: 100%;
+        }
+
+        .carousel-item img {
+            height: 100%;
+            width: 100%;
+            object-fit: cover;
+        }
+
+        .info-text {
+            font-size: 0.9em;
+            line-height: 1.6;
+            color: #333;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .container {
+            padding-left: 0;
+            padding-right: 0;
+        }
+
+        .sbc {
+            font-family: 'Georgia', serif;
+            padding-top: 50px;
+        }
+
+        /* Product Grid Styles */
+        .product-grid {
+            margin-top: 50px;
+        }
+
+        .product-item {
+            margin-bottom: 30px;
+            transition: transform 0.3s ease-in-out;
+        }
+
+            .product-item:hover {
+                transform: scale(1.05);
+            }
+
+            .product-item img {
+                width: 100%;
+                height: auto;
+                border-radius: 10px;
+            }
+
+            .product-item h5 {
+                margin-top: 10px;
+                font-size: 1.1em;
+                font-family: 'Arial', sans-serif;
+                text-align: center;
+            }
+
+            .product-item a {
+                text-decoration: none;
+                color: #333;
+            }
+
+                .product-item a:hover {
+                    color: #007bff;
+                }
+    </style>
+</head>
+<body>
+    <div class="container">
+
+        <!-- Carousel Slider -->
+        <div id="carouselExampleIndicators" class="carousel slide mt-4" data-ride="carousel">
+            <ol class="carousel-indicators">
+                <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+                <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+                <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+                <li data-target="#carouselExampleIndicators" data-slide-to="3"></li>
+                <li data-target="#carouselExampleIndicators" data-slide-to="4"></li>
+            </ol>
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <img src="https://wallpaperaccess.com/full/2483960.jpg" class="d-block w-100" alt="Slide 1">
+                </div>
+                <div class="carousel-item">
+                    <img src="https://i.pinimg.com/originals/ab/d4/3e/abd43eccfe0e8e9196b96cbf18b96b06.jpg" class="d-block w-100" alt="Slide 2">
+                </div>
+                <div class="carousel-item">
+                    <img src="https://m.media-amazon.com/images/G/31/amazonservices/Blog/eCommerce_Platform.png" class="d-block w-100" alt="Slide 3">
+                </div>
+                <div class="carousel-item">
+                    <img src="https://cdn.activeman.com/wp-content/uploads/2018/08/12141811/pexels-photo-996329.jpeg" class="d-block w-100" alt="Slide 4">
+                </div>
+                <div class="carousel-item">
+                    <img src="https://i.ytimg.com/vi/UXd27EwRYy0/maxresdefault.jpg" class="d-block w-100" alt="Slide 5">
+                </div>
+            </div>
+            <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="sr-only">Previous</span>
+            </a>
+            <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="sr-only">Next</span>
+            </a>
+        </div>
+
+        <!-- Shop by Category -->
+        <div class="info-text mt-5">
+            <h1 class="sbc">Shop by Category</h1>
+        </div>
+
+        <!-- Product Grid -->
+        <div class="row product-grid">
+            <div class="col-md-4 col-sm-6 product-item">
+                <a href="https://localhost:61737/ProductPage/Details/1">
+                    <img src="http://purepng.com/public/uploads/large/purepng.com-black-t-shirtclothingblack-t-shirtfashion-dress-shirt-black-cloth-tshirt-631522326884bzr0p.png?text=Product+1" alt="T-Shirt">
+                    <h5>T-Shirt</h5>
+                </a>
+            </div>
+            <div class="col-md-4 col-sm-6 product-item">
+                <a href="https://localhost:61737/ProductPage/Details/2">
+                    <img src="https://www.pngmart.com/files/16/Denim-Jeans-PNG-Transparent-Image.png?text=Product+2" alt="Denim Jeans">
+                    <h5>Denim Jeans</h5>
+                </a>
+            </div>
+            <div class="col-md-4 col-sm-6 product-item">
+                <a href="https://localhost:61737/ProductPage/Details/3">
+                    <img src="https://pngimg.com/uploads/leather_jacket/leather_jacket_PNG24.png?text=Product+3" alt="Leather Jacket">
+                    <h5>Leather Jacket</h5>
+                </a>
+            </div>
+        </div>
+
+        <!-- Shop by BS -->
+       <div class="info-text mt-5">
+            <h1 class="sbc">Best Seller</h1> 
+       </div>
+
+        <div class="row product-grid">
+            <div class="col-md-4 col-sm-6 product-item">
+                <a href="https://localhost:61737/ProductPage/Details/4">
+                    <img src="https://pngimg.com/uploads/dress/dress_PNG90.png?text=Product+4" alt="Summer Dress">
+                    <h5>Summer Dress</h5>
+                </a>
+            </div>
+            <div class="col-md-4 col-sm-6 product-item">
+                <a href="https://localhost:61737/ProductPage/Details/5">
+                    <img src="https://freepngimg.com/thumb/shoes/28530-3-nike-shoes-transparent.png?text=Product+5" alt="Sport Sneakers">
+                    <h5>Sport Sneakers</h5>
+                </a>
+            </div>
+            <div class="col-md-4 col-sm-6 product-item">
+                <a href="https://localhost:61737/ProductPage/Details/6">
+                    <img src="https://pngimg.com/uploads/scarf/scarf_PNG17.png?text=Product+6" alt="Wool Scarf">
+                    <h5>Wool Scarf</h5>
+                </a>
+            </div>
+        </div>
+
+        <div class="info-text mt-5">
+            <h1 class="sbc">Safe off 50%</h1>
+        </div>
+
+        <div class="row product-grid">
+            <div class="col-md-4 col-sm-6 product-item">
+                <a href="https://localhost:61737/ProductPage/Details/7">
+                    <img src="http://pluspng.com/img-png/blouse-png-hd-black-dress-shirt-png-image-950.png?text=Product+7" alt="Formal Blouse">
+                    <h5>Formal Blouse</h5>
+                </a>
+            </div>
+            <div class="col-md-4 col-sm-6 product-item">
+                <a href="https://localhost:61737/ProductPage/Details/8">
+                    <img src="http://pluspng.com/img-png/khaki-pants-png--1024.png?text=Product+8" alt="Chino Pants">
+                    <h5>Chino Pants</h5>
+                </a>
+            </div>
+            <div class="col-md-4 col-sm-6 product-item">
+                <a href="https://localhost:61737/ProductPage/Details/9">
+                    <img src="https://www.pngall.com/wp-content/uploads/7/Black-Winter-Boot-PNG-Free-Image.png?text=Product+9" alt="Winter Boots">
+                    <h5>Winter Boots</h5>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</body>
+</html>
