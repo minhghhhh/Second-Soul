@@ -26,7 +26,7 @@ namespace Second_Soul.Pages
         {
             ViewData["TokenError"] = TempData["TokenError"];
         }
-        public async Task<IActionResult> OnPostRequestToken(string Email)
+        public async Task<IActionResult> OnPost(string Email)
         {
             if (string.IsNullOrEmpty(Email))
             {
@@ -35,9 +35,8 @@ namespace Second_Soul.Pages
             }
             var userResult = await _userBusiness.GetByEmailAsync(Email);
             if (userResult == null || !(userResult.Status > 0) || userResult.Data == null)
-            {
-                // Do not reveal whether the email exists
-                ViewData["TokenError"] = "If an account with that email exists, a password reset token will be sent.";
+            {   
+                ViewData["SuccessfullError"] = "If an account with that email exists, a password reset token will be sent.";
                 return Page();
             }
 
@@ -59,43 +58,6 @@ namespace Second_Soul.Pages
 			ViewData["TokenError"] = "Failed to send email. Please try again.";
             return Page();
         }
-
-        public async Task<IActionResult> OnPostConfirmToken()
-        {
-            if (!ModelState.IsValid)
-            {
-                return Page();
-            }
-
-            if (Input.NewPassword != Input.ConfirmPassword)
-            {
-                ModelState.AddModelError("Input.ConfirmPassword", "The password and confirmation password do not match.");
-                return Page();
-            }
-
-            var userResult = await _userBusiness.GetByEmailAsync(Input.Email);
-            if (userResult == null || !(userResult.Status > 0) || userResult.Data == null)
-            {
-                ModelState.AddModelError("Input.Email", "The user with the given email cannot be found.");
-                return Page();
-            }
-            var user = (User)userResult.Data;
-
-            if (!Input.Token.Trim().Equals(user.Token))
-            {
-                ModelState.AddModelError("Input.Token", "The inputted token is not correct.");
-                return Page();
-            }
-            user.PasswordHash = HashPassWithSHA256.HashWithSHA256(Input.NewPassword);
-            var result = await _userBusiness.Update(user);
-            if (result == null || !(result.Status > 0))
-            {
-                ModelState.AddModelError("", "Resetting the password has failed. Try again at a later time.");
-                return Page();
-            }
-            return RedirectToPage("/Login");
-        }
-
         public class ResetInput
         {
             [Required(ErrorMessage = "Token is required.")]
