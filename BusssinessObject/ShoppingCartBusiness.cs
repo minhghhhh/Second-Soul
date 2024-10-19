@@ -13,10 +13,11 @@ namespace BusssinessObject
 {
     public interface IShoppingCartBusiness
     {
+        Task<int> PriceCart(int userId);
         Task<IBusinessResult> GetByUserId(int userId, int? offset, int? limit);
         Task<IBusinessResult> Save(ShoppingCart cart);
         Task<IBusinessResult> RemoveFromCart(int userId, int productId);
-	}
+    }
 
     public class ShoppingCartBusiness : IShoppingCartBusiness
     {
@@ -24,6 +25,44 @@ namespace BusssinessObject
         public ShoppingCartBusiness(UnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
+        }
+        public async Task<bool> isFullCart(int userId)
+        {
+            try
+            {
+                var result = await GetByUserId(userId, null, null);
+                var carts = (List<ShoppingCart>)result;
+                if(carts.Count > 99)
+                { 
+                    return true;
+                }
+                return false;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                return false;
+            }
+        }
+        public async Task<int> PriceCart(int userId)
+        {
+            try
+            {
+                var total = 0;
+                var result = await GetByUserId(userId, null, null);
+                var carts = (List<ShoppingCart>)result.Data;
+                foreach (var cart in carts)
+                {
+                    total += cart.Product.Price;
+                }
+                return total;
+            }
+            catch
+                (Exception ex)
+            {
+                  Console.WriteLine(ex);
+                return 0;
+            }
         }
         public async Task<IBusinessResult> GetByUserId(int userId, int? offset, int? limit)
         {
@@ -62,15 +101,20 @@ namespace BusssinessObject
             try
             {
                 //int result = await _currencyRepository.CreateAsync(currency);
-                int result = await _unitOfWork.ShoppingCartRepository.CreateAsync(cart);
-                if (result > 0)
+                var full = await isFullCart(cart.UserId);
+                if (full is false)
                 {
-                    return new BusinessResult(Const.SUCCESS_CREATE_CODE, Const.SUCCESS_CREATE_MSG);
+                    int result = await _unitOfWork.ShoppingCartRepository.CreateAsync(cart);
+                    if (result > 0)
+                    {
+                        return new BusinessResult(Const.SUCCESS_CREATE_CODE, Const.SUCCESS_CREATE_MSG);
+                    }
+                    else
+                    {
+                        return new BusinessResult(Const.FAIL_CREATE_CODE, Const.FAIL_CREATE_MSG);
+                    }
                 }
-                else
-                {
-                    return new BusinessResult(Const.FAIL_CREATE_CODE, Const.FAIL_CREATE_MSG);
-                }
+                return new BusinessResult(Const.FAIL_CREATE_CODE, Const.FAIL_CREATE_MSG);
             }
             catch (Exception ex)
             {
@@ -105,5 +149,5 @@ namespace BusssinessObject
             }
         }
 
-	}
+    }
 }

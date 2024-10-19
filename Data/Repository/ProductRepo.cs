@@ -22,7 +22,7 @@ namespace Data.Repository
         }
 		public async Task<List<Product>> GetAllProduct()
 		{
-			return await _dbcontext.Products.Include(a=> a.Category).ToListAsync();
+			return await _dbcontext.Products.Include(a=> a.Category).Include(a=>a.ProductImages).ToListAsync();
 		} 
         public async Task<List<Product>> GetProductsNewest()
         {
@@ -46,7 +46,7 @@ namespace Data.Repository
 			// Validate parameters
 			await ValidateSearchParametersAsync(minPrice, maxPrice, categoryIDs, isAvailable, sellerID);
 
-			var productQuery = _dbcontext.Products.AsNoTracking().Include(p => p.Category).AsQueryable();
+			var productQuery = _dbcontext.Products.AsNoTracking().Include(p => p.Category).Include(a=>a.ProductImages).AsQueryable();
 
 			// Apply search filter
 			if (!string.IsNullOrEmpty(query))

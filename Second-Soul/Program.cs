@@ -29,6 +29,13 @@ Account account = new Account(
     cloudinarySettings.ApiKey,
     cloudinarySettings.ApiSecret
 );
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30); // Session timeout
+    options.Cookie.HttpOnly = true; // Make the session cookie HTTP-only
+    options.Cookie.IsEssential = true; // Make the session cookie essential for GDPR
+});
+
 builder.Services.AddControllers(); // This enables API controller
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddHostedService<BackGround>(); // Add the background service
@@ -81,6 +88,7 @@ builder.Services.ConfigureApplicationCookie(options =>
 
 
 var app = builder.Build();
+app.UseSession();
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

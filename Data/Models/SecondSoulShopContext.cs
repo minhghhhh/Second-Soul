@@ -119,11 +119,15 @@ public partial class SecondSoulShopContext : DbContext
             entity.Property(e => e.Description).HasColumnType("text");
             entity.Property(e => e.CategoryId).HasColumnName("CategoryID").IsRequired();
             entity.Property(e => e.Price).HasColumnType("int").IsRequired();
+            entity.Property(e => e.SalePrice).HasColumnType("int");
             entity.Property(e => e.Condition)
                   .HasMaxLength(20);
              entity.Property(e => e.AddedDate).HasDefaultValueSql("(getdate())").HasColumnType("datetime");
             entity.Property(e => e.IsAvailable).HasDefaultValue(true);
-
+            entity.Property(e => e.IsNew).HasDefaultValue(true);
+            entity.Property(e => e.IsSale).HasDefaultValue(false);
+            entity.Property(e => e.IsReview).HasDefaultValue(false);
+            entity.Property(e => e.MainImage).HasMaxLength(255).IsRequired();
             entity.HasOne(d => d.Seller)
                   .WithMany(p => p.Products)
                   .HasForeignKey(d => d.SellerId)

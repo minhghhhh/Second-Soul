@@ -8,6 +8,7 @@ namespace Second_Soul.Pages
         public IActionResult OnGet()
         {
             Response.Cookies.Delete("User");
+            HttpContext.Session.Clear();
             return RedirectToPage("/Index");
 
         }

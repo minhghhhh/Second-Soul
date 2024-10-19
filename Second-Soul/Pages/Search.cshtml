@@ -49,151 +49,148 @@
 <section class="shop spad">
     <div class="container">
         <div class="row">
-            <form action="get">
-                <div class="col-lg-3">
-                    <div class="shop__sidebar">
-                        <div class="shop__sidebar__search">
+            <div class="col-lg-3">
+                <div class="shop__sidebar">
+                    <div class="shop__sidebar__search">
                             <input type="text" name="query" class="form-control" value="@Model.Query" placeholder="Search products..." />
                             <button type="submit"><span class="icon_search"></span></button>
-                        </div>
-                        <div class="shop__sidebar__accordion">
-                            <div class="accordion" id="accordionExample">
+                    </div>
+                    <div class="shop__sidebar__accordion">
+                        <div class="accordion" id="accordionExample">
 
+                            <div class="card">
+                                <div class="card-heading">
+                                    <a data-toggle="collapse" data-target="#collapseSubcategory" aria-expanded="false" aria-controls="collapseSubcategory">
+                                        Category
+                                    </a>
+                                </div>
+                                <div id="collapseSubcategory" class="collapse" data-parent="#accordionExample">
+                                    <div class="card-body">
+                                        <div class="shop__sidebar__subcategory">
+                                            <ul>
+                                                @if (Model.Categories.Count > 0)
+                                                {
+                                                    <li>
+                                                        @foreach (var parentCategoryGroup in Model.Categories.GroupBy(c => c.Group.Name))
+                                                        {
+                                                            <a data-toggle="collapse" data-target="#subCollapse@(parentCategoryGroup.Key)" aria-expanded="false" aria-controls="subCollapse1">
+                                                                @parentCategoryGroup.Key <i class="fas fa-chevron-down"></i>
+                                                            </a>
+
+                                                            foreach (var subCategory in parentCategoryGroup)
+                                                            {
+                                                                <ul id="subCollapse@(parentCategoryGroup.Key)" class="collapse sub-list">
+                                                                    <li>
+                                                                        <input type="checkbox" name="categoryIDs" value="@subCategory.Value" class="form-check-input"
+                                                                        @(subCategory.Selected ? "checked" : "") />
+                                                                        <label class="form-check-label">@subCategory.Text</label>
+                                                                    </li>
+                                                                </ul>
+                                                            }
+                                                            <br />
+                                                        }
+                                                    </li>
+                                                }
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            @if (Model.Conditions.Count > 0)
+                            {
                                 <div class="card">
                                     <div class="card-heading">
-                                        <a data-toggle="collapse" data-target="#collapseSubcategory" aria-expanded="false" aria-controls="collapseSubcategory">
-                                            Category
+                                        <a data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                            Condition
                                         </a>
                                     </div>
-                                    <div id="collapseSubcategory" class="collapse" data-parent="#accordionExample">
+                                    <div id="collapseTwo" class="collapse show" data-parent="#accordionExample">
                                         <div class="card-body">
-                                            <div class="shop__sidebar__subcategory">
+                                            <div class="shop__sidebar__brand">
                                                 <ul>
-                                                    @if (Model.Categories.Count > 0)
+                                                    @foreach (var condition in Model.Conditions)
                                                     {
-                                                        <li>
-                                                            @foreach (var parentCategoryGroup in Model.Categories.GroupBy(c => c.Group.Name))
-                                                            {
-                                                                <a data-toggle="collapse" data-target="#subCollapse@(parentCategoryGroup.Key)" aria-expanded="false" aria-controls="subCollapse1">
-                                                                    @parentCategoryGroup.Key <i class="fas fa-chevron-down"></i>
-                                                                </a>
-
-                                                                foreach (var subCategory in parentCategoryGroup)
-                                                                {
-                                                                    <ul id="subCollapse@(parentCategoryGroup.Key)" class="collapse sub-list">
-                                                                        <li>
-                                                                            <input type="checkbox" name="categoryIDs" value="@subCategory.Value" class="form-check-input"
-                                                                            @(subCategory.Selected ? "checked" : "") />
-                                                                            <label class="form-check-label">@subCategory.Text</label>
-                                                                        </li>
-                                                                    </ul>
-                                                                }
-                                                                <br />
-                                                            }   
-                                                        </li>
+                                                        <li><a href="#">@condition.Text</a></li> <!-- Assuming each condition has a 'Text' property -->
                                                     }
                                                 </ul>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                @if (Model.Conditions.Count > 0)
-                                {
-                                    <div class="card">
-                                        <div class="card-heading">
-                                            <a data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                                                Condition
-                                            </a>
-                                        </div>
-                                        <div id="collapseTwo" class="collapse show" data-parent="#accordionExample">
-                                            <div class="card-body">
-                                                <div class="shop__sidebar__brand">
-                                                    <ul>
-                                                        @foreach (var condition in Model.Conditions)
-                                                        {
-                                                            <li><a href="#">@condition.Text</a></li> <!-- Assuming each condition has a 'Text' property -->
-                                                        }
-                                                    </ul>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                }
-                                @*                             @if (Model.Conditions.Count > 0)
-                                {
-                                <div class="form-group">
-                                <label for="condition">Condition</label>
-                                @Html.DropDownList("condition", Model.Conditions, "Select Condition", new { @class = "form-control" })
-                                </div>
-                                } *@
-
-                                <div class="card">
-                                    <div class="card-heading">
-                                        <a data-toggle="collapse" data-target="#collapseThree">Filter Price</a>
-                                    </div>
-                                    <div id="collapseThree" class="collapse show" data-parent="#accordionExample">
-                                        <div class="card-body">
-                                            <div class="shop__sidebar__price">
-                                                <div>
-                                                    <input type="number" name="minPrice" class="form-control" value="@Model.MinPrice" min="0" max="999999999" step="1" placeholder="Min Price" />
-                                                    <span class="col-form-label col-sm-1 text-center"></span>
-                                                    <input type="number" name="maxPrice" class="form-control" value="@Model.MaxPrice" min="0" max="999999999" step="1" placeholder="Max Price" />
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="card">
-                                    <div class="card-heading">
-                                        <a data-toggle="collapse" data-target="#collapseFour">Size</a>
-                                    </div>
-                                    <div id="collapseFour" class="collapse show" data-parent="#accordionExample">
-                                        <div class="card-body">
-                                            <div class="shop__sidebar__size">
-                                                <label for="xs">
-                                                    xs
-                                                    <input type="radio" id="xs">
-                                                </label>
-                                                <label for="sm">
-                                                    s
-                                                    <input type="radio" id="sm">
-                                                </label>
-                                                <label for="md">
-                                                    m
-                                                    <input type="radio" id="md">
-                                                </label>
-                                                <label for="xl">
-                                                    xl
-                                                    <input type="radio" id="xl">
-                                                </label>
-                                                <label for="2xl">
-                                                    2xl
-                                                    <input type="radio" id="2xl">
-                                                </label>
-                                                <label for="xxl">
-                                                    xxl
-                                                    <input type="radio" id="xxl">
-                                                </label>
-                                                <label for="3xl">
-                                                    3xl
-                                                    <input type="radio" id="3xl">
-                                                </label>
-                                                <label for="4xl">
-                                                    4xl
-                                                    <input type="radio" id="4xl">
-                                                </label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <button type="submit" class="btn btn-primary">Search</button>
+                            }
+                            @*                             @if (Model.Conditions.Count > 0)
+                            {
+                            <div class="form-group">
+                            <label for="condition">Condition</label>
+                            @Html.DropDownList("condition", Model.Conditions, "Select Condition", new { @class = "form-control" })
                             </div>
+                            } *@
+
+                            <div class="card">
+                                <div class="card-heading">
+                                    <a data-toggle="collapse" data-target="#collapseThree">Filter Price</a>
+                                </div>
+                                <div id="collapseThree" class="collapse show" data-parent="#accordionExample">
+                                    <div class="card-body">
+                                        <div class="shop__sidebar__price">
+                                            <div>
+                                                <input type="number" name="minPrice" class="form-control" value="@Model.MinPrice" min="0" max="999999999" step="1" placeholder="Min Price" />
+                                                <span class="col-form-label col-sm-1 text-center"></span>
+                                                <input type="number" name="maxPrice" class="form-control" value="@Model.MaxPrice" min="0" max="999999999" step="1" placeholder="Max Price" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card">
+                                <div class="card-heading">
+                                    <a data-toggle="collapse" data-target="#collapseFour">Size</a>
+                                </div>
+                                <div id="collapseFour" class="collapse show" data-parent="#accordionExample">
+                                    <div class="card-body">
+                                        <div class="shop__sidebar__size">
+                                            <label for="xs">
+                                                xs
+                                                <input type="radio" id="xs">
+                                            </label>
+                                            <label for="sm">
+                                                s
+                                                <input type="radio" id="sm">
+                                            </label>
+                                            <label for="md">
+                                                m
+                                                <input type="radio" id="md">
+                                            </label>
+                                            <label for="xl">
+                                                xl
+                                                <input type="radio" id="xl">
+                                            </label>
+                                            <label for="2xl">
+                                                2xl
+                                                <input type="radio" id="2xl">
+                                            </label>
+                                            <label for="xxl">
+                                                xxl
+                                                <input type="radio" id="xxl">
+                                            </label>
+                                            <label for="3xl">
+                                                3xl
+                                                <input type="radio" id="3xl">
+                                            </label>
+                                            <label for="4xl">
+                                                4xl
+                                                <input type="radio" id="4xl">
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary">Search</button>
                         </div>
                     </div>
                 </div>
-            </form>
-
+            </div>
             <div class="col-lg-9">
                 <div class="shop__product__option">
                     <div class="row">
@@ -222,13 +219,28 @@
                         {
                             <div class="col-lg-4 col-md-6 col-sm-6">
                                 <div class="product__item">
-                                    <div class="product__item__pic set-bg" data-setbg="/template/img/product/product-2.jpg">
+                                    <div class="product__item__pic set-bg" data-setbg="@product.MainImage">
+                                        @if (@product.IsNew && @product.IsSale)
+                                        {
+                                            <span class="label">Sale</span>
+                                        }
+                                        else
+                                        {
+                                            if (@product.IsNew)
+                                            {
+                                                <span class="label">New</span>
+                                            }
+                                            if (@product.IsSale)
+                                            {
+                                                <span class="label">Sale</span>
+                                            }
+                                        }
                                         <ul class="product__hover">
                                             <li><a href="#"><img src="/template/img/icon/heart.png" alt=""></a></li>
                                             <li>
                                                 <a href="#"><img src="/template/img/icon/compare.png" alt=""> <span>Compare</span></a>
                                             </li>
-                                            <li><a href="/ProductPage/Details/@product.ProductId"><img src="@product.ProductImages.First()" alt=""></a></li>
+                                            <li><a href="/ProductPage/Details/@product.ProductId"><img src="/template/img/icon/search.png" alt=""></a></li>
                                         </ul>
                                     </div>
                                     <div class="product__item__text">

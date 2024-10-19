@@ -28,6 +28,12 @@ namespace Data.Models
         [Column(TypeName = "nvarchar(20)")]
         [RegularExpression("New|Like_New|Good|Fair")]
         public string Condition { get; set; } = string.Empty;
+        public bool IsNew { get; set; } = true;
+        public bool IsSale { get; set; } = false;
+        public bool IsReview { get; set; } = false;
+        public int? SalePrice { get; set; }
+        [Required]
+        public string MainImage { get; set; } = string.Empty;
 
         public DateTime AddedDate { get; set; } = default;
 

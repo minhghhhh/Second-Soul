@@ -10,12 +10,6 @@
         // Deserialize the JSON string back to the User1 object
         currentUser = JsonSerializer.Deserialize<User>(userCookie);
     }
-
-}
-
-@{
-    var totalPrice = HttpContextAccessor.HttpContext.Session.GetInt32("TotalPrice");
-    var totalProduct = HttpContextAccessor.HttpContext.Session.GetInt32("TotalProduct");
 }
 <!DOCTYPE html>
 <html lang="zxx">
@@ -80,11 +74,10 @@
         <div class="offcanvas__nav__option">
             <a href="#" class="search-switch"><img src="~/template/img/icon/search.png" alt=""></a>
             <a href="#"><img src="~/template/icon/heart.png" alt=""></a>
-            <a href="#"><img src="~/template/img/icon/cart.png" alt=""> <span>@totalProduct</span></a>
-            <div class="price">@totalPrice VND</div>
+            <a href="#"><img src="~/template/img/icon/cart.png" alt=""> <span>0</span></a>
+            <div class="price">$0.00</div>
         </div>
         <div id="mobile-menu-wrap">
-
         </div>
         <div class="offcanvas__text">
         </div>
@@ -96,6 +89,9 @@
             <div class="container">
                 <div class="row">
                     <div class="col-lg-6 col-md-7">
+                        <div class="header__top__left">
+                            <p>Secondhand, First choice.</p>
+                        </div>
                     </div>
                     <div class="col-lg-6 col-md-5">
                         <div class="header__top__right">
@@ -144,27 +140,27 @@
                     <nav class="header__menu mobile-menu">
                         <ul>
                             <li><a href="/index">Home</a></li>
-                            <li><a href="/About">AboutUs</a></li>
                             <li><a href="/Search">Shop</a></li>
                             <li>
                                 <a href="#">Category</a>
                                 <ul class="dropdown">
-                                    <li><a href="/about">About Us</a></li>
+                                    <li><a href="./about.html">About Us</a></li>
                                     <li><a href="./shop-details.html">Shop Details</a></li>
-                                    <li><a href="/UserPage/Cart">Shopping Cart</a></li>
+                                    <li><a href="UserPage/Cart">Shopping Cart</a></li>
                                     <li><a href="./checkout.html">Check Out</a></li>
                                     <li><a href="./blog-details.html">Blog Details</a></li>
                                 </ul>
                             </li>
                             <li><a href="/BlogPage">Blog</a></li>
+                            <li><a href="/About">About us</a></li>
                         </ul>
                     </nav>
                 </div>
                 <div class="col-lg-3 col-md-3">
                     <div class="header__nav__option">
                         <a href="#" class="search-switch"><img src="~/template/img/icon/search.png" alt=""></a>
-                        <a href="/UserPage/Cart"><img src="~/template/img/icon/cart.png" alt=""> <span>@(totalProduct??0)</span></a>
-                        <div class="price">@(totalPrice??0) VND</div>
+                        <a href="UserPage/Cart"><img src="~/template/img/icon/cart.png" alt=""> <span>0</span></a>
+                        <div class="price">$0.00</div>
                     </div>
                 </div>
             </div>
@@ -172,7 +168,22 @@
         </div>
     </header>
 
-
+    <div id="wrapper">
+        <aside id="sidebar">
+            <ul>
+                <li><a href="#">My Account</a></li>
+                <li><a href="#">Profile</a></li>
+                <li><a href="#">Banks & Cards</a></li>
+                <li><a href="#">Addresses</a></li>
+                <li><a href="#">Change Password</a></li>
+                <li><a href="#">Notifications</a></li>
+                <li><a href="#">Privacy Settings</a></li>
+                <li><a href="#">My Purchase</a></li>
+                <li><a href="#">My Vouchers</a></li>
+                <li><a href="#">My Shopee Coins</a></li>
+            </ul>
+        </aside>
+    </div>
 
 
     @*
@@ -323,8 +334,8 @@
     <div class="search-model">
         <div class="h-100 d-flex align-items-center justify-content-center">
             <div class="search-close-switch">+</div>
-            <form class="search-model-form" method="get" asp-page="/Search">
-                <input type="text" type="search" name="query" placeholder="Search here.....">
+            <form class="search-model-form">
+                <input type="text" id="search-input" placeholder="Search here.....">
             </form>
         </div>
     </div>

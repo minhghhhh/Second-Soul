@@ -24,7 +24,20 @@ CREATE TABLE Users (
     Role NVARCHAR(20) CHECK (Role IN ('Customer','Admin')), 
     CreatedDate DATETIME DEFAULT GETDATE(),
     IsActive BIT DEFAULT 1
+--	MoMoPhoneNumber NVARCHAR(20) NULL,  -- Số điện thoại ví MoMo
+--	MoMoLinked BIT NOT NULL DEFAULT 0;  -- Trạng thái liên kết (0 = chưa liên kết, 1 = đã liên kết)
 );
+--CREATE TABLE BankAccounts (
+    --Id INT PRIMARY KEY IDENTITY(1,1),           -- Unique identifier for each bank account
+    --UserId INT NOT NULL,                        -- Foreign key referencing Users table
+    --AccountHolderName NVARCHAR(255) NOT NULL,   -- Account holder's name
+    --BankName NVARCHAR(255) NOT NULL,            -- Name of the bank
+    --BankCode NVARCHAR(50) NOT NULL,             -- Optional: Bank identifier (e.g., SWIFT/BIC code)
+   -- AccountNumber NVARCHAR(255) NOT NULL,       -- Encrypted bank account number
+  --  IsVerified BIT NOT NULL DEFAULT 0,          -- Boolean flag to indicate if the account is verified (0 = false, 1 = true)
+ --   VerifiedOn DATETIME NULL,                   -- Timestamp for when the account was verified
+--    CONSTRAINT FK_BankAccounts_Users FOREIGN KEY (UserId) REFERENCES Users(UserID)  -- Foreign key constraint
+--);
 
 CREATE TABLE Categories (
     CategoryID INT IDENTITY(1,1) PRIMARY KEY,
@@ -32,6 +45,7 @@ CREATE TABLE Categories (
     ParentCategoryID INT NULL,
     FOREIGN KEY (ParentCategoryID) REFERENCES Categories(CategoryID)
 );
+
 
 CREATE TABLE Products (
     ProductID INT IDENTITY(1,1) PRIMARY KEY,
@@ -42,7 +56,12 @@ CREATE TABLE Products (
     Price INT NOT NULL,
     Condition NVARCHAR(20) CHECK (Condition IN ('New', 'Like_New', 'Good', 'Fair')),
     AddedDate DATETIME DEFAULT GETDATE(),
+	MainImage NVARCHAR(255) NOT NULL,
     IsAvailable BIT DEFAULT 1,
+	IsSale BIT DEFAULT 0,
+	IsNew BIT DEFAULT 1,
+	IsReview Bit Default 0,
+	SalePrice INT NULL,
     FOREIGN KEY (SellerID) REFERENCES Users(UserID),
     FOREIGN KEY (CategoryID) REFERENCES Categories(CategoryID)
 );
@@ -176,7 +195,7 @@ VALUES
 	('Gloves',6),
 	('Scarf',6);
 Go
-INSERT INTO Products (SellerID, Name, Description, CategoryID, Price, Condition)
+INSERT INTO Products (SellerID, Name, Description,MainImage, CategoryID, Price, Condition)
 VALUES
     (1, 'Casual T-Shirt', 'Comfortable cotton t-shirt for everyday wear.', 8, 2000, 'New'),
     (1, 'Denim Jeans', 'Stylish denim jeans, perfect for casual outings.', 12, 39000, 'Like_New'),

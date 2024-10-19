@@ -1,23 +1,19 @@
 using BusssinessObject;
-using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
+using CloudinaryDotNet;
 using Data.Models;
 using Data.Utils;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
-using System.Linq;
-using System.Text.Json;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
-namespace Second_Soul.Pages.UserPage
+namespace Second_Soul.Pages.UserPage.Profile
 {
-    public class ProfileModel : PageModel
+    public class IndexModel : PageModel
     {
         private readonly Cloudinary _cloudinary;
         private readonly IUserBusiness _userBusiness;
 
-        public ProfileModel(Cloudinary cloudinary, IUserBusiness userBusiness)
+        public IndexModel(Cloudinary cloudinary, IUserBusiness userBusiness)
         {
             _cloudinary = cloudinary;
             _userBusiness = userBusiness;
