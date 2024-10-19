@@ -55,8 +55,16 @@ namespace Second_Soul.Pages.UserPage
         }
         public async Task<IActionResult> OnGetLoadMore(int offset = 0, int limit = 10)
         {
-            var user = await _userBusiness.GetFromCookie(Request);
-            if (user == null)
+			var user = await _userBusiness.GetFromCookie(Request);
+			if (user != null)
+			{
+				var Totalprice = await _shoppingCartBusiness.PriceCart(user.UserId);
+				HttpContext.Session.SetInt32("TotalPrice", Totalprice);
+				var results = await _shoppingCartBusiness.GetByUserId(user.UserId, null, null);
+				var totalProduct = (List<ShoppingCart>)results.Data;
+				HttpContext.Session.SetInt32("TotalProduct", totalProduct.Count());
+			}
+            else
             {
                 return RedirectToPage("/Login");
             }

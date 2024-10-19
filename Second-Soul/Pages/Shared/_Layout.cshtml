@@ -69,12 +69,33 @@
                 <a href="#">FAQs</a>
             </div>
             <div class="offcanvas__top__hover">
-                <span>Usd <i class="arrow_carrot-down"></i></span>
-                <ul>
-                    <li>USD</li>
-                    <li>EUR</li>
-                    <li>USD</li>
-                </ul>
+                @if (currentUser != null)
+                {
+                    <span>
+                        @if (currentUser?.ImageUrl != null)
+                        {
+                            <img src="@currentUser.ImageUrl" alt="Profile Picture" class="rounded-circle" width="30" height="30" />
+                        }
+                        else
+                        {
+                            <i class="bi bi-person-circle" style="font-size: 30px;"></i>
+                        }
+                        @currentUser?.Username
+                        <i class="arrow_carrot-down"></i>
+                    </span>
+                    <ul>
+                        <li><a class="dropdown-item" href="/UserPage/Profile">My Account</a></li>
+                        <li><a class="dropdown-item" href="/UserPage/Order">My Purchase</a></li>
+                        <li><a class="dropdown-item" href="/Logout">Logout</a></li>
+                    </ul>
+
+                }
+                else
+                {
+                    <div class="header__top__links">
+                        <a href="/Login" class="nav-link">Sign in</a>
+                    </div>
+                }
             </div>
         </div>
         <div class="offcanvas__nav__option">
@@ -96,13 +117,14 @@
             <div class="container">
                 <div class="row">
                     <div class="col-lg-6 col-md-7">
+                        <div style="color:white">2nd hand, First choice.</div>
                     </div>
                     <div class="col-lg-6 col-md-5">
                         <div class="header__top__right">
                             <div class="header__top__hover">
                                 @if (currentUser != null)
                                 {
-                                    <span id="dropdownMenuButton" data-bs-toggle="dropdown">
+                                    <span>
                                         @if (currentUser?.ImageUrl != null)
                                         {
                                             <img src="@currentUser.ImageUrl" alt="Profile Picture" class="rounded-circle" width="30" height="30" />
@@ -114,7 +136,7 @@
                                         @currentUser?.Username
                                         <i class="arrow_carrot-down"></i>
                                     </span>
-                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                    <ul>
                                         <li><a class="dropdown-item" href="/UserPage/Profile">My Account</a></li>
                                         <li><a class="dropdown-item" href="/UserPage/Order">My Purchase</a></li>
                                         <li><a class="dropdown-item" href="/Logout">Logout</a></li>
