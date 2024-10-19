@@ -25,9 +25,19 @@ namespace Second_Soul.Pages
                var Totalprice = await _shoppingCartBusiness.PriceCart(user.UserId);
                 HttpContext.Session.SetInt32("TotalPrice", Totalprice);
                 var result = await _shoppingCartBusiness.GetByUserId(user.UserId,null,null);
-                var totalProduct = (List<ShoppingCart>)result.Data;
-                HttpContext.Session.SetInt32("TotalProduct", totalProduct.Count());
-            }
+                if (result != null && result.Status > 0 && result.Data != null) 
+                {
+					var totalProduct = (List<ShoppingCart>)result.Data;
+                    if (totalProduct != null && totalProduct.Count > 0)
+                    {
+                        HttpContext.Session.SetInt32("TotalProduct", totalProduct.Count);
+                    }
+                    else
+                    {
+						HttpContext.Session.SetInt32("TotalProduct", 0);
+					}
+				}
+			}
             return Page();
         }
     }
