@@ -45,7 +45,7 @@ namespace Second_Soul.Pages
 
 			Conditions = Enum.GetNames(typeof(Condition)).Select(o => new SelectListItem
 			{
-				Text = o,
+				Text = o.Replace('_', ' '),
 				Value = o,
 				Selected = condition != null ? o == Condition : false
 			}).ToList();
