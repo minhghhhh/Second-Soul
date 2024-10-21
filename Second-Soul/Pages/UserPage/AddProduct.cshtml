@@ -65,35 +65,39 @@
             });
 
         // Handle Save Product Action
-        $('#saveProduct').click(function () {
-            // let formData = new FormData();
-            // // Collect Product Info
-            // formData.append('Name', $('input[name="Product.Name"]').val());
-            // formData.append('Description', $('textarea[name="Product.Description"]').val());
-            // formData.append('Price', $('input[name="Product.Price"]').val());
-            // formData.append('CategoryID', $('select[name="Product.CategoryID"]').val());
-            // formData.append('Condition', $('select[name="Product.Condition"]').val());
+       $('#saveProduct').click(function (event) {
+    event.preventDefault(); // Prevent the default form submission
 
-            // Collect Uploaded Files from FilePond
-            let pondFiles = pond.getFiles();
-            for (let i = 0; i < pondFiles.length; i++) {
-                formData.append('Photos', pondFiles[i].file);
-            }
+    let formData = new FormData();
+    
+    // Collect Product Info
+    formData.append('Product.Name', $('input[name="Product.Name"]').val());
+    formData.append('Product.Description', $('textarea[name="Product.Description"]').val());
+    formData.append('Product.Price', $('input[name="Product.Price"]').val());
+    formData.append('Product.CategoryID', $('select[name="Product.CategoryID"]').val());
+    formData.append('Product.Condition', $('select[name="Product.Condition"]').val());
 
-            // Ajax Request to Save Product
-            // $.ajax({
-            //     url: '/UserPage/AddProduct', 
-            //     type: 'POST',
-            //     data: formData,
-            //     contentType: false,
-            //     processData: false,
-            //     success: function (response) {
-            //         alert('Product saved successfully!');
-            //     },
-            //     error: function (error) {
-            //         alert('Error while saving product.');
-            //     }
-            // });
-        });
+    // Collect Uploaded Files from FilePond
+    let pondFiles = pond.getFiles();
+    for (let i = 0; i < pondFiles.length; i++) {
+        formData.append('Photos', pondFiles[i].file);
+    }
+
+    // Ajax Request to Save Product
+    $.ajax({
+        url: '/UserPage/AddProduct', 
+        type: 'POST',
+        data: formData,
+        contentType: false,
+        processData: false,
+        success: function (response) {
+            alert('Product saved successfully!');
+        },
+        error: function (error) {
+            alert('Error while saving product.');
+        }
+    });
+});
+
     </script>
 }

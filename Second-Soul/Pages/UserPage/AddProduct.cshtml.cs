@@ -55,8 +55,8 @@ namespace Second_Soul.Pages.UserPage
         public List<string> TempImageUrls { get; set; } = new List<string>();
         public List<Category> Categories { get; set; } = new();
 
-        public IFormFile[] Photos { get; set; }
-        public async Task<IActionResult> OnGetAsync()
+        public IFormFile[] Photos { get; set; } = Array.Empty<IFormFile>();
+		public async Task<IActionResult> OnGetAsync()
         {
             var user = await _userBusiness.GetFromCookie(Request);
             if (user == null)
@@ -74,45 +74,53 @@ namespace Second_Soul.Pages.UserPage
             return Page();
         }
 
-        public async Task<IActionResult> OnPostAsync()
-        {
-            var formData = Request.Form;
-            var product = new Product
-            {
-                Name = Product.Name,
-                Description = Product.Description ?? string.Empty,
-                Price = Product.Price,
-                CategoryId = Product.CategoryID,
-                Condition = Product.Condition,
-                AddedDate = DateTime.Now,
-                IsAvailable = true // Set other necessary fields
-            };
+		public async Task<IActionResult> OnPostAsync()
+		{
+			if (!ModelState.IsValid)
+			{
+				return Page();
+			}
 
-            await _productBusiness.Save(product);
+			var product = new Product
+			{
+				Name = Product.Name,
+				Description = Product.Description ?? string.Empty,
+				Price = Product.Price,
+				CategoryId = Product.CategoryID,
+				Condition = Product.Condition,
+				AddedDate = DateTime.Now,
+				IsAvailable = Product.IsAvailable // Use IsAvailable from input if necessary
+			};
 
-            // Handling file uploads
-            var files = Photos;
-            foreach (var file in files)
-            {
-                if (file.Length > 0)
-                {
-                    // Upload each file (e.g., to Cloudinary)
-                    var uploadResult = await _productImageBusiness.UploadImageAsync(file);
-                    var productImage = new ProductImage
-                    {
-                        ProductId = product.ProductId,
-                        ImageUrl = uploadResult // The returned Cloudinary URL
-                    };
-                    await _productImageBusiness.Save(productImage);
-                }
-            }
+			await _productBusiness.Save(product);
 
-            return new JsonResult(new { success = true });
-        }
+			var files = Photos ?? Array.Empty<IFormFile>();
+			foreach (var file in files)
+			{
+				if (file.Length > 0)
+				{
+					try
+					{
+						var uploadResult = await _productImageBusiness.UploadImageAsync(file);
+						var productImage = new ProductImage
+						{
+							ProductId = product.ProductId,
+							ImageUrl = uploadResult
+						};
+						await _productImageBusiness.Save(productImage);
+					}
+					catch (Exception ex)
+					{
+						// Log the exception
+					}
+				}
+			}
 
-    }
+			return new JsonResult(new { success = true });
+		}
+	}
 
-    public static class TempDataExtensions
+	public static class TempDataExtensions
     {
         public static void Set<T>(this ITempDataDictionary tempData, string key, T value) where T : class
         {
