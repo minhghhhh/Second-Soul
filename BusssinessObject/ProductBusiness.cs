@@ -12,200 +12,217 @@ using System.Threading.Tasks;
 
 namespace BusssinessObject
 {
-	public interface IProductBusiness
-	{
-		Task<List<Product>> GetOldestProducts();
-		Task<List<Product>> GetNewestProducts();
-		Task<IBusinessResult> GetAll();
-		Task<IBusinessResult> GetById(int id);
-		Task<IBusinessResult> Save(Product cate);
-		Task<IBusinessResult> Update(Product cate);
-		Task<IBusinessResult> DeleteById(int id);
-		Task<bool> IdExists(int id);
-		Task<List<Product>> GetProductsBySeller(int id);
-		IQueryable<List<Product>> GetProductsAsQueryable();
-		Task<IBusinessResult> SearchProduct(string? query, int? minPrice, int? maxPrice, List<int>? categoryIDs, string? condition, bool? isAvailable, int? sellerID, int pageIndex = 1, int pageSize = 10);
+    public interface IProductBusiness
+    {
+        Task<List<Product>> GetAllSellProduct();
+        Task<List<Product>> GetProductPriceHighToLow();
 
-	}
-	public class ProductBusiness : IProductBusiness
-	{
-		private readonly UnitOfWork _unitOfWork;
-		public ProductBusiness(UnitOfWork unitOfWork)
-		{
-			_unitOfWork = unitOfWork;
-		}
-		public async Task<List<Product>> GetProductsBySeller(int id)
-		{
-			return await _unitOfWork.ProductRepository.GetProductsBySeller(id);
-		}
-		public async Task<List<Product>> GetOldestProducts()
-		{
-			return await _unitOfWork.ProductRepository.GetProductOldest();
-		}
-		public async Task<List<Product>> GetNewestProducts()
-		{
-			return await _unitOfWork.ProductRepository.GetProductsNewest();
-		}
+        Task<List<Product>> GetProductPriceLowToHigh();
+        Task<List<Product>> GetOldestProducts();
+        Task<List<Product>> GetNewestProducts();
+        Task<IBusinessResult> GetAll();
+        Task<IBusinessResult> GetById(int id);
+        Task<IBusinessResult> Save(Product cate);
+        Task<IBusinessResult> Update(Product cate);
+        Task<IBusinessResult> DeleteById(int id);
+        Task<bool> IdExists(int id);
+        Task<List<Product>> GetProductsBySeller(int id);
+        IQueryable<List<Product>> GetProductsAsQueryable();
+        Task<IBusinessResult> SearchProduct(string? query, int? minPrice, int? maxPrice, List<int>? categoryIDs, string? condition, bool? isAvailable, int? sellerID, int pageIndex = 1, int pageSize = 10);
 
-		public IQueryable<List<Product>> GetProductsAsQueryable()
-		{
-			return _unitOfWork.ProductRepository.GetProductsAsQueryable();
-		}
-		public async Task<IBusinessResult> SearchProduct(string? query, int? minPrice, int? maxPrice, List<int>? categoryIDs, string? condition, bool? isAvailable, int? sellerID, int pageIndex = 1, int pageSize = 10)
-		{
-			try
-			{
-				#region Business rule
-				#endregion
-				if (!string.IsNullOrEmpty(query))
-				{
-					query = FormatUtilities.TrimSpacesPreserveSingle(query);
-				}
-				var search = await _unitOfWork.ProductRepository.SearchProduct(query, minPrice, maxPrice, categoryIDs, condition, isAvailable, sellerID, pageIndex, pageSize);
-				if (search.Any())
-				{
-
-					return new BusinessResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, search);
-				}
-				else
-				{
-					return new BusinessResult(Const.WARNING_NO_DATA_CODE, Const.WARNING_NO_DATA__MSG);
-				}
-
-			}
-			catch (Exception ex)
-			{
-				return new BusinessResult(Const.ERROR_EXCEPTION, ex.Message);
-			}
-		}
-		public async Task<IBusinessResult> GetAll()
-		{
-			try
-			{
-				#region Business rule
-				#endregion
-
-				var currencies = await _unitOfWork.ProductRepository.GetAllAsync();
+    }
+    public class ProductBusiness : IProductBusiness
+    {
+        private readonly UnitOfWork _unitOfWork;
+        public ProductBusiness(UnitOfWork unitOfWork)
+        {
+            _unitOfWork = unitOfWork;
+        }
+        public async Task<List<Product>> GetProductsBySeller(int id)
+        {
+            return await _unitOfWork.ProductRepository.GetProductsBySeller(id);
+        }
+        public async Task<List<Product>> GetOldestProducts()
+        {
+            return await _unitOfWork.ProductRepository.GetProductOldest();
+        }
+        public async Task<List<Product>> GetNewestProducts()
+        {
+            return await _unitOfWork.ProductRepository.GetProductsNewest();
+        }
+        public async Task<List<Product>> GetAllSellProduct()
+        {
+            return await _unitOfWork.ProductRepository.GetAllSellProduct();
+        }
+        public async Task<List<Product>> GetProductPriceHighToLow()
+        {
+            return await _unitOfWork.ProductRepository.GetProductPriceHighToLow();
+        }
+        public async Task<List<Product>> GetProductPriceLowToHigh()
+        {
+            return await _unitOfWork.ProductRepository.GetProductPriceLowToHigh();
+        }
 
 
-				if (currencies == null)
-				{
-					return new BusinessResult(Const.WARNING_NO_DATA_CODE, Const.WARNING_NO_DATA__MSG);
-				}
-				else
-				{
-					return new BusinessResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, currencies);
-				}
-			}
-			catch (Exception ex)
-			{
-				return new BusinessResult(Const.ERROR_EXCEPTION, ex.Message);
-			}
-		}
+        public IQueryable<List<Product>> GetProductsAsQueryable()
+        {
+            return _unitOfWork.ProductRepository.GetProductsAsQueryable();
+        }
+        public async Task<IBusinessResult> SearchProduct(string? query, int? minPrice, int? maxPrice, List<int>? categoryIDs, string? condition, bool? isAvailable, int? sellerID, int pageIndex = 1, int pageSize = 10)
+        {
+            try
+            {
+                #region Business rule
+                #endregion
+                if (!string.IsNullOrEmpty(query))
+                {
+                    query = FormatUtilities.TrimSpacesPreserveSingle(query);
+                }
+                var search = await _unitOfWork.ProductRepository.SearchProduct(query, minPrice, maxPrice, categoryIDs, condition, isAvailable, sellerID, pageIndex, pageSize);
+                if (search.Any())
+                {
 
-		public async Task<IBusinessResult> GetById(int id)
-		{
-			try
-			{
-				#region Business rule
-				#endregion
+                    return new BusinessResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, search);
+                }
+                else
+                {
+                    return new BusinessResult(Const.WARNING_NO_DATA_CODE, Const.WARNING_NO_DATA__MSG);
+                }
 
-				//var currency = await _currencyRepository.GetByIdAsync(code);
-				var cv = await _unitOfWork.ProductRepository.GetProductDetails(id);
+            }
+            catch (Exception ex)
+            {
+                return new BusinessResult(Const.ERROR_EXCEPTION, ex.Message);
+            }
+        }
+        public async Task<IBusinessResult> GetAll()
+        {
+            try
+            {
+                #region Business rule
+                #endregion
 
-				if (cv == null)
-				{
-					return new BusinessResult(Const.WARNING_NO_DATA_CODE, Const.WARNING_NO_DATA__MSG);
-				}
-				else
-				{
-					return new BusinessResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, cv);
-				}
-			}
-			catch (Exception ex)
-			{
-				return new BusinessResult(Const.ERROR_EXCEPTION, ex.Message);
-			}
-		}
-
-		public async Task<IBusinessResult> Save(Product cate)
-		{
-			try
-			{
-				//int result = await _currencyRepository.CreateAsync(currency);
-				int result = await _unitOfWork.ProductRepository.CreateAsync(cate);
-				if (result > 0)
-				{
-					return new BusinessResult(Const.SUCCESS_CREATE_CODE, Const.SUCCESS_CREATE_MSG);
-				}
-				else
-				{
-					return new BusinessResult(Const.FAIL_CREATE_CODE, Const.FAIL_CREATE_MSG);
-				}
-			}
-			catch (Exception ex)
-			{
-				return new BusinessResult(Const.ERROR_EXCEPTION, ex.ToString());
-			}
-		}
-
-		public async Task<IBusinessResult> Update(Product cate)
-		{
-			try
-			{
-				//int result = await _currencyRepository.UpdateAsync(currency);
-				int result = await _unitOfWork.ProductRepository.Update(cate);
-
-				if (result > 0)
-				{
-					return new BusinessResult(Const.SUCCESS_UPDATE_CODE, Const.SUCCESS_UPDATE_MSG);
-				}
-				else
-				{
-					return new BusinessResult(Const.FAIL_UPDATE_CODE, Const.FAIL_UPDATE_MSG);
-				}
-			}
-			catch (Exception ex)
-			{
-				return new BusinessResult(-4, ex.ToString());
-			}
-		}
-
-		public async Task<IBusinessResult> DeleteById(int id)
-		{
-			try
-			{
-				var cvid = await _unitOfWork.ProductRepository.GetByIdAsync(id);
-				if (cvid != null)
-				{
-					var result = await _unitOfWork.ProductRepository.RemoveAsync(cvid);
-					if (result)
-					{
-						return new BusinessResult(Const.SUCCESS_DELETE_CODE, Const.SUCCESS_DELETE_MSG);
-					}
-					else
-					{
-						return new BusinessResult(Const.FAIL_DELETE_CODE, Const.FAIL_DELETE_MSG);
-					}
-				}
-				else
-				{
-					return new BusinessResult(Const.WARNING_NO_DATA_CODE, Const.WARNING_NO_DATA__MSG);
-				}
-			}
-			catch (Exception ex)
-			{
-				return new BusinessResult(Const.ERROR_EXCEPTION, ex.ToString());
-			}
-		}
-
-		public async Task<bool> IdExists(int id)
-		{
-			var cate = await _unitOfWork.ProductRepository.GetByIdAsync(id);
-			return cate != null;
-		}
+                var currencies = await _unitOfWork.ProductRepository.GetAllAsync();
 
 
+                if (currencies == null)
+                {
+                    return new BusinessResult(Const.WARNING_NO_DATA_CODE, Const.WARNING_NO_DATA__MSG);
+                }
+                else
+                {
+                    return new BusinessResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, currencies);
+                }
+            }
+            catch (Exception ex)
+            {
+                return new BusinessResult(Const.ERROR_EXCEPTION, ex.Message);
+            }
+        }
 
-	}
+        public async Task<IBusinessResult> GetById(int id)
+        {
+            try
+            {
+                #region Business rule
+                #endregion
+
+                //var currency = await _currencyRepository.GetByIdAsync(code);
+                var cv = await _unitOfWork.ProductRepository.GetProductDetails(id);
+
+                if (cv == null)
+                {
+                    return new BusinessResult(Const.WARNING_NO_DATA_CODE, Const.WARNING_NO_DATA__MSG);
+                }
+                else
+                {
+                    return new BusinessResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, cv);
+                }
+            }
+            catch (Exception ex)
+            {
+                return new BusinessResult(Const.ERROR_EXCEPTION, ex.Message);
+            }
+        }
+
+        public async Task<IBusinessResult> Save(Product cate)
+        {
+            try
+            {
+                //int result = await _currencyRepository.CreateAsync(currency);
+                int result = await _unitOfWork.ProductRepository.CreateAsync(cate);
+                if (result > 0)
+                {
+                    return new BusinessResult(Const.SUCCESS_CREATE_CODE, Const.SUCCESS_CREATE_MSG);
+                }
+                else
+                {
+                    return new BusinessResult(Const.FAIL_CREATE_CODE, Const.FAIL_CREATE_MSG);
+                }
+            }
+            catch (Exception ex)
+            {
+                return new BusinessResult(Const.ERROR_EXCEPTION, ex.ToString());
+            }
+        }
+
+        public async Task<IBusinessResult> Update(Product cate)
+        {
+            try
+            {
+                //int result = await _currencyRepository.UpdateAsync(currency);
+                int result = await _unitOfWork.ProductRepository.Update(cate);
+
+                if (result > 0)
+                {
+                    return new BusinessResult(Const.SUCCESS_UPDATE_CODE, Const.SUCCESS_UPDATE_MSG);
+                }
+                else
+                {
+                    return new BusinessResult(Const.FAIL_UPDATE_CODE, Const.FAIL_UPDATE_MSG);
+                }
+            }
+            catch (Exception ex)
+            {
+                return new BusinessResult(-4, ex.ToString());
+            }
+        }
+
+        public async Task<IBusinessResult> DeleteById(int id)
+        {
+            try
+            {
+                var cvid = await _unitOfWork.ProductRepository.GetByIdAsync(id);
+                if (cvid != null)
+                {
+                    var result = await _unitOfWork.ProductRepository.RemoveAsync(cvid);
+                    if (result)
+                    {
+                        return new BusinessResult(Const.SUCCESS_DELETE_CODE, Const.SUCCESS_DELETE_MSG);
+                    }
+                    else
+                    {
+                        return new BusinessResult(Const.FAIL_DELETE_CODE, Const.FAIL_DELETE_MSG);
+                    }
+                }
+                else
+                {
+                    return new BusinessResult(Const.WARNING_NO_DATA_CODE, Const.WARNING_NO_DATA__MSG);
+                }
+            }
+            catch (Exception ex)
+            {
+                return new BusinessResult(Const.ERROR_EXCEPTION, ex.ToString());
+            }
+        }
+
+        public async Task<bool> IdExists(int id)
+        {
+            var cate = await _unitOfWork.ProductRepository.GetByIdAsync(id);
+            return cate != null;
+        }
+
+
+
+    }
 }

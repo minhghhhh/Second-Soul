@@ -3,6 +3,14 @@
 @{
     ViewData["Title"] = "Home page";
 }
+<style>
+    .price-old {
+        text-decoration: line-through;
+        margin-right: 10px;
+        color: darkgrey;
+    }
+   
+</style>
 
 <section class="hero">
     <div class="hero__slider owl-carousel">
@@ -42,10 +50,8 @@
                             </p>
                             <a href="#" class="primary-btn">Shop now <span class="arrow_right"></span></a>
                             <div class="hero__social">
-                                <a href="#"><i class="fa fa-facebook"></i></a>
-                                <a href="#"><i class="fa fa-twitter"></i></a>
-                                <a href="#"><i class="fa fa-pinterest"></i></a>
-                                <a href="#"><i class="fa fa-instagram"></i></a>
+                                <a href="https://www.facebook.com/profile.php?id=61565825386889"><i class="fa fa-facebook"></i></a>
+                                <a href="@Html.Raw("https://www.tiktok.com/@second.soul88?is_from_webapp=1&sender_device=pc")" class="tiktok"><i class="fa fa-tiktok"></i></a>
                             </div>
                         </div>
                     </div>
@@ -63,288 +69,60 @@
         <div class="row">
             <div class="col-lg-12">
                 <ul class="filter__controls">
-                    <li class="active" data-filter="*">Best Sellers</li>
                     <li data-filter=".new-arrivals">New Arrivals</li>
                     <li data-filter=".hot-sales">Hot Sales</li>
                 </ul>
             </div>
         </div>
         <div class="row product__filter">
-            <div class="col-lg-3 col-md-6 col-sm-6 col-md-6 col-sm-6 mix new-arrivals">
-                <div class="product__item">
-                    <div class="product__item__pic set-bg" data-setbg="/template/img/product/product-1.jpg">
-                        <span class="label">New</span>
-                        <ul class="product__hover">
-                            <li><a href="#"><img src="/template/img/icon/heart.png" alt=""></a></li>
-                            <li><a href="#"><img src="/template/img/icon/compare.png" alt=""> <span>Compare</span></a></li>
-                            <li><a href="#"><img src="/template/img/icon/search.png" alt=""></a></li>
-                        </ul>
-                    </div>
-                    <div class="product__item__text">
-                        <h6>Piqué Biker Jacket</h6>
-                        <a href="#" class="add-cart">+ Add To Cart</a>
-                        <div class="rating">
-                            <i class="fa fa-star-o"></i>
-                            <i class="fa fa-star-o"></i>
-                            <i class="fa fa-star-o"></i>
-                            <i class="fa fa-star-o"></i>
-                            <i class="fa fa-star-o"></i>
-                        </div>
-                        <h5>$67.24</h5>
-                        <div class="product__color__select">
-                            <label for="pc-1">
-                                <input type="radio" id="pc-1">
-                            </label>
-                            <label class="active black" for="pc-2">
-                                <input type="radio" id="pc-2">
-                            </label>
-                            <label class="grey" for="pc-3">
-                                <input type="radio" id="pc-3">
-                            </label>
+            @if (Model.NewProducts.Any())
+            {
+                @foreach (var product in Model.NewProducts.Take(8))
+                {
+                    <div class="col-lg-3 col-md-6 col-sm-6 col-md-6 col-sm-6 mix new-arrivals">
+                        <div class="product__item">
+                            <div class="product__item__pic set-bg" data-setbg="@product.MainImage">
+                                <span class="label">New</span>
+                                <ul class="product__hover">
+                                    <li><a href="/ProductPage/details/@product.ProductId"><img src="/template/img/icon/search.png" alt=""></a><span>View Detail</span></li>
+                                </ul>
+                            </div>
+                            <div class="product__item__text">
+                                <h6>@product.Name</h6>
+                                <a href="/AddToCart/@product.ProductId">+ Add To Cart</a>
+                                <h5>@product.Price.ToString("N0") VND</h5>
+                                <h9>Xl</h9>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-6 col-sm-6 col-md-6 col-sm-6 mix hot-sales">
-                <div class="product__item">
-                    <div class="product__item__pic set-bg" data-setbg="/template/img/product/product-2.jpg">
-                        <ul class="product__hover">
-                            <li><a href="#"><img src="/template/img/icon/heart.png" alt=""></a></li>
-                            <li><a href="#"><img src="/template/img/icon/compare.png" alt=""> <span>Compare</span></a></li>
-                            <li><a href="#"><img src="/template/img/icon/search.png" alt=""></a></li>
-                        </ul>
-                    </div>
-                    <div class="product__item__text">
-                        <h6>Piqué Biker Jacket</h6>
-                        <a href="#" class="add-cart">+ Add To Cart</a>
-                        <div class="rating">
-                            <i class="fa fa-star-o"></i>
-                            <i class="fa fa-star-o"></i>
-                            <i class="fa fa-star-o"></i>
-                            <i class="fa fa-star-o"></i>
-                            <i class="fa fa-star-o"></i>
-                        </div>
-                        <h5>$67.24</h5>
-                        <div class="product__color__select">
-                            <label for="pc-4">
-                                <input type="radio" id="pc-4">
-                            </label>
-                            <label class="active black" for="pc-5">
-                                <input type="radio" id="pc-5">
-                            </label>
-                            <label class="grey" for="pc-6">
-                                <input type="radio" id="pc-6">
-                            </label>
+                }
+            }
+            @if (Model.SaleProducts.Any())
+            {
+                @foreach (var product in Model.SaleProducts.Take(8))
+                {
+
+                    <div class="col-lg-3 col-md-6 col-sm-6 col-md-6 col-sm-6 mix hot-sales">
+                        <div class="product__item sale">
+                            <div class="product__item__pic set-bg" data-setbg="@product.MainImage">
+                                <span class="label">Sale</span>
+                                <ul class="product__hover">
+                                    <li><a href="/ProductPage/Details/@product.ProductId>"><img src="/template/img/icon/search.png" alt=""></a><span>View Detail</span></li>
+                                </ul>
+                            </div>
+                            <div class="product__item__text">
+                                <h6>@product.Name</h6>
+                                <form id="addToCartForm" method="post">
+                                    <a href="/AddToCart/@product.ProductId">+ Add To Cart</a>
+                                </form>
+                                <h9 class="price-old">@product.Price.ToString("N0") VND</h9>
+                                <h5>@product.SalePrice VND</h5>
+                                <h7>XL</h7>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-6 col-sm-6 col-md-6 col-sm-6 mix new-arrivals">
-                <div class="product__item sale">
-                    <div class="product__item__pic set-bg" data-setbg="/template/img/product/product-3.jpg">
-                        <span class="label">Sale</span>
-                        <ul class="product__hover">
-                            <li><a href="#"><img src="/template/img/icon/heart.png" alt=""></a></li>
-                            <li><a href="#"><img src="/template/img/icon/compare.png" alt=""> <span>Compare</span></a></li>
-                            <li><a href="#"><img src="/template/img/icon/search.png" alt=""></a></li>
-                        </ul>
-                    </div>
-                    <div class="product__item__text">
-                        <h6>Multi-pocket Chest Bag</h6>
-                        <a href="#" class="add-cart">+ Add To Cart</a>
-                        <div class="rating">
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star-o"></i>
-                        </div>
-                        <h5>$43.48</h5>
-                        <div class="product__color__select">
-                            <label for="pc-7">
-                                <input type="radio" id="pc-7">
-                            </label>
-                            <label class="active black" for="pc-8">
-                                <input type="radio" id="pc-8">
-                            </label>
-                            <label class="grey" for="pc-9">
-                                <input type="radio" id="pc-9">
-                            </label>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-6 col-sm-6 col-md-6 col-sm-6 mix hot-sales">
-                <div class="product__item">
-                    <div class="product__item__pic set-bg" data-setbg="/template/img/product/product-4.jpg">
-                        <ul class="product__hover">
-                            <li><a href="#"><img src="/template/img/icon/heart.png" alt=""></a></li>
-                            <li><a href="#"><img src="/template/img/icon/compare.png" alt=""> <span>Compare</span></a></li>
-                            <li><a href="#"><img src="/template/img/icon/search.png" alt=""></a></li>
-                        </ul>
-                    </div>
-                    <div class="product__item__text">
-                        <h6>Diagonal Textured Cap</h6>
-                        <a href="#" class="add-cart">+ Add To Cart</a>
-                        <div class="rating">
-                            <i class="fa fa-star-o"></i>
-                            <i class="fa fa-star-o"></i>
-                            <i class="fa fa-star-o"></i>
-                            <i class="fa fa-star-o"></i>
-                            <i class="fa fa-star-o"></i>
-                        </div>
-                        <h5>$60.9</h5>
-                        <div class="product__color__select">
-                            <label for="pc-10">
-                                <input type="radio" id="pc-10">
-                            </label>
-                            <label class="active black" for="pc-11">
-                                <input type="radio" id="pc-11">
-                            </label>
-                            <label class="grey" for="pc-12">
-                                <input type="radio" id="pc-12">
-                            </label>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-6 col-sm-6 col-md-6 col-sm-6 mix new-arrivals">
-                <div class="product__item">
-                    <div class="product__item__pic set-bg" data-setbg="/template/img/product/product-5.jpg">
-                        <ul class="product__hover">
-                            <li><a href="#"><img src="/template/img/icon/heart.png" alt=""></a></li>
-                            <li><a href="#"><img src="/template/img/icon/compare.png" alt=""> <span>Compare</span></a></li>
-                            <li><a href="#"><img src="/template/img/icon/search.png" alt=""></a></li>
-                        </ul>
-                    </div>
-                    <div class="product__item__text">
-                        <h6>Lether Backpack</h6>
-                        <a href="#" class="add-cart">+ Add To Cart</a>
-                        <div class="rating">
-                            <i class="fa fa-star-o"></i>
-                            <i class="fa fa-star-o"></i>
-                            <i class="fa fa-star-o"></i>
-                            <i class="fa fa-star-o"></i>
-                            <i class="fa fa-star-o"></i>
-                        </div>
-                        <h5>$31.37</h5>
-                        <div class="product__color__select">
-                            <label for="pc-13">
-                                <input type="radio" id="pc-13">
-                            </label>
-                            <label class="active black" for="pc-14">
-                                <input type="radio" id="pc-14">
-                            </label>
-                            <label class="grey" for="pc-15">
-                                <input type="radio" id="pc-15">
-                            </label>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-6 col-sm-6 col-md-6 col-sm-6 mix hot-sales">
-                <div class="product__item sale">
-                    <div class="product__item__pic set-bg" data-setbg="/template/img/product/product-6.jpg">
-                        <span class="label">Sale</span>
-                        <ul class="product__hover">
-                            <li><a href="#"><img src="/template/img/icon/heart.png" alt=""></a></li>
-                            <li><a href="#"><img src="/template/img/icon/compare.png" alt=""> <span>Compare</span></a></li>
-                            <li><a href="#"><img src="/template/img/icon/search.png" alt=""></a></li>
-                        </ul>
-                    </div>
-                    <div class="product__item__text">
-                        <h6>Ankle Boots</h6>
-                        <a href="#" class="add-cart">+ Add To Cart</a>
-                        <div class="rating">
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star-o"></i>
-                        </div>
-                        <h5>$98.49</h5>
-                        <div class="product__color__select">
-                            <label for="pc-16">
-                                <input type="radio" id="pc-16">
-                            </label>
-                            <label class="active black" for="pc-17">
-                                <input type="radio" id="pc-17">
-                            </label>
-                            <label class="grey" for="pc-18">
-                                <input type="radio" id="pc-18">
-                            </label>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-6 col-sm-6 col-md-6 col-sm-6 mix new-arrivals">
-                <div class="product__item">
-                    <div class="product__item__pic set-bg" data-setbg="/template/img/product/product-7.jpg">
-                        <ul class="product__hover">
-                            <li><a href="#"><img src="/template/img/icon/heart.png" alt=""></a></li>
-                            <li><a href="#"><img src="/template/img/icon/compare.png" alt=""> <span>Compare</span></a></li>
-                            <li><a href="#"><img src="/template/img/icon/search.png" alt=""></a></li>
-                        </ul>
-                    </div>
-                    <div class="product__item__text">
-                        <h6>T-shirt Contrast Pocket</h6>
-                        <a href="#" class="add-cart">+ Add To Cart</a>
-                        <div class="rating">
-                            <i class="fa fa-star-o"></i>
-                            <i class="fa fa-star-o"></i>
-                            <i class="fa fa-star-o"></i>
-                            <i class="fa fa-star-o"></i>
-                            <i class="fa fa-star-o"></i>
-                        </div>
-                        <h5>$49.66</h5>
-                        <div class="product__color__select">
-                            <label for="pc-19">
-                                <input type="radio" id="pc-19">
-                            </label>
-                            <label class="active black" for="pc-20">
-                                <input type="radio" id="pc-20">
-                            </label>
-                            <label class="grey" for="pc-21">
-                                <input type="radio" id="pc-21">
-                            </label>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-6 col-sm-6 col-md-6 col-sm-6 mix hot-sales">
-                <div class="product__item">
-                    <div class="product__item__pic set-bg" data-setbg="/template/img/product/product-8.jpg">
-                        <ul class="product__hover">
-                            <li><a href="#"><img src="/template/img/icon/heart.png" alt=""></a></li>
-                            <li><a href="#"><img src="/template/img/icon/compare.png" alt=""> <span>Compare</span></a></li>
-                            <li><a href="#"><img src="/template/img/icon/search.png" alt=""></a></li>
-                        </ul>
-                    </div>
-                    <div class="product__item__text">
-                        <h6>Basic Flowing Scarf</h6>
-                        <a href="#" class="add-cart">+ Add To Cart</a>
-                        <div class="rating">
-                            <i class="fa fa-star-o"></i>
-                            <i class="fa fa-star-o"></i>
-                            <i class="fa fa-star-o"></i>
-                            <i class="fa fa-star-o"></i>
-                            <i class="fa fa-star-o"></i>
-                        </div>
-                        <h5>$26.28</h5>
-                        <div class="product__color__select">
-                            <label for="pc-22">
-                                <input type="radio" id="pc-22">
-                            </label>
-                            <label class="active black" for="pc-23">
-                                <input type="radio" id="pc-23">
-                            </label>
-                            <label class="grey" for="pc-24">
-                                <input type="radio" id="pc-24">
-                            </label>
-                        </div>
-                    </div>
-                </div>
-            </div>
+                }
+            }
         </div>
     </div>
 </section>
@@ -383,43 +161,42 @@
         <div class="row">
             <div class="col-lg-12">
                 <div class="section-title">
-                    <span>Latest News</span>
-                    <h2>Fashion New Trends</h2>
+                    <span>Latest New</span>
+                    <h2>Our Blog</h2>
                 </div>
             </div>
         </div>
         <div class="row">
             <div class="col-lg-4 col-md-6 col-sm-6">
                 <div class="blog__item">
-                    <div class="blog__item__pic set-bg" data-setbg="/template/img/blog/blog-1.jpg"></div>
+                    <div class="blog__item__pic set-bg" data-setbg="https://scontent.fsgn5-9.fna.fbcdn.net/v/t39.30808-6/463336085_122113845614527512_6586357672800161814_n.jpg?_nc_cat=105&ccb=1-7&_nc_sid=127cfc&_nc_eui2=AeEPuwTlDEIqYaVg3-a1o6TtCAiEGeo9RRgICIQZ6j1FGCmhA62-rKJq_4JAfueyhnLaVhMwMuG9DgI3yN8_EI_q&_nc_ohc=HRIPIsAfqjEQ7kNvgH1SeyB&_nc_ht=scontent.fsgn5-9.fna&_nc_gid=AJMGs8sDjok03T8vwAh6pVG&oh=00_AYDPqpfxPmeL-o0Y79qSxh2SPPbCMvmHvonacDq9bh8WoA&oe=671AABFA"></div>
                     <div class="blog__item__text">
-                        <span><img src="/template/img/icon/calendar.png" alt=""> 16 February 2020</span>
-                        <h5>What Curling Irons Are The Best Ones</h5>
-                        <a href="#">Read More</a>
+                        <span><img src="/template/img/icon/calendar.png" alt=""> 17 October 2024</span>
+                        <h5>Smart Consumption With Secondhand Model</h5>
+                        <a href="https://www.facebook.com/share/p/PzmKGbgsT6CVb3et/">Read More</a>
                     </div>
                 </div>
             </div>
             <div class="col-lg-4 col-md-6 col-sm-6">
                 <div class="blog__item">
-                    <div class="blog__item__pic set-bg" data-setbg="/template/img/blog/blog-2.jpg"></div>
+                    <div class="blog__item__pic set-bg" data-setbg="https://scontent.fsgn5-5.fna.fbcdn.net/v/t39.30808-6/463658282_122113845224527512_1611870440587227002_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=127cfc&_nc_eui2=AeHiZzy6D3iQWKJfGFSERhumH9DAo42hlFYf0MCjjaGUVoQIM9B4KHv-SWGECCq7NgBpkp-vwJPYFNVwNDiLPW0T&_nc_ohc=hz6vBQmn6hUQ7kNvgEh8Y0D&_nc_ht=scontent.fsgn5-5.fna&_nc_gid=Atj33bhcaohzFuv0_uhN-4p&oh=00_AYAo2ng8Dpu3vOmNTpl1zNeYX15aXAv6cUIITs_nmxx1yg&oe=671A9F62"></div>
                     <div class="blog__item__text">
-                        <span><img src="/template/img/icon/calendar.png" alt=""> 21 February 2020</span>
-                        <h5>Eternity Bands Do Last Forever</h5>
-                        <a href="#">Read More</a>
+                        <span><img src="/template/img/icon/calendar.png" alt=""> 19 October 2024</span>
+                        <h5>Where Old Stuff Turns Into New Opportunities</h5>
+                        <a href="https://www.facebook.com/share/p/mc4yHY5fiWqPoZBn/">Read More</a>
                     </div>
                 </div>
             </div>
             <div class="col-lg-4 col-md-6 col-sm-6">
                 <div class="blog__item">
-                    <div class="blog__item__pic set-bg" data-setbg="/template/img/blog/blog-3.jpg"></div>
+                    <div class="blog__item__pic set-bg" data-setbg="https://scontent.fsgn5-5.fna.fbcdn.net/v/t39.30808-6/463072375_122113844798527512_6905669622296539598_n.jpg?_nc_cat=100&ccb=1-7&_nc_sid=127cfc&_nc_eui2=AeGFe9pJDss_Bf6j75sj7DO_LYcYAZ_mHoAthxgBn-YegG962Qy-y6BkA9dLEkT6rBNmKvEaYJjG5GXqe0ro7PDT&_nc_ohc=ueCx0R_CnicQ7kNvgGvXvUX&_nc_ht=scontent.fsgn5-5.fna&_nc_gid=A4x6fo56yeEEv-7UQQRIsV1&oh=00_AYBAdZ4wBhROMBaHkwEtJj_mIe77E4KN2Vs1q6YrOWH_qA&oe=671ACE6F"></div>
                     <div class="blog__item__text">
-                        <span><img src="/template/img/icon/calendar.png" alt=""> 28 February 2020</span>
-                        <h5>The Health Benefits Of Sunglasses</h5>
-                        <a href="#">Read More</a>
+                        <span><img src="/template/img/icon/calendar.png" alt=""> 16 October 2024</span>
+                        <h5>Green Shopping Movement From Secondhand Goods</h5>
+                        <a href="https://www.facebook.com/share/p/P3cfZxhSZhBQuCh3/">Read More</a>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </section>
-<!-- Latest Blog Section End -->
