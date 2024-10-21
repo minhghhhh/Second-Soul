@@ -34,6 +34,11 @@
 		margin-left: 0.3rem;
 	}
 
+	.shop__sidebar__condition label {
+		margin-left: 0.3rem;
+	}
+
+
 	.shop__sidebar__search {
 		display: flex;
 	}
@@ -101,16 +106,16 @@
 																<ul id="subCollapse@(parentCategoryGroup.Key)" class="collapse sub-list">
 																	@foreach (var subCategory in parentCategoryGroup)
 																	{
-																		<li class="form-check">
+																		<li class="form-check row">
+																			<label class="form-check-label col-md-5">@subCategory.Text</label>
 																			@if (subCategory.Selected)
 																			{
-																				<input type="checkbox" name="categoryIDs" value="@subCategory.Value" class="form-check-input" checked />
+																				<input type="checkbox" name="categoryIDs" value="@subCategory.Value" class="form-check-input col-md-6" checked />
 																			}
 																			else
 																			{
-																				<input type="checkbox" name="categoryIDs" value="@subCategory.Value" class="form-check-input" />
+																				<input type="checkbox" name="categoryIDs" value="@subCategory.Value" class="form-check-input col-md-6" />
 																			}
-																			<label class="form-check-label">@subCategory.Text</label>
 																		</li>
 																	}
 																</ul>
@@ -136,17 +141,17 @@
 													<ul>
 														@foreach (var condition in Model.Conditions)
 														{
-															<li class="form-check">
+															<li class="form-check row">
+																<label class="form-check-label col-md-6">@condition.Text</label>
 																@if (condition.Selected)
 																{
-																	<input type="radio" name="condition" value="@condition.Value" id="condition-@condition.Value" class="form-check-input" checked/>
+																	<input type="radio" name="condition" value="@condition.Value" id="condition-@condition.Value" class="form-check-input col-md-5" checked />
 
 																}
 																else
 																{
-																	<input type="radio" name="condition" value="@condition.Value" id="condition-@condition.Value" class="form-check-input" />
+																	<input type="radio" name="condition" value="@condition.Value" id="condition-@condition.Value" class="form-check-input col-md-5" />
 																}
-																<label for="condition-@condition.Value" class="form-check-label">@condition.Text</label>
 															</li>
 														}
 													</ul>
