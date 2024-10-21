@@ -29,7 +29,7 @@
         <div class="row">
             <div class="col-lg-8">
                 <div class="shopping__cart__table">
-                    <table>
+                    <table style="width: 100%">
                         <thead>
                             <tr>
                                 <th>Product</th>
@@ -70,7 +70,7 @@
                                     <tr>
                                         <td class="product__cart__item">
                                             <div class="product__cart__item__pic">
-                                                <img src="@item.Product.MainImage" alt="" style="max-block-size = 30%">
+                                                <img src="@item.Product.MainImage" alt="" style="max-block-size:30%"/>
                                             </div>
                                             <div class="product__cart__item__text">
                                                 <h6>@item.Product.Name</h6>
@@ -82,7 +82,14 @@
                                                 </div>
                                             </div>
                                         </td>
-                                        <td class="cart__price">@item.Product.Price.ToString("N0") VND</td>
+                                            @if (item.Product.IsSale && item.Product.SalePrice != null)
+                                            {
+                                            <td class="cart__price">@((int)item.Product.SalePrice).ToString("N0") VND</td>
+                                            }
+                                            else
+                                            {
+                                               <td class="cart__price">@item.Product.Price.ToString("N0") VND</td>
+                                            }
                                         <td class="cart__close" type="submit" name="action" value="delete"><i class="fa fa-close"></i></td>
                                     </tr>
                                     }
@@ -90,7 +97,7 @@
                             }
                             else
                             {
-                                <h1>Your Shopping Cart is Empty</h1>
+                                <tr><td colspan="100%">Your Shopping Cart is Empty</td></tr>
                             }
 
                         </tbody>

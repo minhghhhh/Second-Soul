@@ -36,7 +36,7 @@ namespace Second_Soul.Pages
                 UserId = user.UserId
             };
             await _shoppingCartBusiness.Save(newCartProduct);
-            return RedirectToPage("/Index");
+            return RedirectToPage("/Userpage/Cart");
         }
 
     }

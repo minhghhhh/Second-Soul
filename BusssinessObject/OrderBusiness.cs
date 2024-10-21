@@ -240,9 +240,22 @@ namespace BusssinessObject
 					{
 						errorMessage.Append(orderDetail.Product == null ? string.Empty : " " + orderDetail.Product.Name + ",");
 						await _unitOfWork.OrderDetailRepository.RemoveAsync(orderDetail);
-						await _unitOfWork.SaveChangeAsync();
 					}
-				}
+					else if (orderDetail.Product.SalePrice == null || orderDetail.Product.SalePrice >= orderDetail.Product.Price)
+					{
+
+						orderDetail.Product.IsSale = false;
+						orderDetail.Product.SalePrice = null;
+						await _unitOfWork.ProductRepository.UpdateAsync(orderDetail.Product);
+					}
+					else if (orderDetail.Product.IsSale || orderDetail.Product.SalePrice < orderDetail.Product.Price)
+					{
+                        orderDetail.Product.IsSale = true;
+                        await _unitOfWork.ProductRepository.UpdateAsync(orderDetail.Product);
+                        orderDetail.Price = (int)orderDetail.Product.SalePrice;
+						await _unitOfWork.OrderDetailRepository.UpdateAsync(orderDetail);
+					}
+                }
 				if (orderDetails == null || orderDetails.Count <= 0)
 				{
 					await _unitOfWork.OrderRepository.RemoveAsync(order);

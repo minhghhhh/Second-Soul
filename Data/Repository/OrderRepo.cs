@@ -38,16 +38,16 @@ namespace Data.Repository
                 var product = await context.Products.FindAsync(productId);
                 if (product != null)
                 {
-                    var orderDetail = new OrderDetail
+                    var orderDetail = new OrderDetail();
+                    orderDetail.ProductId = product.ProductId;
+                    orderDetail.OrderId = order.OrderId;
+                    if (product.IsSale)
                     {
-                        OrderId = order.OrderId,
-                        ProductId = productId,
-                        Price = product.Price  // Set the product price
-                    };
+
+                    }
                     context.OrderDetails.Add(orderDetail);
                 }
             }
-
             // Save all the order details
             await context.SaveChangesAsync();
             return order.OrderId;

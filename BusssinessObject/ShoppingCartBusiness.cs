@@ -31,10 +31,13 @@ namespace BusssinessObject
 			try
 			{
 				var result = await GetByUserId(userId, null, null);
-				var carts = (List<ShoppingCart>)result;
-				if (carts.Count > 99)
+				if (result != null && result.Status > 0 && result.Data != null)
 				{
-					return true;
+					var carts = (List<ShoppingCart>)result.Data;
+					if (carts.Count > 99)
+					{
+						return true;
+					}
 				}
 				return false;
 			}
