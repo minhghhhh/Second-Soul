@@ -76,11 +76,17 @@ namespace Second_Soul.Pages.UserPage
 
         public async Task<IActionResult> OnPostAsync()
         {
-            var formData = Request.Form;
+			var user = await _userBusiness.GetFromCookie(Request);
+			if (user == null)
+			{
+				return RedirectToPage("/Login");
+			}
+			var formData = Request.Form;
             var product = new Product
             {
                 Name = Product.Name,
-                Description = Product.Description ?? string.Empty,
+                SellerId = user.UserId,
+				Description = Product.Description ?? string.Empty,
                 Price = Product.Price,
                 CategoryId = Product.CategoryID,
                 Condition = Product.Condition,
@@ -101,7 +107,7 @@ namespace Second_Soul.Pages.UserPage
                     var productImage = new ProductImage
                     {
                         ProductId = product.ProductId,
-                        ImageUrl = uploadResult // The returned Cloudinary URL
+                        ImageUrl = uploadResult 
                     };
                     await _productImageBusiness.Save(productImage);
                 }
