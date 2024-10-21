@@ -74,23 +74,25 @@ namespace Second_Soul.Pages.UserPage
             return Page();
         }
 
-		public async Task<IActionResult> OnPostAsync()
-		{
-			if (!ModelState.IsValid)
+        public async Task<IActionResult> OnPostAsync()
+        {
+			var user = await _userBusiness.GetFromCookie(Request);
+			if (user == null)
 			{
-				return Page();
+				return RedirectToPage("/Login");
 			}
-
-			var product = new Product
-			{
-				Name = Product.Name,
+			var formData = Request.Form;
+            var product = new Product
+            {
+                Name = Product.Name,
+                SellerId = user.UserId,
 				Description = Product.Description ?? string.Empty,
-				Price = Product.Price,
-				CategoryId = Product.CategoryID,
-				Condition = Product.Condition,
-				AddedDate = DateTime.Now,
-				IsAvailable = Product.IsAvailable // Use IsAvailable from input if necessary
-			};
+                Price = Product.Price,
+                CategoryId = Product.CategoryID,
+                Condition = Product.Condition,
+                AddedDate = DateTime.Now,
+                IsAvailable = true // Set other necessary fields
+            };
 
 			await _productBusiness.Save(product);
 
