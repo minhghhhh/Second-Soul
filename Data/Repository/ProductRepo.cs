@@ -24,6 +24,19 @@ namespace Data.Repository
 		{
 			return await _dbcontext.Products.Include(a=> a.Category).Include(a=>a.ProductImages).ToListAsync();
 		} 
+		public async Task<List<Product>> GetAllSellProduct()
+		{
+			return await _dbcontext.Products.Where(a => a.IsSale == true && a.IsAvailable==true).ToListAsync();
+		}
+        public async Task<List<Product>> GetProductPriceHighToLow()
+        {
+            return await _dbcontext.Products.AsNoTracking().OrderByDescending(p => p.Price).Where(p => p.IsAvailable == true).ToListAsync();
+        }
+        public async Task<List<Product>> GetProductPriceLowToHigh()
+        {
+            return await _dbcontext.Products.AsNoTracking().OrderBy(p => p.Price).Where(p => p.IsAvailable == true).ToListAsync();
+        }
+
         public async Task<List<Product>> GetProductsNewest()
         {
             return await _dbcontext.Products.AsNoTracking().OrderByDescending(p=>p.AddedDate).Where(p=> p.IsAvailable == true).ToListAsync();
@@ -137,7 +150,7 @@ namespace Data.Repository
 		}
 		public async Task<Product?> GetProductDetails(int id)
 		{
-			return await context.Products.Include(a=>a.Category).Include(a=>a.Seller).Where(a=>a.ProductId== id).FirstOrDefaultAsync();
+			return await context.Products.Include(a=>a.Category).Include(a=>a.Seller).Where(a=>a.ProductId == id && a.IsAvailable== true).FirstOrDefaultAsync();
 		}
 		private async Task<bool> IsValidCategoryAsync(int categoryID)
 		{
