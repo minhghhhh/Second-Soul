@@ -13,7 +13,7 @@ namespace Second_Soul
         public BackGround(ILogger<BackGround> logger, IServiceProvider serviceProvider)
         {
             _logger = logger;
-            _serviceProvider = serviceProvider; 
+            _serviceProvider = serviceProvider;
         }
         private async Task UpdateProductStatusesAsync()
         {
@@ -42,13 +42,14 @@ namespace Second_Soul
         {
             _logger.LogInformation("Background Service is starting.");
             while (!stoppingToken.IsCancellationRequested)
-            { 
+            {
                 try
                 {
                     using (var scope = _serviceProvider.CreateScope())
                     {
                         var unitOfWork = scope.ServiceProvider.GetRequiredService<UnitOfWork>();
                         await unitOfWork.CouponRepository.DisableExpiredCoupons();
+                        await UpdateProductStatusesAsync();
                     }
                 }
                 catch (Exception ex)
@@ -56,7 +57,7 @@ namespace Second_Soul
                     Console.WriteLine($"Error disable Expired Coupons: {ex.Message}");
                 }
                 await Task.Delay(TimeSpan.FromSeconds(15), stoppingToken);
-           }
+            }
 
         }
     }

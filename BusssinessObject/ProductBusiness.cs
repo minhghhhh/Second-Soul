@@ -14,6 +14,10 @@ namespace BusssinessObject
 {
     public interface IProductBusiness
     {
+        List<Product> SortPriceHighToLow(List<Product> products);
+        List<Product> SortPriceLowToHigh(List<Product> products);
+        List<Product> SortNewestProduct(List<Product> products);
+        List<Product> SortOldestProduct(List<Product> products);
         Task<List<Product>> GetAllSellProduct();
         Task<List<Product>> GetProductPriceHighToLow();
 
@@ -222,7 +226,24 @@ namespace BusssinessObject
             return cate != null;
         }
 
+        public List<Product> SortPriceHighToLow(List<Product> products)
+        {
+            return _unitOfWork.ProductRepository.SortPriceHighToLow(products);
+        }
 
+        public List<Product> SortPriceLowToHigh(List<Product> products)
+        {
+            return _unitOfWork.ProductRepository.SortPriceLowToHigh(products);
+        }
 
+        public List<Product> SortNewestProduct(List<Product> products)
+        {
+            return  _unitOfWork.ProductRepository.SortNewestProduct(products);
+        }
+
+        public  List<Product>SortOldestProduct(List<Product> products)
+        {
+            return _unitOfWork.ProductRepository.SortOldestProduct(products);
+        }
     }
 }

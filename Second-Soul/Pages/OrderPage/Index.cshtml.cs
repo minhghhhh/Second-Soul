@@ -102,7 +102,7 @@ namespace Second_Soul.Pages.OrderPage
 					return await OnGetAsync(id);
 				case "placeOrder":
 					// Handle placing the order
-					var paymentLink = await _paymentBusiness.CreatePaymentLink(id, $"{Request.Scheme}://{Request.Host}/CancelPayment/{id}", $"{Request.Scheme}://{Request.Host}" , user.UserId);
+					var paymentLink = await _paymentBusiness.CreatePaymentLink(id, $"{Request.Scheme}://{Request.Host}/OrderPage/CancelPayment/{id}", $"{Request.Scheme}://{Request.Host}" , user.UserId);
 
 					if (paymentLink == null || !(paymentLink.Status > 0) || paymentLink.Data == null)
 					{

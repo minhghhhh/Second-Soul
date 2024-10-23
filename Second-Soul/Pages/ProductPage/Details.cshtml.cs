@@ -79,7 +79,7 @@ namespace Second_Soul.Pages.ProductPage
                     List<int> temp = [id];
                     var phone = user.PhoneNumber ?? string.Empty; 
                     var address = user.Address ?? string.Empty;
-                    int orderId = await _orderBusiness.CreateOrderAsync(user.UserId, temp, phone, address, 0, null);
+                    int orderId = await _orderBusiness.CreateOrderAsync(user.UserId, temp, user.FullName, phone, address, 0, null);
                     return RedirectToPage("/OrderPage/Index", new { id = orderId });
             }
             return await OnGetAsync(id);

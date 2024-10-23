@@ -1,207 +1,203 @@
 ﻿@page
 @model IndexModel
 @{
-	ViewData["Title"] = "Home page";
+    ViewData["Title"] = "Home page";
 }
 <style>
-	.price-old {
-		text-decoration: line-through;
-		margin-right: 10px;
-		color: darkgrey;
-	}
+    .price-old {
+        text-decoration: line-through;
+        margin-right: 10px;
+        color: darkgrey;
+    }
 </style>
 
 <section class="hero">
-	<div class="hero__slider owl-carousel">
-		<div class="hero__items set-bg" data-setbg="/template/img/hero/hero-1.jpg">
-			<div class="container">
-				<div class="row">
-					<div class="col-xl-5 col-lg-7 col-md-8">
-						<div class="hero__text">
-							<h6>Summer Collection</h6>
-							<h2>Fall - Winter Collections 2030</h2>
-							<p>
-								A specialist label creating luxury essentials. Ethically crafted with an unwavering
-								commitment to exceptional quality.
-							</p>
-							<a href="#" class="primary-btn">Shop now <span class="arrow_right"></span></a>
-							<div class="hero__social">
-								<a href="https://www.facebook.com/profile.php?id=61565825386889"><i class="fa fa-facebook"></i></a>
-								<a href="@Html.Raw("https://www.tiktok.com/@second.soul88?is_from_webapp=1&sender_device=pc")" class="tiktok">
-									<i class="fab fa-tiktok"></i>
-								</a>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-		<div class="hero__items set-bg" data-setbg="/template/img/hero/hero-2.jpg">
-			<div class="container">
-				<div class="row">
-					<div class="col-xl-5 col-lg-7 col-md-8">
-						<div class="hero__text">
-							<h6>Summer Collection</h6>
-							<h2>Fall - Winter Collections 2030</h2>
-							<p>
-								A specialist label creating luxury essentials. Ethically crafted with an unwavering
-								commitment to exceptional quality.
-							</p>
-							<a href="#" class="primary-btn">Shop now <span class="arrow_right"></span></a>
-							<div class="hero__social">
-								<a href="https://www.facebook.com/profile.php?id=61565825386889"><i class="fa fa-facebook"></i></a>
-								<a href="@Html.Raw("https://www.tiktok.com/@second.soul88?is_from_webapp=1&sender_device=pc")" class="tiktok"><i class="fa fa-tiktok"></i></a>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+    <div class="hero__slider owl-carousel">
+        <div class="hero__items set-bg" data-setbg="/template/img/hero/hero-1.jpg">
+            <div class="container">
+                <div class="row">
+                    <div class="col-xl-5 col-lg-7 col-md-8">
+                        <div class="hero__text">
+                            <h6>Summer Collection</h6>
+                            <h2>Fall - Winter Collections 2030</h2>
+                            <p>
+                                A specialist label creating luxury essentials. Ethically crafted with an unwavering
+                                commitment to exceptional quality.
+                            </p>
+                            <a href="#" class="primary-btn">Shop now <span class="arrow_right"></span></a>
+                            <div class="hero__social">
+                                <a href="https://www.facebook.com/profile.php?id=61565825386889"><i class="fa fa-facebook"></i></a>
+                                <a href="@Html.Raw("https://www.tiktok.com/@second.soul88?is_from_webapp=1&sender_device=pc")" class="tiktok">
+                                    <i class="fab fa-tiktok"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="hero__items set-bg" data-setbg="/template/img/hero/hero-2.jpg">
+            <div class="container">
+                <div class="row">
+                    <div class="col-xl-5 col-lg-7 col-md-8">
+                        <div class="hero__text">
+                            <h6>Summer Collection</h6>
+                            <h2>Fall - Winter Collections 2030</h2>
+                            <p>
+                                A specialist label creating luxury essentials. Ethically crafted with an unwavering
+                                commitment to exceptional quality.
+                            </p>
+                            <a href="#" class="primary-btn">Shop now <span class="arrow_right"></span></a>
+                            <div class="hero__social">
+                                <a href="https://www.facebook.com/profile.php?id=61565825386889"><i class="fa fa-facebook"></i></a>
+                                <a href="@Html.Raw("https://www.tiktok.com/@second.soul88?is_from_webapp=1&sender_device=pc")" class="tiktok"><i class="fa fa-tiktok"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </section>
 <!-- Hero Section End -->
 <!-- Banner Section Begin -->
 <!-- Banner Section End -->
 <!-- Product Section Begin -->
 <section class="product spad">
-	<div class="container">
-		<div class="row">
-			<div class="col-lg-12">
-				<ul class="filter__controls">
-					<li data-filter=".new-arrivals">New Arrivals</li>
-					<li data-filter=".hot-sales">Hot Sales</li>
-				</ul>
-			</div>
-		</div>
-		<div class="row product__filter">
-			@if (Model.NewProducts.Any())
-			{
-				@foreach (var product in Model.NewProducts.Take(8))
-				{
-					<div class="col-lg-3 col-md-6 col-sm-6 col-md-6 col-sm-6 mix new-arrivals">
-						<div class="product__item">
-							<div class="product__item__pic set-bg" data-setbg="@product.MainImage">
-								<span class="label">New</span>
-								<ul class="product__hover">
-									<li><a href="/ProductPage/details/@product.ProductId"><img src="/template/img/icon/search.png" alt=""></a><span>View Detail</span></li>
-								</ul>
-							</div>
-							<div class="product__item__text">
-								<h6>@product.Name</h6>
-								<a href="/AddToCart/@product.ProductId">+ Add To Cart</a>
-								<h5>@product.Price.ToString("N0") VND</h5>
-								<h9>Xl</h9>
-							</div>
-						</div>
-					</div>
-				}
-			}
-			<div class="row product__filter">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <ul class="filter__controls">
+                    <li data-filter=".new-arrivals">New Arrivals</li>
+                    <li data-filter=".hot-sales">Hot Sales</li>
+                </ul>
+            </div>
+        </div>
+        <div class="row product__filter">
+            @if (Model.NewProducts.Any())
+            {
+                @foreach (var product in Model.NewProducts.Take(8))
+                {
+                    <div class="col-lg-3 col-md-6 col-sm-6 col-md-6 col-sm-6 mix new-arrivals">
+                        <div class="product__item">
+                            <div class="product__item__pic set-bg" data-setbg="@product.MainImage">
+                                <span class="label">New</span>
+                                <ul class="product__hover">
+                                    <li><a href="/ProductPage/details/@product.ProductId"><img src="/template/img/icon/search.png" alt=""></a><span>View Detail</span></li>
+                                </ul>
+                            </div>
+                            <div class="product__item__text">
+                                <h6>@product.Name</h6>
+                                <a href="/AddToCart/@product.ProductId">+ Add To Cart</a>
+                                <h5>@product.Price.ToString("N0") VND</h5>
+                                <h9>Xl</h9>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
 
-				@if (Model.SaleProducts.Any())
-				{
-					@foreach (var product in Model.SaleProducts.Take(8))
-					{
+            @if (Model.SaleProducts.Any())
+            {
+                @foreach (var product in Model.SaleProducts.Take(8))
+                {
 
-						<div class="col-lg-3 col-md-6 col-sm-6 col-md-6 col-sm-6 mix hot-sales">
-							<div class="product__item sale">
-								<div class="product__item__pic set-bg" data-setbg="@product.MainImage">
-									<span class="label">Sale</span>
-									<ul class="product__hover">
-										<li><a href="/ProductPage/Details/@product.ProductId>"><img src="/template/img/icon/search.png" alt=""></a><span>View Detail</span></li>
-									</ul>
-								</div>
-								<div class="product__item__text">
-									<h6>@product.Name</h6>
-									<form id="addToCartForm" method="post">
-										<a href="/AddToCart/@product.ProductId">+ Add To Cart</a>
-									</form>
-									<h9 class="price-old">@product.Price.ToString("N0") VND</h9>
-									@if (product.SalePrice != null)
-									{
-										<h5>@(((int)product.SalePrice).ToString("N0")) VND</h5>
-									}
-									<h9>XL</h9>
-								</div>
-							</div>
-						</div>
-					}
-				}
-			</div>
-		</div>
-	</div>
+                    <div class="col-lg-3 col-md-6 col-sm-6 col-md-6 col-sm-6 mix hot-sales">
+                        <div class="product__item sale">
+                            <div class="product__item__pic set-bg" data-setbg="@product.MainImage">
+                                <span class="label">Sale</span>
+                                <ul class="product__hover">
+                                    <li><a href="/ProductPage/Details/@product.ProductId>"><img src="/template/img/icon/search.png" alt=""></a><span>View Detail</span></li>
+                                </ul>
+                            </div>
+                            <div class="product__item__text">
+                                <h6>@product.Name</h6>
+                                <a href="/AddToCart/@product.ProductId">+ Add To Cart</a>
+                                <h9 class="price-old">@product.Price.ToString("N0") VND</h9>
+                                @if (product.SalePrice != null)
+                                {
+                                    <h5>@(((int)product.SalePrice).ToString("N0")) VND</h5>
+                                }
+                                <h9>XL</h9>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+    </div>
 </section>
 <!-- Product Section End -->
 <!-- Instagram Section Begin -->
 <section class="instagram spad">
-	<div class="container">
-		<div class="row">
-			<div class="col-lg-8">
-				<div class="instagram__pic">
-					<div class="instagram__pic__item set-bg" data-setbg="/template/img/instagram/instagram-1.jpg"></div>
-					<div class="instagram__pic__item set-bg" data-setbg="/template/img/instagram/instagram-2.jpg"></div>
-					<div class="instagram__pic__item set-bg" data-setbg="/template/img/instagram/instagram-3.jpg"></div>
-					<div class="instagram__pic__item set-bg" data-setbg="/template/img/instagram/instagram-4.jpg"></div>
-					<div class="instagram__pic__item set-bg" data-setbg="/template/img/instagram/instagram-5.jpg"></div>
-					<div class="instagram__pic__item set-bg" data-setbg="/template/img/instagram/instagram-6.jpg"></div>
-				</div>
-			</div>
-			<div class="col-lg-4">
-				<div class="instagram__text">
-					<h2>Facebook</h2>
-					<p>
-						Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-						labore et dolore magna aliqua.
-					</p>
-					<h3>#2ndsoul</h3>
-				</div>
-			</div>
-		</div>
-	</div>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="instagram__pic">
+                    <div class="instagram__pic__item set-bg" data-setbg="/template/img/instagram/instagram-1.jpg"></div>
+                    <div class="instagram__pic__item set-bg" data-setbg="/template/img/instagram/instagram-2.jpg"></div>
+                    <div class="instagram__pic__item set-bg" data-setbg="/template/img/instagram/instagram-3.jpg"></div>
+                    <div class="instagram__pic__item set-bg" data-setbg="/template/img/instagram/instagram-4.jpg"></div>
+                    <div class="instagram__pic__item set-bg" data-setbg="/template/img/instagram/instagram-5.jpg"></div>
+                    <div class="instagram__pic__item set-bg" data-setbg="/template/img/instagram/instagram-6.jpg"></div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="instagram__text">
+                    <h2>Facebook</h2>
+                    <p>
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
+                        labore et dolore magna aliqua.
+                    </p>
+                    <h3>#2ndsoul</h3>
+                </div>
+            </div>
+        </div>
+    </div>
 </section>
 <!-- Instagram Section End -->
 <!-- Latest Blog Section Begin -->
 <section class="latest spad">
-	<div class="container">
-		<div class="row">
-			<div class="col-lg-12">
-				<div class="section-title">
-					<span>Latest New</span>
-					<h2>Our Blog</h2>
-				</div>
-			</div>
-		</div>
-		<div class="row">
-			<div class="col-lg-4 col-md-6 col-sm-6">
-				<div class="blog__item">
-					<div class="blog__item__pic set-bg" data-setbg="https://scontent.fsgn5-9.fna.fbcdn.net/v/t39.30808-6/463336085_122113845614527512_6586357672800161814_n.jpg?_nc_cat=105&ccb=1-7&_nc_sid=127cfc&_nc_eui2=AeEPuwTlDEIqYaVg3-a1o6TtCAiEGeo9RRgICIQZ6j1FGCmhA62-rKJq_4JAfueyhnLaVhMwMuG9DgI3yN8_EI_q&_nc_ohc=HRIPIsAfqjEQ7kNvgH1SeyB&_nc_ht=scontent.fsgn5-9.fna&_nc_gid=AJMGs8sDjok03T8vwAh6pVG&oh=00_AYDPqpfxPmeL-o0Y79qSxh2SPPbCMvmHvonacDq9bh8WoA&oe=671AABFA"></div>
-					<div class="blog__item__text">
-						<span><img src="/template/img/icon/calendar.png" alt=""> 17 October 2024</span>
-						<h5>Smart Consumption With Secondhand Model</h5>
-						<a href="https://www.facebook.com/share/p/PzmKGbgsT6CVb3et/">Read More</a>
-					</div>
-				</div>
-			</div>
-			<div class="col-lg-4 col-md-6 col-sm-6">
-				<div class="blog__item">
-					<div class="blog__item__pic set-bg" data-setbg="https://scontent.fsgn5-5.fna.fbcdn.net/v/t39.30808-6/463658282_122113845224527512_1611870440587227002_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=127cfc&_nc_eui2=AeHiZzy6D3iQWKJfGFSERhumH9DAo42hlFYf0MCjjaGUVoQIM9B4KHv-SWGECCq7NgBpkp-vwJPYFNVwNDiLPW0T&_nc_ohc=hz6vBQmn6hUQ7kNvgEh8Y0D&_nc_ht=scontent.fsgn5-5.fna&_nc_gid=Atj33bhcaohzFuv0_uhN-4p&oh=00_AYAo2ng8Dpu3vOmNTpl1zNeYX15aXAv6cUIITs_nmxx1yg&oe=671A9F62"></div>
-					<div class="blog__item__text">
-						<span><img src="/template/img/icon/calendar.png" alt=""> 19 October 2024</span>
-						<h5>Where Old Stuff Turns Into New Opportunities</h5>
-						<a href="https://www.facebook.com/share/p/mc4yHY5fiWqPoZBn/">Read More</a>
-					</div>
-				</div>
-			</div>
-			<div class="col-lg-4 col-md-6 col-sm-6">
-				<div class="blog__item">
-					<div class="blog__item__pic set-bg" data-setbg="https://scontent.fsgn5-5.fna.fbcdn.net/v/t39.30808-6/463072375_122113844798527512_6905669622296539598_n.jpg?_nc_cat=100&ccb=1-7&_nc_sid=127cfc&_nc_eui2=AeGFe9pJDss_Bf6j75sj7DO_LYcYAZ_mHoAthxgBn-YegG962Qy-y6BkA9dLEkT6rBNmKvEaYJjG5GXqe0ro7PDT&_nc_ohc=ueCx0R_CnicQ7kNvgGvXvUX&_nc_ht=scontent.fsgn5-5.fna&_nc_gid=A4x6fo56yeEEv-7UQQRIsV1&oh=00_AYBAdZ4wBhROMBaHkwEtJj_mIe77E4KN2Vs1q6YrOWH_qA&oe=671ACE6F"></div>
-					<div class="blog__item__text">
-						<span><img src="/template/img/icon/calendar.png" alt=""> 16 October 2024</span>
-						<h5>Green Shopping Movement From Secondhand Goods</h5>
-						<a href="https://www.facebook.com/share/p/P3cfZxhSZhBQuCh3/">Read More</a>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="section-title">
+                    <span>Latest New</span>
+                    <h2>Our Blog</h2>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-4 col-md-6 col-sm-6">
+                <div class="blog__item">
+                    <div class="blog__item__pic set-bg" data-setbg="https://scontent.fsgn5-9.fna.fbcdn.net/v/t39.30808-6/463336085_122113845614527512_6586357672800161814_n.jpg?_nc_cat=105&ccb=1-7&_nc_sid=127cfc&_nc_eui2=AeEPuwTlDEIqYaVg3-a1o6TtCAiEGeo9RRgICIQZ6j1FGCmhA62-rKJq_4JAfueyhnLaVhMwMuG9DgI3yN8_EI_q&_nc_ohc=HRIPIsAfqjEQ7kNvgH1SeyB&_nc_ht=scontent.fsgn5-9.fna&_nc_gid=AJMGs8sDjok03T8vwAh6pVG&oh=00_AYDPqpfxPmeL-o0Y79qSxh2SPPbCMvmHvonacDq9bh8WoA&oe=671AABFA"></div>
+                    <div class="blog__item__text">
+                        <span><img src="/template/img/icon/calendar.png" alt=""> 17 October 2024</span>
+                        <h5>Smart Consumption With Secondhand Model</h5>
+                        <a href="https://www.facebook.com/share/p/PzmKGbgsT6CVb3et/">Read More</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 col-sm-6">
+                <div class="blog__item">
+                    <div class="blog__item__pic set-bg" data-setbg="https://scontent.fsgn5-5.fna.fbcdn.net/v/t39.30808-6/463658282_122113845224527512_1611870440587227002_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=127cfc&_nc_eui2=AeHiZzy6D3iQWKJfGFSERhumH9DAo42hlFYf0MCjjaGUVoQIM9B4KHv-SWGECCq7NgBpkp-vwJPYFNVwNDiLPW0T&_nc_ohc=hz6vBQmn6hUQ7kNvgEh8Y0D&_nc_ht=scontent.fsgn5-5.fna&_nc_gid=Atj33bhcaohzFuv0_uhN-4p&oh=00_AYAo2ng8Dpu3vOmNTpl1zNeYX15aXAv6cUIITs_nmxx1yg&oe=671A9F62"></div>
+                    <div class="blog__item__text">
+                        <span><img src="/template/img/icon/calendar.png" alt=""> 19 October 2024</span>
+                        <h5>Where Old Stuff Turns Into New Opportunities</h5>
+                        <a href="https://www.facebook.com/share/p/mc4yHY5fiWqPoZBn/">Read More</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 col-sm-6">
+                <div class="blog__item">
+                    <div class="blog__item__pic set-bg" data-setbg="https://scontent.fsgn5-5.fna.fbcdn.net/v/t39.30808-6/463072375_122113844798527512_6905669622296539598_n.jpg?_nc_cat=100&ccb=1-7&_nc_sid=127cfc&_nc_eui2=AeGFe9pJDss_Bf6j75sj7DO_LYcYAZ_mHoAthxgBn-YegG962Qy-y6BkA9dLEkT6rBNmKvEaYJjG5GXqe0ro7PDT&_nc_ohc=ueCx0R_CnicQ7kNvgGvXvUX&_nc_ht=scontent.fsgn5-5.fna&_nc_gid=A4x6fo56yeEEv-7UQQRIsV1&oh=00_AYBAdZ4wBhROMBaHkwEtJj_mIe77E4KN2Vs1q6YrOWH_qA&oe=671ACE6F"></div>
+                    <div class="blog__item__text">
+                        <span><img src="/template/img/icon/calendar.png" alt=""> 16 October 2024</span>
+                        <h5>Green Shopping Movement From Secondhand Goods</h5>
+                        <a href="https://www.facebook.com/share/p/P3cfZxhSZhBQuCh3/">Read More</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </section>

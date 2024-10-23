@@ -14,7 +14,11 @@ namespace Data.Repository
         public OrderRepo(SecondSoulShopContext context) : base(context)
         {
         }
-        public async Task<int> CreateOrderAsync(int customerId, List<int> productIds, string phoneNumber, string address, int totalAmount, int? couponId)
+        public async Task<List<Order>> GetOrdersByUserID(int userID)
+        {
+            return await context.Orders.Include(a=>a.Coupon).Where(a=>a.CustomerId == userID).ToListAsync();
+        }
+        public async Task<int> CreateOrderAsync(int customerId, List<int> productIds, string fullname ,string phoneNumber, string address, int totalAmount, int? couponId)
         {
             // Create a new Order
             var order = new Order
@@ -22,17 +26,16 @@ namespace Data.Repository
                 CustomerId = customerId,
                 OrderDate = DateTime.Now,
                 TotalAmount = totalAmount,
+                FullName = fullname,
                 Status = "Pending",  // Initial status
                 PhoneNumber = phoneNumber,
                 Address = address,
                 CouponId = couponId
             };
 
-            // Add the order to the context
             context.Orders.Add(order);
-            await context.SaveChangesAsync();  // Save the order to generate OrderId
+            await context.SaveChangesAsync(); 
 
-            // Add OrderDetails for each product
             foreach (var productId in productIds)
             {
                 var product = await context.Products.FindAsync(productId);

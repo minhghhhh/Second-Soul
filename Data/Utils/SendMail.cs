@@ -260,7 +260,7 @@ namespace Data.Utils
                     <p>Please click the button below to change your email:</p>                    
                       <a class='button' href='"
                     + confirmationLink
-                    + "'>Confirm Email</a>"
+                    + "'>Change Email</a>"
                     + @"
                 </div>
             </body>

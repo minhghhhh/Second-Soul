@@ -39,9 +39,6 @@ namespace Second_Soul.Pages
         }
         public class LoginInput
         {
-            public LoginInput()
-            {
-            }
 
             [Required]
             public string Email { get; set; } = string.Empty;
