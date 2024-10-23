@@ -30,8 +30,12 @@ namespace Second_Soul.Pages
 		public int? MinPrice { get; set; }
 		public int? MaxPrice { get; set; }
 		public List<SelectListItem> Conditions { get; set; } = new List<SelectListItem>();
-		public string? Condition { get; set; }
-		public bool IsAvailable { get; set; } = true;
+        public List<SelectListItem> Sizes { get; set; } = new List<SelectListItem>();
+
+        public string? Condition { get; set; }
+        public string? Size { get; set; }
+
+        public bool IsAvailable { get; set; } = true;
 		public List<SelectListItem> Sellers { get; set; } = new List<SelectListItem>();
 		public List<Product> Products { get; set; } = new List<Product>();
 		public List<SelectListItem> Categories { get; set; } = new List<SelectListItem>();
@@ -40,24 +44,31 @@ namespace Second_Soul.Pages
 		public int PageSize { get; set; } = 10; // Default items per page
 
 		// OnGet method to handle the search logic
-		public async Task<IActionResult> OnGetAsync(string? query, int? minPrice, int? maxPrice, List<int>? categoryIDs, string? condition, bool? isAvailable, int? sellerID, int pageIndex = 1)
+		public async Task<IActionResult> OnGetAsync(string? query, int? minPrice, int? maxPrice,string? size, List<int>? categoryIDs, string? condition, bool? isAvailable, int? sellerID, int pageIndex = 1)
 		{
 			Query = query;
 			MinPrice = minPrice;
 			MaxPrice = maxPrice;
 			Condition = string.IsNullOrEmpty(condition) ? null : condition;
+            Size = string.IsNullOrEmpty(size) ? null : size;
 
-			Conditions = Enum.GetNames(typeof(Condition)).Select(o => new SelectListItem
+
+            Conditions = Enum.GetNames(typeof(Condition)).Select(o => new SelectListItem
 			{
 				Text = o.Replace('_', ' '),
 				Value = o,
 				Selected = condition != null ? o == Condition : false
 			}).ToList();
-
-			IsAvailable = isAvailable != null && (bool)isAvailable;
+            Sizes = Enum.GetNames(typeof(Size)).Select(o => new SelectListItem
+            {
+                Text = o.Replace("two", "2"),
+                Value = o,
+                Selected = size != null ? o == Condition : false
+            }).ToList();
+            IsAvailable = isAvailable != null && (bool)isAvailable;
 			PageIndex = pageIndex;
 
-			var productResult = await _productBusiness.SearchProduct(query, minPrice, maxPrice, categoryIDs, condition, isAvailable, sellerID, pageIndex, PageSize);
+			var productResult = await _productBusiness.SearchProduct(query, minPrice, maxPrice, categoryIDs, condition,size, isAvailable, sellerID, pageIndex, PageSize);
 			if (productResult.Status > 0 && productResult.Data != null)
 			{
 				Products = (List<Product>)productResult.Data;

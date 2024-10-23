@@ -54,6 +54,7 @@ CREATE TABLE Products (
     Description TEXT,
     CategoryID INT NOT NULL,
     Price INT NOT NULL,
+	Size nvarchar(5) CHECK (Size IN ('XS','S', 'M', 'L', 'XL','2Xl','Other')),
     Condition NVARCHAR(20) CHECK (Condition IN ('New', 'Like_New', 'Good', 'Fair')),
     AddedDate DATETIME DEFAULT GETDATE(),
 	MainImage NVARCHAR(255) NOT NULL,
@@ -195,23 +196,23 @@ VALUES
 	('Gloves',6),
 	('Scarf',6);
 Go
-INSERT INTO Products (SellerID, Name, Description, MainImage, CategoryID, Price, Condition)
+INSERT INTO Products (SellerID, Name, Description, MainImage, CategoryID, Price, Size, Condition)
 VALUES
-    (1, 'Casual T-Shirt', 'Comfortable cotton t-shirt for everyday wear.', 'http://pluspng.com/img-png/khaki-pants-png--1024.png', 8, 2000, 'New'),
-    (1, 'Denim Jeans', 'Stylish denim jeans, perfect for casual outings.', 'https://www.pngmart.com/files/16/Denim-Jeans-PNG-Transparent-Image.png', 12, 39000, 'Like_New'),
-    (1, 'Leather Jacket', 'Classic leather jacket for a rugged look.', 'https://pngimg.com/uploads/leather_jacket/leather_jacket_PNG24.png', 7, 129000, 'Good'),
-    (3, 'Summer Dress', 'Light and breezy summer dress for warm days.', 'https://pngimg.com/uploads/dress/dress_PNG90.png', 11, 49000, 'New'),
-    (3, 'Sport Sneakers', 'Durable sneakers for your active lifestyle.', 'https://freepngimg.com/thumb/shoes/28530-3-nike-shoes-transparent.png', 15, 59000, 'New'),
-    (3, 'Wool Scarf', 'Warm wool scarf to keep you cozy in winter.', 'https://pngimg.com/uploads/scarf/scarf_PNG17.png', 24, 29000, 'Fair'),
-    (3, 'Formal Blouse', 'Elegant blouse suitable for office wear.', 'http://pluspng.com/img-png/blouse-png-hd-black-dress-shirt-png-image-950.png', 10, 34000, 'Good'),
-    (3, 'Chino Pants', 'Comfortable chino pants for formal occasions.', 'http://pluspng.com/img-png/khaki-pants-png--1024.png', 13, 44000, 'Like_New'),
-    (3, 'Winter Boots', 'Insulated boots for snowy days.', 'https://www.pngall.com/wp-content/uploads/7/Black-Winter-Boot-PNG-Free-Image.png', 18, 89000, 'New'),
-    (1, 'Graphic Croptop', 'Trendy graphic croptop for a casual look.', 'http://purepng.com/public/uploads/large/purepng.com-black-t-shirtclothingblack-t-shirtfashion-dress-shirt-black-cloth-tshirt-631522326884bzr0p.png', 9, 24000, 'New'),
-    (1, 'Canvas Backpack', 'Spacious and stylish canvas backpack.', 'http://pluspng.com/img-png/blouse-png-hd-black-dress-shirt-png-image-950.png', 23, 39000, 'Good'),
-    (1, 'Leather Loafers', 'Sophisticated loafers for a polished look.', 'https://pngimg.com/uploads/leather_jacket/leather_jacket_PNG24.png', 16, 69000, 'Like_New'),
-    (1, 'Sporty Tank Top', 'Breathable tank top for workouts.', 'http://purepng.com/public/uploads/large/purepng.com-black-t-shirtclothingblack-t-shirtfashion-dress-shirt-black-cloth-tshirt-631522326884bzr0p.png', 9, 21000, 'New'),
-    (3, 'Elegant High-Heels', 'Stylish high-heels for special occasions.', 'https://www.pngall.com/wp-content/uploads/7/Black-Winter-Boot-PNG-Free-Image.png', 17, 74000, 'New'),
-    (3, 'Trendy Skirt', 'Fashionable skirt that pairs well with tops.', 'https://freepngimg.com/thumb/shoes/28530-3-nike-shoes-transparent.png', 14, 49000, 'Good');
+    (1, 'Casual T-Shirt', 'Comfortable cotton t-shirt for everyday wear.', 'http://pluspng.com/img-png/khaki-pants-png--1024.png', 8, 2000, 'L', 'New'),
+    (1, 'Denim Jeans', 'Stylish denim jeans, perfect for casual outings.', 'https://www.pngmart.com/files/16/Denim-Jeans-PNG-Transparent-Image.png', 12, 39000, 'M', 'Like_New'),
+    (1, 'Leather Jacket', 'Classic leather jacket for a rugged look.', 'https://pngimg.com/uploads/leather_jacket/leather_jacket_PNG24.png', 7, 129000, 'L', 'Good'),
+    (3, 'Summer Dress', 'Light and breezy summer dress for warm days.', 'https://pngimg.com/uploads/dress/dress_PNG90.png', 11, 49000, 'XL', 'New'),
+    (3, 'Sport Sneakers', 'Durable sneakers for your active lifestyle.', 'https://freepngimg.com/thumb/shoes/28530-3-nike-shoes-transparent.png', 15, 59000, 'Other', 'New'),
+    (3, 'Wool Scarf', 'Warm wool scarf to keep you cozy in winter.', 'https://pngimg.com/uploads/scarf/scarf_PNG17.png', 24, 29000, 'Other', 'Fair'),
+    (3, 'Formal Blouse', 'Elegant blouse suitable for office wear.', 'http://pluspng.com/img-png/blouse-png-hd-black-dress-shirt-png-image-950.png', 10, 34000, 'M', 'Good'),
+    (3, 'Chino Pants', 'Comfortable chino pants for formal occasions.', 'http://pluspng.com/img-png/khaki-pants-png--1024.png', 13, 44000, 'L', 'Like_New'),
+    (3, 'Winter Boots', 'Insulated boots for snowy days.', 'https://www.pngall.com/wp-content/uploads/7/Black-Winter-Boot-PNG-Free-Image.png', 18, 89000, 'L', 'New'),
+    (1, 'Graphic Croptop', 'Trendy graphic croptop for a casual look.', 'http://purepng.com/public/uploads/large/purepng.com-black-t-shirtclothingblack-t-shirtfashion-dress-shirt-black-cloth-tshirt-631522326884bzr0p.png', 9, 24000, 'S', 'New'),
+    (1, 'Canvas Backpack', 'Spacious and stylish canvas backpack.', 'http://pluspng.com/img-png/blouse-png-hd-black-dress-shirt-png-image-950.png', 23, 39000, 'Other', 'Good'),
+    (1, 'Leather Loafers', 'Sophisticated loafers for a polished look.', 'https://pngimg.com/uploads/leather_jacket/leather_jacket_PNG24.png', 16, 69000, 'L', 'Like_New'),
+    (1, 'Sporty Tank Top', 'Breathable tank top for workouts.', 'http://purepng.com/public/uploads/large/purepng.com-black-t-shirtclothingblack-t-shirtfashion-dress-shirt-black-cloth-tshirt-631522326884bzr0p.png', 9, 21000, 'M', 'New'),
+    (3, 'Elegant High-Heels', 'Stylish high-heels for special occasions.', 'https://www.pngall.com/wp-content/uploads/7/Black-Winter-Boot-PNG-Free-Image.png', 17, 74000, 'M', 'New'),
+    (3, 'Trendy Skirt', 'Fashionable skirt that pairs well with tops.', 'https://freepngimg.com/thumb/shoes/28530-3-nike-shoes-transparent.png', 14, 49000, 'M', 'Good');
 Go
 INSERT INTO ShoppingCarts (UserID, ProductID)
 VALUES

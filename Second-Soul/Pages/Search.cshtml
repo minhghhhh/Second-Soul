@@ -56,6 +56,11 @@
             background-color: white; /* Set a background color */
         }
 
+    .price-old {
+        text-decoration: line-through;
+        margin-right: 10px;
+        color: darkgrey;
+    }
 </style>
 <section class="breadcrumb-option">
     <div class="container">
@@ -184,50 +189,27 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="card">
-                                    <div class="card-heading">
-                                        <a data-toggle="collapse" data-target="#collapseFour">Size</a>
-                                    </div>
-                                    <div id="collapseFour" class="collapse show" data-parent="#accordionExample">
-                                        <div class="card-body">
-                                            <div class="shop__sidebar__size">
-                                                <label for="xs">
-                                                    xs
-                                                    <input type="radio" id="xs">
-                                                </label>
-                                                <label for="sm">
-                                                    s
-                                                    <input type="radio" id="sm">
-                                                </label>
-                                                <label for="md">
-                                                    m
-                                                    <input type="radio" id="md">
-                                                </label>
-                                                <label for="xl">
-                                                    xl
-                                                    <input type="radio" id="xl">
-                                                </label>
-                                                <label for="2xl">
-                                                    2xl
-                                                    <input type="radio" id="2xl">
-                                                </label>
-                                                <label for="xxl">
-                                                    xxl
-                                                    <input type="radio" id="xxl">
-                                                </label>
-                                                <label for="3xl">
-                                                    3xl
-                                                    <input type="radio" id="3xl">
-                                                </label>
-                                                <label for="4xl">
-                                                    4xl
-                                                    <input type="radio" id="4xl">
-                                                </label>
+                                @if (Model.Sizes.Count > 0)
+                                {
+                                    <div class="card">
+                                        <div class="card-heading">
+                                            <a data-toggle="collapse" data-target="#collapseFour">Size</a>
+                                        </div>
+                                        <div id="collapseFour" class="collapse show" data-parent="#accordionExample">
+                                            <div class="card-body">
+                                                <div class="shop__sidebar__size">
+                                                    @foreach (var size in Model.Sizes)
+                                                    {
+                                                        <label for="@size.Text">
+                                                            @size.Text
+                                                            <input type="radio" value="@size.Value" name="size">
+                                                        </label>
+                                                    }
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-
+                                }
                                 <button type="submit" class="btn btn-primary">Search</button>
                             </div>
                         </div>
@@ -291,18 +273,15 @@
                                     <div class="product__item__text">
                                         <h6>@product.Name</h6>
                                         <a href="/AddToCart/@product.ProductId">+ Add To Cart</a>
+                                        @if (product.SalePrice != null)
+                                        {
+                                        <h9 class="price-old">@product.Price.ToString("N0") VND</h9>
+                                            <h5>@(((int)product.SalePrice).ToString("N0")) VND</h5>
+                                        }
+                                        else{
                                         <h5>@product.Price.ToString("N0") VND</h5>
-                                        <div class="product__color__select">
-                                            <label for="pc-4">
-                                                <input type="radio" id="pc-4">
-                                            </label>
-                                            <label class="active black" for="pc-5">
-                                                <input type="radio" id="pc-5">
-                                            </label>
-                                            <label class="grey" for="pc-6">
-                                                <input type="radio" id="pc-6">
-                                            </label>
-                                        </div>
+                                        }
+                                        <h9>@product.Size</h9>
                                     </div>
                                 </div>
                             </div>

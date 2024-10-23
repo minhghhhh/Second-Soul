@@ -6,7 +6,7 @@
     User? currentUser = null;
 
     if (!string.IsNullOrEmpty(userCookie))
-    {   
+    {
         currentUser = JsonSerializer.Deserialize<User>(userCookie);
     }
 
@@ -66,6 +66,39 @@
     <link rel="stylesheet" href="~/template/css/owl.carousel.min.css" type="text/css">
     <link rel="stylesheet" href="~/template/css/slicknav.min.css" type="text/css">
     <link rel="stylesheet" href="~/template/css/style.css" type="text/css">
+    <link rel="icon"
+          href="~/adminAssets/assets/img/kaiadmin/favicon.ico"
+          type="image/x-icon" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />    <!-- Fonts and icons -->
+    <script src="~/adminAssets/assets/js/plugin/webfont/webfont.min.js"></script>
+    <script>
+        WebFont.load({
+            google: { families: ["Public Sans:300,400,500,600,700"] },
+            custom: {
+                families: [
+                    "Font Awesome 5 Solid",
+                    "Font Awesome 5 Regular",
+                    "Font Awesome 5 Brands",
+                    "simple-line-icons",
+                ],
+                urls: ["~/adminAssets/assets/css/fonts.min.css"],
+            },
+            active: function () {
+                sessionStorage.fonts = true;
+            },
+        });
+    </script>
+
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="~/adminAssets/assets/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/adminAssets/assets/css/plugins.min.css" />
+    <link rel="stylesheet" href="~/adminAssets/assets/css/kaiadmin.min.css" />
+
+    <!-- CSS Just for demo purpose, don't include it in your project -->
+    <link rel="stylesheet" href="~/adminAssets/assets/css/demo.css" />
+    @Html.Raw("<link rel='https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-  free@5.15.4/css/fontawesome.min.css'/>")
+    @RenderSection("Styles", required: false)
+
 </head>
 
 <body>
@@ -170,6 +203,9 @@
                 </div>
             </div>
         </div>
+    </header>
+
+    <div class="container">
         <div class="container">
             <div class="row">
                 <div class="col-lg-3 col-md-3">
@@ -216,10 +252,138 @@
             <a href="#" class="w3-bar-item w3-button">Link 2</a>
             <a href="#" class="w3-bar-item w3-button">Link 3</a>
         </div>
+        <div class="sidebar" data-background-color="dark">
+            <div class="sidebar-logo">
+                <!-- Logo Header -->
+                <div class="logo-header" data-background-color="dark">
+                    <a href="/" class="logo">
+                        <img src="~/assets/img/logo/logo.png"
+                             alt="navbar brand"
+                             class="navbar-brand"
+                             height="30" />
+                    </a>
+                    <div class="nav-toggle">
+                        <button class="btn btn-toggle toggle-sidebar">
+                            <i class="gg-menu-right"></i>
+                        </button>
+                        <button class="btn btn-toggle sidenav-toggler">
+                            <i class="gg-menu-left"></i>
+                        </button>
+                    </div>
+                    <button class="topbar-toggler more">
+                        <i class="gg-more-vertical-alt"></i>
+                    </button>
+                </div>
+                <!-- End Logo Header -->
+            </div>
+            <div class="sidebar-wrapper scrollbar scrollbar-inner">
+                <div class="sidebar-content">
+                    <ul class="nav nav-secondary">
+                        <li class="nav-section">
+                            <span class="sidebar-mini-icon">
+                                <i class="fa fa-ellipsis-h"></i>
+                            </span>
+                            <h4 class="text-section">Dashboard</h4>
+                        </li>
+                        <li class="nav-item">
+                            <a asp-page="/admin/index"
+                               class="collapsed"
+                               aria-expanded="false">
+                                <i class="fas fa-home"></i>
+                                <p>Dashboard</p>
+                            </a>
+                        </li>
+                        <li class="nav-section">
+                            <span class="sidebar-mini-icon">
+                                <i class="fa fa-ellipsis-h"></i>
+                            </span>
+                            <h4 class="text-section">Management</h4>
+                        </li>
+                        <li class="nav-item">
+                            <a asp-page="/admin/accountPage/index">
+                                <i class="fas fa-user"></i>
+                                <p>Account</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a asp-page="/admin/servicePage/index">
+                                <i class="fab fa-servicestack"></i>
+                                <p>Service</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a asp-page="/admin/FeedbackPage/index">
+                                <i class="fas fa-comment-dots"></i>
+                                <p>Feedback</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a asp-page="/admin/BillPage/index">
+                                <i class="fas fa-money-bill-alt"></i>
+                                <p>Bill</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a asp-page="/admin/BookingPage/index">
+                                <i class="fas fa-th-list"></i>
+                                <p>Booking</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a asp-page="/admin/VoucherPage/index">
+                                <i class="fas fa-ticket-alt"></i>
+                                <p>Voucher</p>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!-- End Sidebar -->
+        <style>
 
-    </header>
 
-    <div class="container">
+            .main-panel {
+                padding-top: 30px; /* Adjust this value based on your header height */
+            }
+
+            /* Optional: Adjust margin-top for the main content to account for fixed header */
+            main {
+                margin-top: 30px;
+                box-shadow: none;
+                border: none;
+            }
+        </style>
+
+        <div class="main-header">
+            <div class="main-header-logo">
+                <!-- Logo Header -->
+                <div class="logo-header" data-background-color="dark">
+                    <a href="index.html" class="logo">
+                        <img src="~/adminAssets/assets/img/kaiadmin/logo_light.svg"
+                             alt="navbar brand"
+                             class="navbar-brand"
+                             height="20" />
+                    </a>
+                    <div class="nav-toggle">
+                        <button class="btn btn-toggle toggle-sidebar">
+                            <i class="gg-menu-right"></i>
+                        </button>
+                        <button class="btn btn-toggle sidenav-toggler">
+                            <i class="gg-menu-left"></i>
+                        </button>
+                    </div>
+                    <button class="topbar-toggler more">
+                        <i class="gg-more-vertical-alt"></i>
+                    </button>
+                </div>
+            </div>
+            <nav class="navbar navbar-header navbar-header-transparent navbar-expand-lg">
+                <div class="container-fluid">
+                    <!-- Navbar content -->
+                </div>
+            </nav>
+        </div>
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
@@ -306,6 +470,36 @@
     <script src="~/template/js/mixitup.min.js"></script>
     <script src="~/template/js/owl.carousel.min.js"></script>
     <script src="~/template/js/main.js"></script>
+    <script src="~/adminAssets/assets/js/setting-demo.js"></script>
+    <script src="~/adminAssets/assets/js/demo.js"></script>
+    <script>
+        $("#lineChart").sparkline([102, 109, 120, 99, 110, 105, 115], {
+            type: "line",
+            height: "70",
+            width: "100%",
+            lineWidth: "2",
+            lineColor: "#177dff",
+            fillColor: "rgba(23, 125, 255, 0.14)",
+        });
+
+        $("#lineChart2").sparkline([99, 125, 122, 105, 110, 124, 115], {
+            type: "line",
+            height: "70",
+            width: "100%",
+            lineWidth: "2",
+            lineColor: "#f3545d",
+            fillColor: "rgba(243, 84, 93, .14)",
+        });
+
+        $("#lineChart3").sparkline([105, 103, 123, 100, 95, 105, 115], {
+            type: "line",
+            height: "70",
+            width: "100%",
+            lineWidth: "2",
+            lineColor: "#ffa534",
+            fillColor: "rgba(255, 165, 52, .14)",
+        });
+    </script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

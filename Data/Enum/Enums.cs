@@ -27,7 +27,17 @@ namespace Data.Enum
             Good,
             Fair 
         }
+        public enum Size
+        {
+            XS,
+            S,
+            M,
+            L,
+            XL,
+            twoXL,
+            Other
 
+        }
         public enum PaymentMethod
         {
             COD,
