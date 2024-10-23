@@ -22,7 +22,11 @@ namespace Second_Soul.Pages
 			_categoryBusiness = categoryBusiness;
 			_userBusiness = userBusiness;
 		}
-		public string? Query { get; set; }
+        [BindProperty(SupportsGet = true)]
+        public string SortOption { get; set; }
+        public List<SelectListItem> SortOptions { get; set; }
+
+        public string? Query { get; set; }
 		public int? MinPrice { get; set; }
 		public int? MaxPrice { get; set; }
 		public List<SelectListItem> Conditions { get; set; } = new List<SelectListItem>();
@@ -57,7 +61,7 @@ namespace Second_Soul.Pages
 			if (productResult.Status > 0 && productResult.Data != null)
 			{
 				Products = (List<Product>)productResult.Data;
-			}
+            }
 
 			// Update the method that fetches categories
 			var categoryResult = await _categoryBusiness.GetAll();
@@ -105,13 +109,41 @@ namespace Second_Soul.Pages
 					}
 				}
 			}
+            SortOptions = new List<SelectListItem>
+        {
+            new SelectListItem { Value = "PriceAsc", Text = "Lowest to Highest Price" },
+            new SelectListItem { Value = "PriceDesc", Text = "Highest to Lowest Price" },
+            new SelectListItem { Value = "Newest", Text = "Newest" },
+            new SelectListItem { Value = "Oldest", Text = "Oldest" }
+        };
+            // Set the default sort option to "Newest" if not specified
+            if (string.IsNullOrEmpty(SortOption))
+            {
+                SortOption = "Newest";
+            }
+            Products = SortProducts(Products, SortOption);
 
-			// Pagination logic
-			TotalPages = (int)Math.Ceiling(Products.Count() / (double)PageSize);
+            // Pagination logic
+            TotalPages = (int)Math.Ceiling(Products.Count() / (double)PageSize);
 			return Page();
 		}
+        private  List<Product> SortProducts(List<Product> products, string sortOption)
+        {
+            switch (sortOption)
+            {
+                case "PriceAsc":
+                    return  _productBusiness.SortPriceLowToHigh(products);
+                case "PriceDesc":
+                    return  _productBusiness.SortPriceHighToLow(products);
+                case "Newest":
+                    return  _productBusiness.SortNewestProduct(products);
+                case "Oldest":
+                    return  _productBusiness.SortOldestProduct(products);
+            }
+			 return products;
+        }
 
-		public bool HasPreviousPage => PageIndex > 1;
+        public bool HasPreviousPage => PageIndex > 1;
 		public bool HasNextPage => PageIndex < TotalPages;
 	}
 

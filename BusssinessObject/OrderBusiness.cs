@@ -13,14 +13,15 @@ using Data.Repository;
 namespace BusssinessObject
 {
 	public interface IOrderBusiness
-	{
-		Task<IBusinessResult> GetById(int orderId);
+    {
+		Task<List<Order>> GetOrdersByUserId(int userId);
+        Task<IBusinessResult> GetById(int orderId);
 		Task<IBusinessResult> ReadOnlyById(int orderId);
 		Task<IBusinessResult> ReadOnlyOrdersByUserId(int userId);
 		Task<IBusinessResult> Save(Order order);
 		Task<IBusinessResult> Update(Order order);
 		Task<IBusinessResult> GetPendingOrder(int orderId, int? userId);
-		Task<int> CreateOrderAsync(int customerId, List<int> productIds, string phoneNumber, string address, int totalAmount, int? couponId);
+		Task<int> CreateOrderAsync(int customerId, List<int> productIds,string fullname ,string phoneNumber, string address, int totalAmount, int? couponId);
 
 	}
 	public class OrderBusiness : IOrderBusiness
@@ -30,9 +31,9 @@ namespace BusssinessObject
 		{
 			_unitOfWork = unitOfWork;
 		}
-		public async Task<int> CreateOrderAsync(int customerId, List<int> productIds, string phoneNumber, string address, int totalAmount, int? couponId)
+		public async Task<int> CreateOrderAsync(int customerId, List<int> productIds, string fullname, string phoneNumber, string address, int totalAmount, int? couponId)
 		{
-			return await _unitOfWork.OrderRepository.CreateOrderAsync(customerId, productIds, phoneNumber, address, totalAmount, couponId);
+			return await _unitOfWork.OrderRepository.CreateOrderAsync(customerId, productIds, fullname, phoneNumber, address, totalAmount, couponId);
 		}
 
 		public async Task<IBusinessResult> GetById(int orderId)
@@ -211,6 +212,10 @@ namespace BusssinessObject
 				return new BusinessResult(Const.ERROR_EXCEPTION, ex.Message);
 			}
 
+		}
+		public async Task<List<Order>> GetOrdersByUserId(int userId)
+		{
+			return await _unitOfWork.OrderRepository.GetOrdersByUserID(userId);
 		}
 
 		public async Task<(Order? order, System.String? error)> ValidatePendingOrder(Order? order, int? userId)

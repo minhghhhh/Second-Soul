@@ -95,6 +95,7 @@ namespace Second_Soul.Pages.UserPage
                 case "payment":
 					if (SelectedProducts != null && SelectedProducts.Count > 0)
 					{
+                        var fullname = user.FullName;
 						var phone = user.PhoneNumber ?? string.Empty;
 						var address = user.Address ?? string.Empty;
                         int total = 0;
@@ -107,7 +108,7 @@ namespace Second_Soul.Pages.UserPage
                             }
 							total += ((Product)result.Data).Price;
 						}
-						int orderId = await _orderBusiness.CreateOrderAsync(user.UserId, SelectedProducts, phone, address, total, null);
+						int orderId = await _orderBusiness.CreateOrderAsync(user.UserId, SelectedProducts, fullname,phone, address, total, null);
 						return RedirectToPage("/OrderPage/index", new { id = orderId });
 					}
                     break;

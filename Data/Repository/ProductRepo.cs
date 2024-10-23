@@ -20,7 +20,35 @@ namespace Data.Repository
             _dbcontext = context;
             _userRepo = userRepo;
         }
-		public async Task<List<Product>> GetAllProduct()
+        public List<Product> SortPriceHighToLow(List<Product> products)
+        {
+            return products
+                .Where(p => p.IsAvailable)  
+                .OrderByDescending(p => p.Price)  
+                .ToList();
+        }
+        public List<Product> SortPriceLowToHigh(List<Product> products)
+        {
+            return products
+                .Where(p => p.IsAvailable)
+                .OrderBy(p => p.Price)
+                .ToList();
+        }
+        public List<Product> SortNewestProduct(List<Product> products)
+        {
+            return products
+                .Where(p => p.IsAvailable)
+                .OrderByDescending(p => p.AddedDate)
+                .ToList();
+        }
+        public List<Product> SortOldestProduct(List<Product> products)
+        {
+            return products
+                .Where(p => p.IsAvailable)
+                .OrderBy(p => p.AddedDate)
+                .ToList();
+        }
+        public async Task<List<Product>> GetAllProduct()
 		{
 			return await _dbcontext.Products.Include(a=> a.Category).Include(a=>a.ProductImages).ToListAsync();
 		} 
