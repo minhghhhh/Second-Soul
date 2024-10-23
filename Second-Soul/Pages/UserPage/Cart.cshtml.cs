@@ -112,21 +112,34 @@ namespace Second_Soul.Pages.UserPage
 					}
                     break;
                 case "delete":
-					if (SelectedProducts != null && SelectedProducts.Count > 0)
-					{
-                        foreach(var product in SelectedProducts)
+                    if (SelectedProducts != null && SelectedProducts.Count > 0)
+                    {
+                        foreach (var product in SelectedProducts)
                         {
-							var result = await _shoppingCartBusiness.RemoveFromCart(user.UserId, product);
-							if (result == null || result.Status <= 0)
-							{
+                            var result = await _shoppingCartBusiness.RemoveFromCart(user.UserId, product);
+                            if (result == null || result.Status <= 0)
+                            {
 
-								ModelState.AddModelError(string.Empty, "Removing a product from cart has failed.");
+                                ModelState.AddModelError(string.Empty, "Removing a product from cart has failed.");
                                 return await OnGet();
-							}
-						}
+                            }
+                        }
                         return await OnGet();
+                    }
+                    break;
+                case string a when a.Contains("delete__"):
+					{
+						if (int.TryParse(action.Split('_')[1], out int productId) && productId > 0 && SelectedProducts != null && SelectedProducts.Count > 0)
+						{
+							var result = await _shoppingCartBusiness.RemoveFromCart(user.UserId, productId);
+                            if (result == null || result.Status <= 0)
+                            {
+
+                                ModelState.AddModelError(string.Empty, "Removing a product from cart has failed.");
+                            }
+                        }
+						return await OnGet();
 					}
-					break;
 			}
 
 			ModelState.AddModelError(string.Empty, "Please select at least one product.");
