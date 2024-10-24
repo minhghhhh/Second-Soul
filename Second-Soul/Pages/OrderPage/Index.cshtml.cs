@@ -37,7 +37,7 @@ namespace Second_Soul.Pages.OrderPage
 		public int Discount { get; set; } = 0;
 		public int Total { get; set; } = 0;
 		[BindProperty]
-		public Order Order1 { get; set; }
+		public Order Order1 { get; set; } = new();
 		public List<OrderDetail> Details { get; set; } = new List<OrderDetail>();
 		public List<Product> Products { get; set; } = new List<Product>();
 		public User User1 { get; set; } = new User();
