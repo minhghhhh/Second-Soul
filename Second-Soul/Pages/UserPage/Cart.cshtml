@@ -4,7 +4,6 @@
 	ViewData["Title"] = "Shopping Cart";
 }
 
-@* 
 <!-- Breadcrumb Section Begin -->
 <section class="breadcrumb-option">
 	<div class="container">
@@ -24,122 +23,96 @@
 </section>
 <!-- Breadcrumb Section End -->
 <!-- Shopping Cart Section Begin -->
-<section class="shopping-cart spad">
-	<div class="container">
-		<div class="row">
-			<div class="col-lg-8">
-				<div class="shopping__cart__table">
-					<table style="width: 100%">
-						<thead>
-							<tr>
-								<th>Product</th>
-								<th></th>
-								<th>Total</th>
-								<th></th>
-							</tr>
-						</thead>
-						<tbody>
+<form method="post" asp-page-handler="SubmitSelectedItems">
 
-							@*                             <tr>
-							<td class="product__cart__item">
-							<div class="product__cart__item__pic">
-							<img src="img/shopping-cart/cart-1.jpg" alt="">
-							</div>
-							<div class="product__cart__item__text">
-							<h6>T-shirt Contrast Pocket</h6>
-							<h5>$98.49</h5>
-							</div>
-							</td>
-							<td class="quantity__item">
-							<div class="quantity">
-							<div class="pro-qty-2">
-							</div>
-							</div>
-							</td>
-							<td class="cart__price">$ 30.00</td>
-							<td class="cart__close"><i class="fa fa-close"></i></td>
-							</tr>*@
-
-
-							@if (Model.ShoppingCarts.Count > 0)
-							{
-
-								<form method="post" asp-page-handler="SubmitSelectedItems">
+	<section class="shopping-cart spad">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-8">
+					<div class="shopping__cart__table">
+						<table style="width: 100%">
+							<thead>
+								<tr>
+									<th>Product</th>
+									<th>Name</th>
+									<th>Price</th>
+									<th></th>
+								</tr>
+							</thead>
+							<tbody>
+								@if (Model.ShoppingCarts.Count > 0)
+								{
 									@foreach (var item in Model.ShoppingCarts)
 									{
-									<tr>
-										<td class="product__cart__item">
-											<div class="product__cart__item__pic">
-												<img src="@item.Product.MainImage" alt="" style="max-block-size:30%" />
-											</div>
-											<div class="product__cart__item__text">
-												<h6>@item.Product.Name</h6>
-											</div>
-										</td>
-										<td class="quantity__item">
-											<div class="quantity">
-												<div>
+										<tr>
+											<td>
+												<div class="product__cart__item__pic">
+													<img src="@item.Product.MainImage" alt="" style="max-width:40%" />
 												</div>
-											</div>
-										</td>
-											@if (item.Product.IsSale && item.Product.SalePrice != null)
-											{
-											<td class="cart__price">@((int)item.Product.SalePrice).ToString("N0") VND</td>
-											}
-											else
-											{
-											<td class="cart__price">@item.Product.Price.ToString("N0") VND</td>
-											}
-										<td class="cart__close">
-											<i class="fa fa-close">
-												<button type="submit" name="action" value="delete__@item.Product.ProductId"></button>
-											</i>
-										</td>
-									</tr>
+											</td>
+											<td>
+												<div class="product__cart__item__text">
+													<h6>@item.Product.Name</h6>
+												</div>
+											</td>
+											<td class="cart__price">
+												@(item.Product.IsSale && item.Product.SalePrice != null ?
+																						((int)item.Product.SalePrice).ToString("N0") + " VND" :
+																						item.Product.Price.ToString("N0") + " VND")
+											</td>
+											<td class="cart__close">
+												<input type="checkbox" class="select-checkbox" name="SelectedProducts" value="@item.Product.ProductId" />
+											</td>
+										</tr>
 									}
-								</form>
-							}
-							else
-							{
-								<tr><td colspan="100%">Your Shopping Cart is Empty</td></tr>
-							}
-
-						</tbody>
-					</table>
-				</div>
-				<div class="row">
-					<div class="col-lg-6 col-md-6 col-sm-6">
-						<div class="continue__btn">
-							<a href="/Search">Continue Shopping</a>
+								}
+								else
+								{
+									<tr>
+										<td colspan="4">Your Shopping Cart is Empty</td>
+									</tr>
+								}
+							</tbody>
+						</table>
+					</div>
+					<div class="row">
+						<div class="col-lg-6 col-md-6 col-sm-6">
+							<div class="continue__btn">
+								<a href="/Search">Continue Shopping</a>
+							</div>
 						</div>
 					</div>
 				</div>
-			</div>
-			<div class="col-lg-4">
-				<div class="cart__discount">
+				<div class="col-lg-4">
+					@* 				<div class="cart__discount">
 					<h6>Discount codes</h6>
-					<form action="#">
-						<input type="text" placeholder="Coupon code">
-						<button type="submit">Apply</button>
+					<form method="post" asp-page-handler="ApplyDiscount">
+					<input type="text" name="couponCode" placeholder="Coupon code">
+					<button type="submit">Apply</button>
 					</form>
-				</div>
-				<div class="cart__total">
-					<h6>Cart total</h6>
-					<ul>
-						<li>Subtotal<span> VND</span></li>
-						<li>Discount<span>%</span></li>
-						<li>Total<span> VND</span></li>
-					</ul>
-					<button type="submit" name="action" value="payment" class="primary-btn">Proceed to checkout</button>
+					</div>
+					*@
+					<div class="cart__total">
+						<h6>Cart total</h6>
+						<ul>
+							<li>Total<span>@Model.Total.ToString("N0") VND</span></li>
+							<li>Shipping<span>@(((int)30000).ToString("N0")) VND</span></li>
+						</ul>
+						<div>
+							<button type="submit" name="action" value="payment" class="primary-btn">Proceed to checkout</button>
+						</div>
+					</div>
+
 				</div>
 			</div>
 		</div>
-	</div>
-</section>
+	</section>
+</form>
 
 
 
- 
+
+
 
 
 
@@ -213,108 +186,109 @@
 			background-color: #c0392b;
 		}
 
-    .payment-button {
-        background-color: #4a90e2;
-        color: white;
-        border: none;
-        border-radius: 8px;
-        padding: 15px 20px;
-        font-size: 18px;
-        text-align: center;
-        cursor: pointer;
-        display: block;
-        margin: 20px auto;
-        transition: background 0.3s;
-        width: 100%;
-        max-width: 300px;
-    }
+	.payment-button {
+		background-color: #4a90e2;
+		color: white;
+		border: none;
+		border-radius: 8px;
+		padding: 15px 20px;
+		font-size: 18px;
+		text-align: center;
+		cursor: pointer;
+		display: block;
+		margin: 20px auto;
+		transition: background 0.3s;
+		width: 100%;
+		max-width: 300px;
+	}
 
-        .payment-button:hover {
-            background-color: #357abD;
-        }
+		.payment-button:hover {
+			background-color: #357abD;
+		}
 
-    #loading {
-        text-align: center;
-        font-size: 1.2em;
-        color: #555;
-    }
+	#loading {
+		text-align: center;
+		font-size: 1.2em;
+		color: #555;
+	}
 
-    .select-checkbox {
-        margin-right: 15px;
-    }
+	.select-checkbox {
+		margin-right: 15px;
+	}
 </style>
 
-@if (Model.ShoppingCarts.Count > 0)
+@* @if (Model.ShoppingCarts.Count > 0)
 {
-    <div class="cart-content">
-        <h1>Your Shopping Cart</h1>
-            <div id="cart-items" class="cart-items-grid">
-                @if (Model.ShoppingCarts.Count > 0)
-                {
-                    <form method="post" asp-page-handler="SubmitSelectedItems">
-                        @foreach (var item in Model.ShoppingCarts)
-                        {
-                            <div class="cart-item" id="item-@item.Product.ProductId">
-                                <input type="checkbox" class="select-checkbox" name="SelectedProducts" value="@item.Product.ProductId" />
-                                <div class="item-details">
-                                    <h2>@item.Product.Name</h2>
-                                    <p>Price: @item.Product.Price.ToString("N0") VND</p>
-                                </div>
-                            </div>
-                        }
+	<div class="cart-content">
+		<h1>Your Shopping Cart</h1>
+		<div id="cart-items" class="cart-items-grid">
+			@if (Model.ShoppingCarts.Count > 0)
+			{
+				<form method="post" asp-page-handler="SubmitSelectedItems">
+					@foreach (var item in Model.ShoppingCarts)
+					{
+						<div class="cart-item" id="item-@item.Product.ProductId">
+							<input type="checkbox" class="select-checkbox" name="SelectedProducts" value="@item.Product.ProductId" />
+							<div class="item-details">
+								<h2>@item.Product.Name</h2>
+								<p>Price: @item.Product.Price.ToString("N0") VND</p>
+							</div>
+						</div>
+					}
 
-                        <button type="submit" name="action" value="payment" class="btn btn-primary">Proceed to Payment</button>
+					<button type="submit" name="action" value="payment" class="btn btn-primary">Proceed to Payment</button>
 					<button type="submit" name="action" value="delete" class="btn btn-danger">Remove From Cart</button>
-                    </form>
-                }
-                else
-                {
-                    <p>No item in cart</p>
-                }
-            </div>
-            <div id="loading" style="display:none;">Loading more items...</div>
-    </div>
+				</form>
+			}
+			else
+			{
+				<p>No item in cart</p>
+			}
+		</div>
+		<div id="loading" style="display:none;">Loading more items...</div>
+	</div>
 }
 else
 {
-    <div class="cart-content">
-        <h1>Your Shopping Cart is Empty</h1>
-    </div>
+	<div class="cart-content">
+		<h1>Your Shopping Cart is Empty</h1>
+	</div>
 }
+ *@
+@* @section Scripts
+{
+	<script>
+		let offset = Model.ShoppingCarts.Count;
 
-@section Scripts
-	{
-		<script>
-			let offset = Model.ShoppingCarts.Count;
+		window.onscroll = async () => {
+			if (document.documentElement.scrollHeight - window.innerHeight <= window.scrollY + 100) {
+				document.getElementById("loading").style.display = "block";
 
-			window.onscroll = async () => {
-				if (document.documentElement.scrollHeight - window.innerHeight <= window.scrollY + 100) {
-					document.getElementById("loading").style.display = "block";
+				try {
+					const response = await fetch(`/UserPage/Cart?handler=LoadMore&offset=${offset}`);
+					if (!response.ok) throw new Error("Network response was not ok");
 
-					try {
-						const response = await fetch(`/UserPage/Cart?handler=LoadMore&offset=${offset}`);
-						if (!response.ok) throw new Error("Network response was not ok");
+					const { items, hasMore } = await response.json();
+					items.forEach(item => {
+						const cartItemsDiv = document.getElementById("cart-items");
+						const itemDiv = document.createElement("div");
+						itemDiv.className = "cart-item";
+						itemDiv.id = `item-${item.Product.Id}`;
+						itemDiv.innerHTML = `<input type="checkbox" class="select-checkbox" name="selectedProducts" value="${item.Product.Id}"/><div class="item-details"><h2>${item.Product.Name}</h2><p>Quantity: ${item.Quantity}</p><p>Price: ${item.Product.Price.toLocaleString('en-US', { style: 'currency', currency: 'VND' })}</p></div><button class="delete-button" onclick="deleteItem(${item.Product.Id})">Remove</button>`;
+						cartItemsDiv.appendChild(itemDiv);
+					});
 
-                    const { items, hasMore } = await response.json();
-                    items.forEach(item => {
-                        const cartItemsDiv = document.getElementById("cart-items");
-                        const itemDiv = document.createElement("div");
-                        itemDiv.className = "cart-item";
-                        itemDiv.id = `item-${item.Product.Id}`;
-                        itemDiv.innerHTML = `<input type="checkbox" class="select-checkbox" name="selectedProducts" value="${item.Product.Id}"/><div class="item-details"><h2>${item.Product.Name}</h2><p>Quantity: ${item.Quantity}</p><p>Price: ${item.Product.Price.toLocaleString('en-US', { style: 'currency', currency: 'VND' })}</p></div><button class="delete-button" onclick="deleteItem(${item.Product.Id})">Remove</button>`;
-                        cartItemsDiv.appendChild(itemDiv);
-                    });
-
-						if (hasMore) {
-							offset += items.length;
-						}
-					} catch (error) {
-						console.error("Failed to load more items:", error);
-					} finally {
-						document.getElementById("loading").style.display = "none";
+					if (hasMore) {
+						offset += items.length;
 					}
+				} catch (error) {
+					console.error("Failed to load more items:", error);
+				} finally {
+					document.getElementById("loading").style.display = "none";
 				}
-			};
+			}
+		};
 
-		</script>
+	</script>
 }
+ *@

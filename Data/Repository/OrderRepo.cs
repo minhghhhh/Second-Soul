@@ -44,9 +44,15 @@ namespace Data.Repository
                     var orderDetail = new OrderDetail();
                     orderDetail.ProductId = product.ProductId;
                     orderDetail.OrderId = order.OrderId;
-                    if (product.IsSale)
+                    if (product.IsSale && product.SalePrice != null && product.SalePrice < product.Price)
                     {
-
+                        orderDetail.Price = (int)product.SalePrice;
+                    }
+                    else
+                    {
+                        product.IsSale = false;
+                        product.SalePrice = null;
+                        context.Products.Update(product);
                     }
                     context.OrderDetails.Add(orderDetail);
                 }
