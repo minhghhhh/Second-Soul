@@ -20,7 +20,8 @@ namespace Second_Soul.Pages.OrderPage
 		private readonly IPaymentBusiness _paymentBusiness;
 		private readonly IProductBusiness _productBusiness;
 		private readonly ICouponBusiness _couponBusiness;
-		public IndexModel(IOrderBusiness orderBusiness, ICouponBusiness couponBusiness, IOrderDetailBusiness orderDetailBusiness, IUserBusiness userBusiness, IPaymentBusiness paymentBusiness, IProductBusiness productBusiness)
+		private readonly IShoppingCartBusiness _shoppingCartBusiness;
+		public IndexModel(IOrderBusiness orderBusiness, ICouponBusiness couponBusiness, IOrderDetailBusiness orderDetailBusiness, IUserBusiness userBusiness, IPaymentBusiness paymentBusiness, IProductBusiness productBusiness, IShoppingCartBusiness shoppingCartBusiness)
 		{
 			_couponBusiness = couponBusiness;
 			_orderBusiness = orderBusiness;
@@ -28,6 +29,7 @@ namespace Second_Soul.Pages.OrderPage
 			_userBusiness = userBusiness;
 			_paymentBusiness = paymentBusiness;
 			_productBusiness = productBusiness;
+			_shoppingCartBusiness = shoppingCartBusiness;
 		}
 		public string PopupMessage { get; set; } = string.Empty;
 		[BindProperty]
@@ -102,7 +104,7 @@ namespace Second_Soul.Pages.OrderPage
 					return await OnGetAsync(id);
 				case "placeOrder":
 					// Handle placing the order
-					var paymentLink = await _paymentBusiness.CreatePaymentLink(id, $"{Request.Scheme}://{Request.Host}/OrderPage/CancelPayment/{id}", $"{Request.Scheme}://{Request.Host}" , user.UserId);
+					var paymentLink = await _paymentBusiness.CreatePaymentLink(id, $"{Request.Scheme}://{Request.Host}/OrderPage/CancelPayment/{id}", $"{Request.Scheme}://{Request.Host}", user.UserId);
 
 					if (paymentLink == null || !(paymentLink.Status > 0) || paymentLink.Data == null)
 					{
@@ -139,18 +141,18 @@ namespace Second_Soul.Pages.OrderPage
 				{
 					Order1.CouponId = null;
 					var orderResult = await _orderBusiness.Update(Order1);
-					if (orderResult == null || !(orderResult.Status > 0)) 
-					{ 
-						return false; 
+					if (orderResult == null || !(orderResult.Status > 0))
+					{
+						return false;
 					}
 				}
 				else
 				{
 					var coupon = (Coupon)result.Data;
-                    CouponCode = coupon.Code;
+					CouponCode = coupon.Code;
 					CouponMessage = $"Coupon applied! You saved {coupon.DiscountPercentage}%";
 
-                }
+				}
 			}
 			Details = await _orderDetailBusiness.GetDetailsByOrderId(orderId);
 			if (Details == null || !(Details.Count > 0))
@@ -175,6 +177,66 @@ namespace Second_Soul.Pages.OrderPage
 			return true;
 		}
 
+		public async Task<IActionResult> OnPostReturnToCartAsync(int orderId)
+		{
+			var user = await _userBusiness.GetFromCookie(Request);
+			if (user == null)
+			{
+				return RedirectToPage("/Login");
+			}
+
+			var results = await _userBusiness.GetById(user.UserId);
+			if (results.Status < 0 || results.Data == null)
+			{
+				return RedirectToPage("/Login");
+			}
+			User1 = (User)results.Data;
+
+			var order1 = await _orderBusiness.GetPendingOrder(orderId, User1.UserId);
+			if (order1 == null || !(order1.Status > 0) || order1.Data == null)
+			{
+				order1 = await _orderBusiness.GetSinglePendingOrder(user.UserId);
+			}
+			if (order1 == null || !(order1.Status > 0) || order1.Data == null)
+			{
+				return Page();
+			}
+			Order1 = (Order)order1.Data;
+			if (Order1.OrderDetails == null || Order1.OrderDetails.Count <= 0)
+			{
+				Order1.OrderDetails = await _orderDetailBusiness.GetDetailsByOrderId(orderId);
+				if (Order1.OrderDetails == null || !(Order1.OrderDetails.Count > 0))
+				{
+					return await OnGetAsync(Order1.OrderId);
+				}
+			}
+			while (Order1.OrderDetails.Count > 0)
+			{
+				//var newCartProduct = new ShoppingCart
+				//{
+				//	AddedDate = DateTime.Now,
+				//	ProductId = orderDetail.ProductId,
+				//	UserId = user.UserId
+				//};
+				//var result = await _shoppingCartBusiness.Save(newCartProduct);
+				//if (result == null || !(result.Status > 0))
+				//{
+				//	return await OnGetAsync(Order1.OrderId);
+				//}
+				var orderDetail = Order1.OrderDetails.First();
+				Order1.OrderDetails.Remove(orderDetail);
+				var result = await _orderDetailBusiness.DeleteById(orderDetail.OrderId);
+				if (result == null || !(result.Status > 0))
+				{
+					return await OnGetAsync(Order1.OrderId);
+				}
+			}
+			var orderResult = await _orderBusiness.DeleteById(Order1.OrderId);
+			if (orderResult == null || !(orderResult.Status > 0))
+			{
+				return await OnGetAsync(Order1.OrderId);
+			}
+			return new JsonResult(new { redirectUrl = Url.Page("/UserPage/Cart") });
+		}
 	}
 }
-

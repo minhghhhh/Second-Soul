@@ -21,6 +21,8 @@ namespace BusssinessObject
 		Task<IBusinessResult> Save(Order order);
 		Task<IBusinessResult> Update(Order order);
 		Task<IBusinessResult> GetPendingOrder(int orderId, int? userId);
+		Task<IBusinessResult> GetSinglePendingOrder(int userId);
+		Task<IBusinessResult> DeleteById(int id);
 		Task<int> CreateOrderAsync(int customerId, List<int> productIds,string fullname ,string phoneNumber, string address, int totalAmount, int? couponId);
 
 	}
@@ -34,6 +36,33 @@ namespace BusssinessObject
 		public async Task<int> CreateOrderAsync(int customerId, List<int> productIds, string fullname, string phoneNumber, string address, int totalAmount, int? couponId)
 		{
 			return await _unitOfWork.OrderRepository.CreateOrderAsync(customerId, productIds, fullname, phoneNumber, address, totalAmount, couponId);
+		}
+		public async Task<IBusinessResult> DeleteById(int id)
+		{
+			try
+			{
+				var order = await _unitOfWork.OrderRepository.GetByIdAsync(id);
+				if (order != null)
+				{
+					var result = await _unitOfWork.OrderRepository.RemoveAsync(order);
+					if (result)
+					{
+						return new BusinessResult(Const.SUCCESS_DELETE_CODE, Const.SUCCESS_DELETE_MSG);
+					}
+					else
+					{
+						return new BusinessResult(Const.FAIL_DELETE_CODE, Const.FAIL_DELETE_MSG);
+					}
+				}
+				else
+				{
+					return new BusinessResult(Const.WARNING_NO_DATA_CODE, Const.WARNING_NO_DATA__MSG);
+				}
+			}
+			catch (Exception ex)
+			{
+				return new BusinessResult(Const.ERROR_EXCEPTION, ex.ToString());
+			}
 		}
 
 		public async Task<IBusinessResult> GetById(int orderId)
@@ -178,6 +207,41 @@ namespace BusssinessObject
 				return new BusinessResult(Const.ERROR_EXCEPTION, ex.ToString());
 			}
 		}
+		public async Task<IBusinessResult> GetSinglePendingOrder(int userId)
+		{
+			try
+			{
+				#region Business rule
+				#endregion
+
+				if (!(userId > 0))
+				{
+					throw new Exception("Order cannot be found.");
+				}
+
+				var order = await _unitOfWork.OrderRepository.GetPendingOrderWithOrderDetailsAndProductsByUserId(userId);
+
+				if (order == null)
+				{
+					return new BusinessResult(Const.WARNING_NO_DATA_CODE, Const.WARNING_NO_DATA__MSG);
+				}
+				else
+				{
+					var result = await ValidatePendingOrder(order, userId);
+					if (result.order == null || !string.IsNullOrEmpty(result.error))
+					{
+						return new BusinessResult(Const.FAIL_READ_CODE, !string.IsNullOrEmpty(result.error) ? result.error : Const.FAIL_READ_MSG);
+					}
+					return new BusinessResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, result.order);
+				}
+			}
+			catch (Exception ex)
+			{
+				return new BusinessResult(Const.ERROR_EXCEPTION, ex.Message);
+			}
+
+		}
+
 
 		public async Task<IBusinessResult> GetPendingOrder(int orderId, int? userId)
 		{

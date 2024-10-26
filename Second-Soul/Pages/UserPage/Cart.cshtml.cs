@@ -132,7 +132,7 @@ namespace Second_Soul.Pages.UserPage
 					break;
 				case string a when a.Contains("delete__"):
 					{
-						if (int.TryParse(action.Split('_')[1], out int productId) && productId > 0 && SelectedProducts != null && SelectedProducts.Count > 0)
+						if (int.TryParse(action.Split("__")[1], out int productId) && productId > 0)
 						{
 							var result = await _shoppingCartBusiness.RemoveFromCart(user.UserId, productId);
 							if (result == null || result.Status <= 0)

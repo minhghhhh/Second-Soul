@@ -33,6 +33,7 @@
 						<table style="width: 100%">
 							<thead>
 								<tr>
+									<th></th>
 									<th>Product</th>
 									<th>Name</th>
 									<th>Price</th>
@@ -45,13 +46,16 @@
 									@foreach (var item in Model.ShoppingCarts)
 									{
 										<tr>
+											<td class="cart__close">
+												<input type="checkbox" class="select-checkbox" name="SelectedProducts" value="@item.ProductId" />
+											</td>
 											<td>
-												<div class="product__cart__item__pic">
-													<img src="@item.Product.MainImage" alt="" style="max-width:40%" />
+												<div style="max-width:80%; margin:0 auto; align-items:center">
+													<img src="@item.Product.MainImage" alt="" style="max-height:50%; max-width:50%;margin:0 auto" />
 												</div>
 											</td>
 											<td>
-												<div class="product__cart__item__text">
+												<div>
 													<h6>@item.Product.Name</h6>
 												</div>
 											</td>
@@ -60,9 +64,7 @@
 																						((int)item.Product.SalePrice).ToString("N0") + " VND" :
 																						item.Product.Price.ToString("N0") + " VND")
 											</td>
-											<td class="cart__close">
-												<input type="checkbox" class="select-checkbox" name="SelectedProducts" value="@item.Product.ProductId" />
-											</td>
+											<td class="cart__close"><button style="background:none; border:none; cursor:pointer;" type="submit" name="action" value="delete__@item.ProductId"><i class="fa fa-close"></i></button></td>
 										</tr>
 									}
 								}
@@ -79,6 +81,11 @@
 						<div class="col-lg-6 col-md-6 col-sm-6">
 							<div class="continue__btn">
 								<a href="/Search">Continue Shopping</a>
+							</div>
+						</div>
+						<div class="col-lg-6 col-md-6 col-sm-6">
+							<div>
+								<button class="primary-btn" type="submit" name="action" value="delete">Remove From Cart</button>
 							</div>
 						</div>
 					</div>
@@ -131,7 +138,7 @@
 
 
 
-<style>
+@* <style>
 	body {
 		font-family: Arial, sans-serif;
 		background-color: #f9f9f9;
@@ -215,7 +222,7 @@
 	.select-checkbox {
 		margin-right: 15px;
 	}
-</style>
+</style> *@
 
 @* @if (Model.ShoppingCarts.Count > 0)
 {
