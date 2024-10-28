@@ -23,9 +23,17 @@ namespace Second_Soul.Pages.UserPage.Profile
             [DataType(DataType.PhoneNumber)]
             public string Phone { get; set; } = string.Empty;
             public string Address { get; set; } = string.Empty;
+        }
+        public class BankInput
+        {
+            [Required]
+            public string Bank { get; set; } = string.Empty;
+            [Required]
+            public string BankInfo { get; set; } = string.Empty;
+            [Required]
+            public string BankUser { get; set; } = string.Empty;
 
         }
-
         public IndexModel(Cloudinary cloudinary, IUserBusiness userBusiness)
         {
             _cloudinary = cloudinary;
@@ -33,6 +41,8 @@ namespace Second_Soul.Pages.UserPage.Profile
         }
         [BindProperty]
         public ChangeProfileInput Change { get; set; }
+        [BindProperty]
+        public BankInput BankInputs { get; set; }
         public User? UserProfile { get; set; } = null;
         [BindProperty]
         public string ErrorMessage { get; set; }
@@ -41,7 +51,6 @@ namespace Second_Soul.Pages.UserPage.Profile
 
         public async Task<IActionResult> OnGetAsync()
         {
-            
             var user = await _userBusiness.GetFromCookie(Request);
             if (user == null)
             {
@@ -75,11 +84,42 @@ namespace Second_Soul.Pages.UserPage.Profile
 
             switch (action)
             {
+                case "UpdateBank":
+                    UserProfile.Bank = BankInputs.Bank;
+                    UserProfile.Bankinfo = BankInputs.BankInfo;
+                    UserProfile.Bankuser = BankInputs.BankUser;
+                    await _userBusiness.Update(UserProfile);
+                    SuccessMessage = "Banking infomation successfully updated.";
+                    return await OnGetAsync();
+                case "Withdraw":
+                    if(UserProfile.Wallet == 0)
+                    {
+                        ErrorMessage = "Your Balance need to be more than 0";
+                        return await OnGetAsync();
+                    }
+                    if (UserProfile.Bank == null ||UserProfile.Bankinfo == null|| UserProfile.Bankuser == null)
+                    {
+                        ErrorMessage = "Please fill in your banking infomation";
+                        return await OnGetAsync();
+                    }
+                    var domain = Request.Scheme + "://" + Request.Host;
+                    bool emailSentbank = await SendMail.SendBankTransferEmail("mphamtran8@gmail.com", UserProfile, domain);
+                    if (emailSentbank)
+                    {
+                        SuccessMessage = "Your withdraw request has been send,please wait 1-2hours for proceed.";
+                        return await OnGetAsync();
+                    }
+                    else
+                    {
+                        ErrorMessage = "Failed to send email. Please try again."; 
+                        return await OnGetAsync();
+
+                    }
                 case "UpdateEmail":
                     var confirmationLink = $"{Request.Scheme}://{Request.Host}/UserPage/ChangeEmail/{UserProfile.UserId}";
                     var emailSend = await SendMail.SendToChangeEmail(UserProfile.Email, confirmationLink);
                     SuccessMessage = "Change Email Link has been sent to your current email.";
-                    return Page();
+                    return await OnGetAsync();
                 case "UpdatePassword":
                     UserProfile.Token = FormatUtilities.GenerateRandomCodeWithExpiration(20);
 
@@ -92,18 +132,18 @@ namespace Second_Soul.Pages.UserPage.Profile
                         bool emailSent = await SendMail.SendResetLinkEmail(UserProfile.Email, resetLink);
                         if (emailSent)
                         {
-                            return Page();
+                            return await OnGetAsync();
                         }
                     }
                     ErrorMessage = "Failed to send email. Please try again.";
-                    return Page();
+                    return await OnGetAsync();
                 case "UpdateProfile":
                     UserProfile.FullName = Change.FullName;
                     UserProfile.Address = Change.Address;
                     UserProfile.PhoneNumber = Change.Phone;
                     await _userBusiness.Update(UserProfile);
                     SuccessMessage = "Profile picture successfully changed.";
-                    return Page();
+                    return await OnGetAsync();
                 case "UpdatePicture":
                     if (PictureFile != null)
                     {
@@ -112,7 +152,7 @@ namespace Second_Soul.Pages.UserPage.Profile
                         if (!allowedExtensions.Contains(fileExtension))
                         {
                             ErrorMessage = "Only PNG, JPG, and JPEG formats are allowed.";
-                            return Page();
+                            return await OnGetAsync();
                         }
                         var uploadParams = new ImageUploadParams()
                         {
@@ -126,13 +166,13 @@ namespace Second_Soul.Pages.UserPage.Profile
                     else
                     {
                         ErrorMessage = "Please select a file to upload.";
-                        return Page();
+                        return await OnGetAsync();
                     }
 
                     SuccessMessage = "Profile picture successfully changed.";
-                    return Page();
+                    return await OnGetAsync();
             }
-            return Page();
+            return await OnGetAsync();
         }
     }
 }

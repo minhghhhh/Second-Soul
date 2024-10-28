@@ -10,7 +10,6 @@ namespace Second_Soul.Pages
             Response.Cookies.Delete("User");
             HttpContext.Session.Clear();
             return RedirectToPage("/Index");
-
         }
     }
 }

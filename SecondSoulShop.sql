@@ -20,6 +20,7 @@ CREATE TABLE Users (
 	Wallet int Default 0,
 	Bank NVARCHAR(50) Null,
 	Bankinfo Nvarchar(255) Null, 
+	Bankuser Nvarchar(100) Null,
     PhoneNumber NVARCHAR(15) NULL,
 	Token Nvarchar(255) Null,
 	ImageUrl NVARCHAR(255) Null,
@@ -30,17 +31,7 @@ CREATE TABLE Users (
 --	MoMoPhoneNumber NVARCHAR(20) NULL,  -- Số điện thoại ví MoMo
 --	MoMoLinked BIT NOT NULL DEFAULT 0;  -- Trạng thái liên kết (0 = chưa liên kết, 1 = đã liên kết)
 );
---CREATE TABLE BankAccounts (
-    --Id INT PRIMARY KEY IDENTITY(1,1),           -- Unique identifier for each bank account
-    --UserId INT NOT NULL,                        -- Foreign key referencing Users table
-    --AccountHolderName NVARCHAR(255) NOT NULL,   -- Account holder's name
-    --BankName NVARCHAR(255) NOT NULL,            -- Name of the bank
-    --BankCode NVARCHAR(50) NOT NULL,             -- Optional: Bank identifier (e.g., SWIFT/BIC code)
-   -- AccountNumber NVARCHAR(255) NOT NULL,       -- Encrypted bank account number
-  --  IsVerified BIT NOT NULL DEFAULT 0,          -- Boolean flag to indicate if the account is verified (0 = false, 1 = true)
- --   VerifiedOn DATETIME NULL,                   -- Timestamp for when the account was verified
---    CONSTRAINT FK_BankAccounts_Users FOREIGN KEY (UserId) REFERENCES Users(UserID)  -- Foreign key constraint
---);
+
 
 CREATE TABLE Categories (
     CategoryID INT IDENTITY(1,1) PRIMARY KEY,
@@ -131,7 +122,7 @@ CREATE TABLE Reviews (
 );
 
 CREATE TABLE ShoppingCarts (
-     UserID INT,
+    UserID INT,
     ProductID INT,
     AddedDate DATETIME DEFAULT GETDATE(),
 	PRIMARY KEY(UserID, ProductID),

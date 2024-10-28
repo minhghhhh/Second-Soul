@@ -3,7 +3,6 @@
 
 @{
     ViewData["Title"] = "Index";
-    Layout = "_ProfileLayout";
 }
 
 <body>
@@ -107,6 +106,7 @@
                             </tr>
                         </thead>
                         <tbody>
+                            @if(Model.Orders.Count!=0){
                             @foreach (var item in Model.Orders)
                             {
                                 <tr>
@@ -152,6 +152,11 @@
                                     </div>
                                 </div>
 
+                                }
+                            }
+                            else
+                            {
+                                <h5>Your order is empty</h5>
                             }
                         </tbody>
                     </table>

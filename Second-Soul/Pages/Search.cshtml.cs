@@ -14,10 +14,11 @@ namespace Second_Soul.Pages
 		private readonly IProductBusiness _productBusiness;
 		private readonly ICategoryBusiness _categoryBusiness;
 		private readonly IUserBusiness _userBusiness;
+		private readonly IShoppingCartBusiness _shoppingCartBusiness;
 
-
-		public SearchModel(IProductBusiness productBusiness, ICategoryBusiness categoryBusiness, IUserBusiness userBusiness)
+		public SearchModel(IProductBusiness productBusiness, ICategoryBusiness categoryBusiness, IUserBusiness userBusiness, IShoppingCartBusiness shoppingCartBusiness)
 		{
+			_shoppingCartBusiness = shoppingCartBusiness;
 			_productBusiness = productBusiness;
 			_categoryBusiness = categoryBusiness;
 			_userBusiness = userBusiness;
@@ -46,6 +47,25 @@ namespace Second_Soul.Pages
 		// OnGet method to handle the search logic
 		public async Task<IActionResult> OnGetAsync(string? query, int? minPrice, int? maxPrice,string? size, List<int>? categoryIDs, string? condition, bool? isAvailable, int? sellerID, int pageIndex = 1)
 		{
+			var user = await _userBusiness.GetFromCookie(Request);
+			if (user != null)
+			{
+				var Totalprice = await _shoppingCartBusiness.PriceCart(user.UserId);
+				HttpContext.Session.SetInt32("TotalPrice", Totalprice);
+				var result = await _shoppingCartBusiness.GetByUserId(user.UserId, null, null);
+				if (result != null && result.Status > 0 && result.Data != null)
+				{
+					var totalProduct = (List<ShoppingCart>)result.Data;
+					if (totalProduct != null && totalProduct.Count > 0)
+					{
+						HttpContext.Session.SetInt32("TotalProduct", totalProduct.Count);
+					}
+					else
+					{
+						HttpContext.Session.SetInt32("TotalProduct", 0);
+					}
+				}
+			}
 			Query = query;
 			MinPrice = minPrice;
 			MaxPrice = maxPrice;
