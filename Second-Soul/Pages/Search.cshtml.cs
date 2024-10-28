@@ -83,7 +83,7 @@ namespace Second_Soul.Pages
             {
                 Text = o.Replace("two", "2"),
                 Value = o,
-                Selected = size != null ? o == Condition : false
+                Selected = size != null ? o == Size : false
             }).ToList();
             IsAvailable = isAvailable != null && (bool)isAvailable;
 			PageIndex = pageIndex;

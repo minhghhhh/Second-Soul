@@ -192,7 +192,15 @@ namespace Data.Repository
 		{
 			return await _userRepo.GetSingleOrDefaultWithNoTracking(c => c.UserId == sellerId) != null;
 		}
-	}
+        public async Task<List<Product>> GetFilterdAccountProduct(DateTime fromDate, DateTime toDate, int accountId)
+        {
+            var filteredBills = context.Products
+                .Where(b => b.SellerId == accountId && b.AddedDate >= fromDate && b.AddedDate <= toDate)
+                .OrderBy(b => b.AddedDate)
+                .ToList();
+            return filteredBills;
+        }
+    }
 
 }
 

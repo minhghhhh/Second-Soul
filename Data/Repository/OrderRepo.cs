@@ -55,7 +55,14 @@ namespace Data.Repository
             await context.SaveChangesAsync();
             return order.OrderId;
         }
-
+        public async Task<List<Order>> GetFilterdAccountOrder(DateTime fromDate, DateTime toDate, int accountId)
+        {
+            var filteredBills = context.Orders
+                .Where(b => b.CustomerId == accountId && b.OrderDate >= fromDate && b.OrderDate <= toDate)
+                .OrderBy(b => b.OrderDate)
+                .ToList();
+            return filteredBills;
+        }
         public async Task<Order?> GetOrderWithOrderDetailsAndProductsById(int orderId)
         {
             return await context.Orders.Include(o => o.OrderDetails).ThenInclude(od => od.Product).SingleOrDefaultAsync(o => o.OrderId == orderId);

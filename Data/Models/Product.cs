@@ -52,7 +52,6 @@ namespace Data.Models
 
         [ForeignKey("SellerId")]
         public virtual User? Seller { get; set; }
-
         public virtual ICollection<ShoppingCart> ShoppingCarts { get; set; } = new List<ShoppingCart>();
         public virtual ICollection<ProductImage> ProductImages { get; set; } = new List<ProductImage>();
     }

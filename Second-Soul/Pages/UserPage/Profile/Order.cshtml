@@ -6,16 +6,51 @@
 }
 
 <body>
+    <style>
+        .center-content {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .center-table {
+            width: 100%;
+            text-align: center;
+        }
+
+            .center-table th, .center-table td {
+                text-align: center;
+            }
+
+        .form-inline {
+            justify-content: center;
+        }
+    </style>
+    <br />
     <div class="col-md-12">
+        <form method="post" class="form-inline mb-3" asp-page-handler="SortDate">
+            <div class="form-group mr-2">
+                <label class="mr-2">From:</label>
+                <input type="date" class="form-control" id="fromDate" name="fromDate">
+            </div>
+            <div class="form-group mr-2">
+                <label class="mr-2">To:</label>
+                <input type="date" class="form-control" id="toDate" name="toDate">
+            </div>
+            <button type="submit" class="primary-btn">Apply Filter</button>
+        </form>
+        <br/>
         <div class="card">
             <div class="card-header">
                 <div class="d-flex align-items-center">
                     <h4 class="card-title">All Orders </h4>
+                    <div class="card center-content">
                 </div>
             </div>
             <div class="card-body">
                 <!-- Modal -->
-                @* <div class="modal fade" id="addRowModal" tabindex="-1" role="dialog" aria-hidden="true">
+        @* <div class="modal fade" id="addRowModal" tabindex="-1" role="dialog" aria-hidden="true">
                     <div class="modal-dialog" role="document">
                         <div class="modal-content">
                             <div class="modal-header border-0">
@@ -34,50 +69,50 @@
                                         <div class="col-sm-12">
                                             <div class="form-group form-group-default">
                                                 <label>Name</label>
-                                                <input asp-for="NewAccount.Name" type="text" class="form-control" placeholder="Fill Name" required />
-                                                <span asp-validation-for="NewAccount.Name" class="text-danger"></span>
+                                                <input asp-for="@Model.Orders" type="text" class="form-control" placeholder="Fill Name" required />
+                                                <span asp-validation-="@Model.Orders" class="text-danger"></span>
                                             </div>
                                         </div>
                                         <div class="col-sm-12">
                                             <div class="form-group form-group-default">
                                                 <label>Email</label>
-                                                <input asp-for="NewAccount.Email" type="email" class="form-control" placeholder="Fill Email" required />
-                                                <span asp-validation-for="NewAccount.Email" class="text-danger"></span>
+                                                <input asp-for="@Model.Orders" type="email" class="form-control" placeholder="Fill Email" required />
+                                                <span asp-validation-for="@Model.Orders" class="text-danger"></span>
                                             </div>
                                         </div>
                                         <div class="col-sm-6">
                                             <div class="form-group form-group-default">
                                                 <label>Password</label>
-                                                <input asp-for="NewAccount.Pass" type="password" class="form-control" placeholder="Fill Password" required />
-                                                <span asp-validation-for="NewAccount.Pass" class="text-danger"></span>
+                                                <input asp-for="@Model.Orders" type="password" class="form-control" placeholder="Fill Password" required />
+                                                <span asp-validation-for="@Model.Orders" class="text-danger"></span>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group form-group-default">
                                                 <label>Phone Number</label>
-                                                <input asp-for="NewAccount.Phone" type="number" class="form-control" placeholder="Fill Phone Number" min="1" required />
-                                                <span asp-validation-for="NewAccount.Phone" class="text-danger"></span>
+                                                <input asp-for="@Model.Orders" type="number" class="form-control" placeholder="Fill Phone Number" min="1" required />
+                                                <span asp-validation-for="@Model.Orders" class="text-danger"></span>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group form-group-default">
                                                 <label>Role</label>
-                                                <select asp-for="NewAccount.RoleId" class="form-control" required>
+                                                <select asp-for="@Model.Orders" class="form-control" required>
                                                     <option value="">-- Select --</option> <!-- Optional placeholder -->
-                                                    @foreach (var item in Model.Roles)
+                                                    @foreach (var item in Model.Orders)
                                                     {
-                                                        <option value="@item.Id">@item.Name</option>
+                                                        <option value="@item.OrderId">@item.Address</option>
                                                     }
                                                 </select>
-                                                <span asp-validation-for="NewAccount.RoleId" class="text-danger"></span>
+                                                <span asp-validation-for="@Model.Orders" class="text-danger"></span>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group form-group-default">
                                                 <label>Status</label>
-                                                <input asp-for="NewAccount.Status" type="radio" required value="true" /> Active
-                                                <input asp-for="NewAccount.Status" type="radio" required value="false" /> Inactive
-                                                <span asp-validation-for="NewAccount.Status" class="text-danger"></span>
+                                                <input asp-for="@Model.Orders" type="radio" required value="true" /> Active
+                                                <input asp-for="@Model.Orders" type="radio" required value="false" /> Inactive
+                                                <span asp-validation-for="@Model.Orders" class="text-danger"></span>
                                             </div>
                                         </div>
                                     </div>
@@ -89,7 +124,8 @@
                             </form>
                         </div>
                     </div>
-                </div> *@
+                </div>  *@
+                </div>
                 <div class="table-responsive">
                     <table id="add-row" class="display table table-striped table-hover">
                         <thead>
@@ -120,43 +156,25 @@
                                     <td>@Html.DisplayFor(modelItem => item.Status)</td>
                                     <td>
                                         <div class="form-button-action">
-                                            <a type="button" data-orderid="@item.OrderId" data-bs-toggle="modal" data-bs-target="#orderDetailsModal"
-                                               class="btn btn-link btn-primary btn-lg view-details-btn" title="View Details">
-                                                <i class="fas fa-info-circle"></i>
-                                            </a>
+                                                <a type="button" href="/UserPage/Profile/OrderDetail/@item.OrderId" data-bs-toggle="tooltip" title="View Details" class="btn btn-link btn-primary btn-lg">
+                                                    <i class="fas fa-info-circle"></i>
+                                                </a>
                                         </div>
 
                                     </td>
                                 </tr>
-
-                                <div class="modal fade" id="orderDetailsModal" tabindex="-1" aria-labelledby="orderDetailsModalLabel" aria-hidden="true">
-                                    <div class="modal-dialog modal-lg">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title" id="orderDetailsModalLabel">Order Details</h5>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                            </div>
-                                            <div class="modal-body">
-                                                <!-- Content will be loaded here dynamically -->
-                                                <div id="orderDetailsContent">
-                                                    <!-- Loading spinner while details are being fetched -->
-                                                    <div class="spinner-border" role="status">
-                                                        <span class="visually-hidden">Loading...</span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
                                 }
                             }
                             else
                             {
-                                <h5>Your order is empty</h5>
+                                @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+                                {
+                                    <tr>
+                                        <td colspan="8" style="vertical-align: middle;">
+                                            <h2 style="color:grey; text-align:center;">@Model.ErrorMessage</h2>
+                                        </td>
+                                    </tr>
+                                }
                             }
                         </tbody>
                     </table>
@@ -164,7 +182,7 @@
             </div>
         </div>
     </div>
-
+    
     <!--   Core JS Files   -->
     <script src="~/adminAssets/assets/js/core/jquery-3.7.1.min.js"></script>
     <script src="~/adminAssets/assets/js/core/popper.min.js"></script>
@@ -201,12 +219,12 @@
     <!-- Kaiadmin DEMO methods, don't include it in your project! -->
     <script src="~/adminAssets/assets/js/setting-demo.js"></script>
     <script src="~/adminAssets/assets/js/demo.js"></script>
-    <link rel="stylesheet" href="../assets/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="../assets/css/plugins.min.css" />
-    <link rel="stylesheet" href="../assets/css/kaiadmin.min.css" />
+    <link rel="stylesheet" href="~/adminAssets/assets/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/adminAssets/assets/css/plugins.min.css" />
+    <link rel="stylesheet" href="~/adminAssets/assets/css/kaiadmin.min.css" />
 
     <!-- CSS Just for demo purpose, don't include it in your project -->
-    <link rel="stylesheet" href="../assets/css/demo.css" />
+    <link rel="stylesheet" href="~/adminAssets/assets/css/demo.css" />
 
     <script>
             $(document).ready(function () {
@@ -257,9 +275,6 @@
             lineColor: "#ffa534",
             fillColor: "rgba(255, 165, 52, .14)",
         });
-    </script>
-
-    <script>
         $(document).ready(function () {
             $("#basic-datatables").DataTable({});
 

@@ -36,7 +36,41 @@ namespace Second_Soul.Pages.UserPage.Profile
                 return RedirectToPage("/Login");
             }
             Orders = await _orderBusiness.GetOrdersByUserId(user.UserId);
+            if (Orders.Count == 0)
+            {
+                ErrorMessage = "You dont have any order";
+            }
             return Page();
         }
+        public async Task<IActionResult> OnPostSortDate(DateTime fromDate, DateTime toDate)
+        {
+            var user = await _userBusiness.GetFromCookie(Request);
+            if (user != null)
+            {
+                if (fromDate != DateTime.MinValue && toDate != DateTime.MinValue)
+                {
+                    Orders = await _orderBusiness.GetFilterdAccountOrder(fromDate, toDate, user.UserId);
+                    if (Orders.Count > 0)
+                    {
+                        return Page();
+                    }
+                    else
+                    {
+                        ErrorMessage = $"No Order's from {fromDate} to {toDate}";
+                        return Page();
+                    }
+                }
+                else
+                {
+                    Orders = await _orderBusiness.GetOrdersByUserId(user.UserId);
+                }
+                return Page();
+            }
+            else
+            {
+                return NotFound();
+            }
+        }
+
     }
 }
