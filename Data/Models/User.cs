@@ -28,7 +28,11 @@ public partial class User
 
     [MaxLength(15)]
     public string? PhoneNumber { get; set; }
-
+    [MaxLength(50)]
+    public string? Bank {  get; set; } = string.Empty;
+    [MaxLength(255)]
+    public string? Bankinfo {  get; set; } = string.Empty;
+    public int Wallet { get; set; } = default;
     [MaxLength(255)]
     public string? Address { get; set; }
 

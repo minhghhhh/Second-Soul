@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Data.Utils.HashPass;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using static Data.Enum.Enums;
 
 namespace Second_Soul.Pages.UserPage.Profile
 {
@@ -39,7 +41,8 @@ namespace Second_Soul.Pages.UserPage.Profile
 
         public async Task<IActionResult> OnGetAsync()
         {
-           var user = await _userBusiness.GetFromCookie(Request);
+            
+            var user = await _userBusiness.GetFromCookie(Request);
             if (user == null)
             {
                 return RedirectToPage("/Login");
@@ -47,8 +50,17 @@ namespace Second_Soul.Pages.UserPage.Profile
             }
             var result = await _userBusiness.GetById(user.UserId);
             UserProfile = (User)result.Data;
+            Banks = Enum.GetNames(typeof(Bank))
+                    .Select(b => new SelectListItem
+                    {
+                        Text = b.ToString(),
+                        Value = b,
+                        Selected = user.Bank == b.ToString()
+                    })
+                    .ToList();
             return Page();
-        }
+        } 
+        public List<SelectListItem> Banks { get; set; }
 
         public async Task<IActionResult> OnPostAsync(string action, IFormFile PictureFile)
         {
