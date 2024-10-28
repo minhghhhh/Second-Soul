@@ -23,7 +23,7 @@ namespace BusssinessObject
         Task<IBusinessResult> GetByEmailOrUserNameAndPasswordAsync(string email, string password);
         Task<IBusinessResult> GetByEmailAsync(string email);
         Task<User?> GetFromCookie(HttpRequest request);
-        Task<IBusinessResult> Register(User cate);
+        Task<IBusinessResult> Register(User cate, string confirmationLink);
         Task<User?> GetUserByToken(string token);
         Task<IBusinessResult> ReadOnlyActiveSellers();
         Task<User?> GetUserByHashedToken(string token);
@@ -349,17 +349,16 @@ namespace BusssinessObject
             }
         }
 
-        public async Task<IBusinessResult> Register(User cate)
+        public async Task<IBusinessResult> Register(User cate, string confirmationLink)
         {
             try
             {
                 cate.PasswordHash = HashPassWithSHA256.HashWithSHA256(cate.PasswordHash);
-                cate.Token = Guid.NewGuid().ToString();
                 int result = await _unitOfWork.UserRepository.CreateAsync(cate);
-                if (result != null)
+                if (result > 0)
                 {
-                    var confirmationLink =
-                    $"https://localhost:7141/Confirm?token={cate.Token}";
+                    //var confirmationLink =
+                    //$"https://localhost:7141/Confirm?token={cate.Token}";
                     //  $"https://secondsoul2nd.azurewebsites.net/confirm?token={cate.Token}"; //deploy
                     var emailSend = await SendMail.SendConfirmationEmail(cate.Email, confirmationLink);
                     if (!emailSend)
