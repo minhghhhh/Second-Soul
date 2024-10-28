@@ -41,7 +41,7 @@ namespace Second_Soul.Pages
             user.IsActive = true;
             await _userBusiness.Update(user);
 
-            Message = "Email confirmed successfully,Login to continues!";
+            Message = "Email confirmed successfully. Login to continue!";
             return Page();
         }
     }
