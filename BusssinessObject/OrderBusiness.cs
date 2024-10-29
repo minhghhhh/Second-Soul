@@ -9,6 +9,7 @@ using BusinessObject.Base;
 using Common;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using Data.Repository;
+using System.Net.WebSockets;
 
 namespace BusssinessObject
 {
@@ -296,19 +297,26 @@ namespace BusssinessObject
 				{
 					return (null, "This order cannot be accessed by any other customer but its own.");
 				}
-				var orderDetails = await _unitOfWork.OrderDetailRepository.GetDetailsByOrderId(order.OrderId);
+				var orderDetails = await _unitOfWork.OrderDetailRepository.GetListWithNoTracking(record => record.OrderId == order.OrderId);
 				if (orderDetails == null || orderDetails.Count <= 0)
 				{
 					await _unitOfWork.OrderRepository.RemoveAsync(order);
 					return (null, "This order contains no valid and available items.");
 				}
 				var errorMessage = new StringBuilder("Unavailable Product(s):");
-				foreach (var orderDetail in orderDetails)
+				int i = 0;
+				while (i < orderDetails.Count)
 				{
-					if (orderDetail.Product == null || orderDetail.Product.IsAvailable == false)
+					var orderDetail = await _unitOfWork.OrderDetailRepository.GetDetailByProductIdAndOrderId(orderDetails[i].OrderId, orderDetails[i].ProductId);
+					if (orderDetail == null)
+					{
+						orderDetails.RemoveAt(i);
+					}
+					else if (orderDetail.Product == null || orderDetail.Product.IsAvailable == false)
 					{
 						errorMessage.Append(orderDetail.Product == null ? string.Empty : " " + orderDetail.Product.Name + ",");
 						await _unitOfWork.OrderDetailRepository.RemoveAsync(orderDetail);
+						orderDetails.RemoveAt(i);
 					}
 					else if (orderDetail.Product.SalePrice == null || orderDetail.Product.SalePrice >= orderDetail.Product.Price)
 					{
@@ -316,6 +324,7 @@ namespace BusssinessObject
 						orderDetail.Product.IsSale = false;
 						orderDetail.Product.SalePrice = null;
 						await _unitOfWork.ProductRepository.UpdateAsync(orderDetail.Product);
+						i++;
 					}
 					else if (orderDetail.Product.IsSale || orderDetail.Product.SalePrice < orderDetail.Product.Price)
 					{
@@ -323,6 +332,7 @@ namespace BusssinessObject
                         await _unitOfWork.ProductRepository.UpdateAsync(orderDetail.Product);
                         orderDetail.Price = (int)orderDetail.Product.SalePrice;
 						await _unitOfWork.OrderDetailRepository.UpdateAsync(orderDetail);
+						i++;
 					}
                 }
 				if (orderDetails == null || orderDetails.Count <= 0)

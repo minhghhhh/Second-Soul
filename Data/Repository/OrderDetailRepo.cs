@@ -22,7 +22,7 @@ namespace Data.Repository
 		}
 		public async Task<OrderDetail?> GetDetailByProductIdAndOrderId(int orderId, int productId)
 		{
-			return await context.OrderDetails.SingleOrDefaultAsync(record => record.OrderId == orderId && record.ProductId == productId);
+			return await context.OrderDetails.Include(record => record.Product).SingleOrDefaultAsync(record => record.OrderId == orderId && record.ProductId == productId);
 		}
 		public async Task<bool> RemoveOrderDetailAsync(OrderDetail orderDetail)
 		{

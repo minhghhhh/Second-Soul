@@ -59,7 +59,16 @@ namespace Second_Soul.Pages.OrderPage
 			{
 				User1 = (User)result.Data;
 			}
-			if (await GetOrderInfo(id) == true)
+			var check = false;
+			if (User1.Role != "Admin")
+			{
+				check = await GetOrderInfo(id, null);
+			}
+			else
+			{
+				check = await GetOrderInfo(id, User1.UserId);
+			}
+			if (await GetOrderInfo(id, User1.UserId) == true)
 			{
 				return Page();
 			}
@@ -104,11 +113,17 @@ namespace Second_Soul.Pages.OrderPage
 					return await OnGetAsync(id);
 				case "placeOrder":
 					// Handle placing the order
+					var order1 = await _orderBusiness.GetPendingOrder(id, User1.UserId);
+					if (order1 == null || !(order1.Status > 0) || order1.Data == null)
+					{
+						PopupMessage = order1 == null || string.IsNullOrWhiteSpace(order1.Message) ? "The order's retrieval process has encountered an unexpected error." : order1.Message;
+						return await OnGetAsync(id);
+					}
 					var paymentLink = await _paymentBusiness.CreatePaymentLink(id, $"{Request.Scheme}://{Request.Host}/OrderPage/CancelPayment/{id}", $"{Request.Scheme}://{Request.Host}", user.UserId);
 
 					if (paymentLink == null || !(paymentLink.Status > 0) || paymentLink.Data == null)
 					{
-						PopupMessage = paymentLink != null && !string.IsNullOrEmpty(paymentLink.Message) ? paymentLink.Message : "Something went wrong. Payments cannot be done as of this moment.";
+						PopupMessage = paymentLink != null && !string.IsNullOrWhiteSpace(paymentLink.Message) ? paymentLink.Message : "Something went wrong. Payments cannot be done as of this moment.";
 						return await OnGetAsync(id);
 					}
 					return Redirect(((CreatePaymentResult)paymentLink.Data).checkoutUrl);
@@ -125,7 +140,7 @@ namespace Second_Soul.Pages.OrderPage
 			return RedirectToPage(); // Reload the page after the action
 		}
 
-		public async Task<bool> GetOrderInfo(int orderId)
+		public async Task<bool> GetOrderInfo(int orderId, int? userId)
 		{
 
 			var order1 = await _orderBusiness.GetById(orderId);
@@ -134,6 +149,24 @@ namespace Second_Soul.Pages.OrderPage
 				return false;
 			}
 			Order1 = (Order)order1.Data;
+			if (string.IsNullOrEmpty(Order1.Status))
+			{
+				return false;
+			}
+			if (userId != null && Order1.CustomerId != (int)userId)
+			{
+				return false;
+			}
+			if (userId != null && Order1.Status == "Pending")
+			{
+				var result = await _orderBusiness.GetPendingOrder(orderId, userId);
+				if (result == null || (result.Status > 0) || result.Data == null)
+				{
+					PopupMessage = result == null || string.IsNullOrWhiteSpace(result.Message) ? "The order's retrieval process has encountered an unexpected error." : result.Message;
+					return false;
+				}
+				Order1 = (Order)result.Data;
+			}
 			if (Order1.CouponId != null)
 			{
 				var result = await _couponBusiness.GetById((int)Order1.CouponId);
@@ -159,16 +192,21 @@ namespace Second_Soul.Pages.OrderPage
 			{
 				return false;
 			}
-			foreach (var order in Details)
+			int i = 0;
+			while (i > Details.Count)
 			{
-				var item = await _productBusiness.GetById(order.ProductId);
-				if (item == null || !(item.Status > 0) || item.Data == null)
+				if (Details[i].Product == null || !Details[i].Product.IsAvailable)
 				{
-					return false;
+					var orderDetailId = Details[i].OrderDetailId;
+					Details.RemoveAt(i);
+					await _orderDetailBusiness.DeleteById(orderDetailId);
 				}
-				var product = (Product)item.Data;
-				Products.Add(product);
-				Total += order.Price;
+				else
+				{
+					Products.Add(Details[i].Product);
+					Total += Details[i].Price;
+					i++;
+				}
 			}
 			if (Total > Order1.TotalAmount)
 			{
