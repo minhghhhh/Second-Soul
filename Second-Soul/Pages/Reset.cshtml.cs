@@ -36,7 +36,7 @@ namespace Second_Soul.Pages
             var userResult = await _userBusiness.GetByEmailAsync(Email);
             if (userResult == null || !(userResult.Status > 0) || userResult.Data == null)
             {   
-                ViewData["SuccessfullError"] = "If an account with that email exists, a password reset token will be sent.";
+                ViewData["SuccessMessage"] = "If an account with that email exists, a password reset token will be sent.";
                 return Page();
             }
 

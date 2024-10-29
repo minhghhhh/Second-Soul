@@ -71,7 +71,7 @@ namespace Second_Soul.Pages
 
             if (result.Status > 0 && result.Data != null)
             {
-                ViewData["SuccessMessage"] = "Registration Success.Please Confirm the email.";
+                ViewData["SuccessMessage"] = "Registration Success. Please Confirm the email.";
                 return Page();
             }
             ViewData["ErrorMessage"] = "Please fill in all required fields correctly.";
