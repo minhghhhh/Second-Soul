@@ -35,10 +35,10 @@
 		align-items: center;
 	}
 
-	.nav-icons img {
-		margin: 0 10px;
-		cursor: pointer;
-	}
+		.nav-icons img {
+			margin: 0 10px;
+			cursor: pointer;
+		}
 
 	/* Main Container Styles */
 	.main-container {
@@ -95,12 +95,12 @@
 		margin-bottom: 20px;
 	}
 
-	.voucher input {
-		width: calc(100% - 10px);
-		padding: 10px;
-		border: 1px solid #E6455E;
-		border-radius: 5px;
-	}
+		.voucher input {
+			width: calc(100% - 10px);
+			padding: 10px;
+			border: 1px solid #E6455E;
+			border-radius: 5px;
+		}
 
 	.product-item {
 		display: flex;
@@ -141,9 +141,9 @@
 		margin-top: 20px;
 	}
 
-	.order-button:hover {
-		background-color: #c0392b;
-	}
+		.order-button:hover {
+			background-color: #c0392b;
+		}
 
 	.btn-apply-coupon {
 		background-color: #E6455E;
@@ -155,9 +155,9 @@
 		margin-top: 10px;
 	}
 
-	.btn-apply-coupon:hover {
-		background-color: #c0392b;
-	}
+		.btn-apply-coupon:hover {
+			background-color: #c0392b;
+		}
 
 	.coupon-message {
 		color: #E6455E;
@@ -206,10 +206,10 @@
 		cursor: pointer;
 	}
 
-	.close-btn:hover {
-		background-color: #c0392b;
-	}
-	}
+		.close-btn:hover {
+			background-color: #c0392b;
+		}
+
 </style>
 
 <body>
@@ -332,4 +332,65 @@
 			</script>
 		</div>
 	</div>
+	<form id="returnToCartForm" method="post" asp-page-handler="ReturnToCart" style="display: none;visibility:hidden;">
+		<input type="hidden" name="orderId" value="@Model.Order1.OrderId" />
+
+	</form>
+
+	<script>
+		let inactivityTime = 0;
+		const inactivityLimit = 15 * 60 * 1000; // 15 minutes in milliseconds
+		let inactivityTriggered = false; // Flag to track if inactivity has triggered a request
+
+		// Function to handle user inactivity
+		function handleInactivity() {
+			if (!inactivityTriggered) {
+				inactivityTriggered = true;
+				const formData = new FormData(document.getElementById('returnToCartForm'));
+				const xhr = new XMLHttpRequest();
+				xhr.open('POST', window.location.href + '?handler=ReturnToCart', true);
+				xhr.onload = function () {
+					if (xhr.status === 200) {
+						// Parse the JSON response
+						const response = JSON.parse(xhr.responseText);
+
+						if (response.redirectUrl) {
+							// Redirect to the cart page
+							window.location.href = response.redirectUrl;
+						} else {
+							// Optionally, update the UI if no redirect is needed
+							console.log('Order deleted, but no redirect.');
+						}
+					} else {
+						console.error('Failed to submit the form.');
+					}
+				};
+				xhr.send(formData);
+			}
+		}
+
+		// Increment the inactivity time
+		const timerIncrement = () => {
+			inactivityTime += 1000; // Increment by 1 second
+			if (inactivityTime >= inactivityLimit) {
+				handleInactivity();
+			}
+		};
+
+		// Reset inactivity timer on user activity
+		const resetInactivityTimer = () => {
+			inactivityTime = 0;
+			inactivityTriggered = false; // Reset the flag on user activity
+		};
+
+		// Listen for user activities
+		document.addEventListener('mousemove', resetInactivityTimer);
+		document.addEventListener('keypress', resetInactivityTimer);
+		document.addEventListener('click', resetInactivityTimer);
+		document.addEventListener('scroll', resetInactivityTimer);
+
+		// Start the timer
+		setInterval(timerIncrement, 1000); // Check every second
+	</script>
+
 </body>

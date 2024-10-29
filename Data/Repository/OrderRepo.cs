@@ -44,9 +44,16 @@ namespace Data.Repository
                     var orderDetail = new OrderDetail();
                     orderDetail.ProductId = product.ProductId;
                     orderDetail.OrderId = order.OrderId;
-                    if (product.IsSale)
+                    if (product.IsSale && product.SalePrice != null && product.SalePrice < product.Price)
                     {
-
+                        orderDetail.Price = (int)product.SalePrice;
+                    }
+                    else
+                    {
+                        product.IsSale = false;
+                        product.SalePrice = null;
+                        context.Products.Update(product);
+                        orderDetail.Price = product.Price;
                     }
                     context.OrderDetails.Add(orderDetail);
                 }
@@ -68,5 +75,9 @@ namespace Data.Repository
             return await context.Orders.Include(o => o.OrderDetails).ThenInclude(od => od.Product).SingleOrDefaultAsync(o => o.OrderId == orderId);
         }
 
-    }
+		public async Task<Order?> GetPendingOrderWithOrderDetailsAndProductsByUserId(int userId)
+		{
+			return await context.Orders.Include(o => o.OrderDetails).ThenInclude(od => od.Product).SingleOrDefaultAsync(o => o.CustomerId == userId && o.Status == "Pending");
+		}
+	}
 }

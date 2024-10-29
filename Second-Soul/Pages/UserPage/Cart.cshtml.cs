@@ -56,6 +56,7 @@ namespace Second_Soul.Pages.UserPage
 					}
 				}
 			}
+
 			var result = await _shoppingCartBusiness.GetByUserId(user.UserId, null, null); // Modify this for actual pagination in future
 			if (result == null || !(result.Status > 0))
 			{
