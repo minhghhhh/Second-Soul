@@ -67,6 +67,10 @@ public partial class SecondSoulShopContext : DbContext
             entity.Property(e => e.Email).HasMaxLength(100).IsRequired();
             entity.Property(e => e.PhoneNumber).HasMaxLength(15);
             entity.Property(e => e.Address).HasMaxLength(255);
+            entity.Property(e => e.Bankinfo).HasMaxLength(255);
+            entity.Property(e => e.Bank).HasMaxLength(50);
+            entity.Property(e => e.Bankuser).HasMaxLength(100);
+            entity.Property(e => e.Wallet).HasDefaultValue(0);  
             entity.Property(e => e.Role).HasMaxLength(20).HasConversion<string>();
             entity.Property(e => e.CreatedDate).HasDefaultValueSql("(getdate())").HasColumnType("datetime");
             entity.Property(e => e.IsActive).HasDefaultValue(true);
@@ -122,7 +126,9 @@ public partial class SecondSoulShopContext : DbContext
             entity.Property(e => e.SalePrice).HasColumnType("int");
             entity.Property(e => e.Condition)
                   .HasMaxLength(20);
-             entity.Property(e => e.AddedDate).HasDefaultValueSql("(getdate())").HasColumnType("datetime");
+            entity.Property(e => e.Size)
+                  .HasMaxLength(5);
+            entity.Property(e => e.AddedDate).HasDefaultValueSql("(getdate())").HasColumnType("datetime");
             entity.Property(e => e.IsAvailable).HasDefaultValue(true);
             entity.Property(e => e.IsNew).HasDefaultValue(true);
             entity.Property(e => e.IsSale).HasDefaultValue(false);

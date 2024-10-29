@@ -31,8 +31,9 @@ namespace BusssinessObject
         Task<IBusinessResult> DeleteById(int id);
         Task<bool> IdExists(int id);
         Task<List<Product>> GetProductsBySeller(int id);
+        Task<List<Product>> GetFilterdAccountProduct(DateTime fromDate, DateTime toDate, int accountId);
         IQueryable<List<Product>> GetProductsAsQueryable();
-        Task<IBusinessResult> SearchProduct(string? query, int? minPrice, int? maxPrice, List<int>? categoryIDs, string? condition, bool? isAvailable, int? sellerID, int pageIndex = 1, int pageSize = 10);
+        Task<IBusinessResult> SearchProduct(string? query, int? minPrice, int? maxPrice, List<int>? categoryIDs, string? condition, string? size, bool? isAvailable, int? sellerID, int pageIndex = 1, int pageSize = 10);
 
     }
     public class ProductBusiness : IProductBusiness
@@ -41,6 +42,10 @@ namespace BusssinessObject
         public ProductBusiness(UnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
+        }
+        public async Task<List<Product>> GetFilterdAccountProduct(DateTime fromDate, DateTime toDate, int accountId)
+        {
+            return await _unitOfWork.ProductRepository.GetFilterdAccountProduct(fromDate, toDate, accountId);
         }
         public async Task<List<Product>> GetProductsBySeller(int id)
         {
@@ -72,7 +77,7 @@ namespace BusssinessObject
         {
             return _unitOfWork.ProductRepository.GetProductsAsQueryable();
         }
-        public async Task<IBusinessResult> SearchProduct(string? query, int? minPrice, int? maxPrice, List<int>? categoryIDs, string? condition, bool? isAvailable, int? sellerID, int pageIndex = 1, int pageSize = 10)
+        public async Task<IBusinessResult> SearchProduct(string? query, int? minPrice, int? maxPrice, List<int>? categoryIDs, string? condition,string? size, bool? isAvailable, int? sellerID, int pageIndex = 1, int pageSize = 10)
         {
             try
             {
@@ -82,7 +87,7 @@ namespace BusssinessObject
                 {
                     query = FormatUtilities.TrimSpacesPreserveSingle(query);
                 }
-                var search = await _unitOfWork.ProductRepository.SearchProduct(query, minPrice, maxPrice, categoryIDs, condition, isAvailable, sellerID, pageIndex, pageSize);
+                var search = await _unitOfWork.ProductRepository.SearchProduct(query, minPrice, maxPrice, categoryIDs, condition,size, isAvailable, sellerID, pageIndex, pageSize);
                 if (search.Any())
                 {
 

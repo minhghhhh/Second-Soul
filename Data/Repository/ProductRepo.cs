@@ -82,7 +82,7 @@ namespace Data.Repository
             return (IQueryable<List<Product>>)_dbcontext.Products.AsQueryable();
         }
 
-		public async Task<List<Product>> SearchProduct(string? query, int? minPrice, int? maxPrice, List<int>? categoryIDs, string? condition, bool? isAvailable, int? sellerID, int pageIndex = 1, int pageSize = 10)
+		public async Task<List<Product>> SearchProduct(string? query, int? minPrice, int? maxPrice, List<int>? categoryIDs, string? condition,string? size, bool? isAvailable, int? sellerID, int pageIndex = 1, int pageSize = 10)
 		{
 			// Validate parameters
 			await ValidateSearchParametersAsync(minPrice, maxPrice, categoryIDs, isAvailable, sellerID);
@@ -117,9 +117,12 @@ namespace Data.Repository
 			{
 				productQuery = productQuery.Where(p => p.Condition == condition);
 			}
-
-			// Apply availability filter
-			if (isAvailable.HasValue)
+            if (!string.IsNullOrEmpty(size))
+            {
+                productQuery = productQuery.Where(p => p.Size == size);
+            }
+            // Apply availability filter
+            if (isAvailable.HasValue)
 			{
 				productQuery = productQuery.Where(p => p.IsAvailable == isAvailable.Value);
 			}
@@ -189,7 +192,15 @@ namespace Data.Repository
 		{
 			return await _userRepo.GetSingleOrDefaultWithNoTracking(c => c.UserId == sellerId) != null;
 		}
-	}
+        public async Task<List<Product>> GetFilterdAccountProduct(DateTime fromDate, DateTime toDate, int accountId)
+        {
+            var filteredBills = context.Products
+                .Where(b => b.SellerId == accountId && b.AddedDate >= fromDate && b.AddedDate <= toDate)
+                .OrderBy(b => b.AddedDate)
+                .ToList();
+            return filteredBills;
+        }
+    }
 
 }
 

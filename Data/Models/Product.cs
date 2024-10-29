@@ -23,6 +23,10 @@ namespace Data.Models
         [Required]
         [Column(TypeName = "int")]
         public int Price { get; set; }
+        [Required]
+        [Column(TypeName = "nvarchar(5)")]
+        [RegularExpression("XS|S|M|L|XL|twoXL|Other")]
+        public string Size { get; set; } = string.Empty;
 
         [Required]
         [Column(TypeName = "nvarchar(20)")]
@@ -48,7 +52,6 @@ namespace Data.Models
 
         [ForeignKey("SellerId")]
         public virtual User? Seller { get; set; }
-
         public virtual ICollection<ShoppingCart> ShoppingCarts { get; set; } = new List<ShoppingCart>();
         public virtual ICollection<ProductImage> ProductImages { get; set; } = new List<ProductImage>();
     }
