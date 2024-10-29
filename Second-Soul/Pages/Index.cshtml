@@ -90,7 +90,7 @@
                                 <h6>@product.Name</h6>
                                 <a href="/AddToCart/@product.ProductId">+ Add To Cart</a>
                                 <h5>@product.Price.ToString("N0") VND</h5>
-                                <h9>Xl</h9>
+                                <h9>@product.Size</h9>
                             </div>
                         </div>
                     </div>
@@ -118,7 +118,7 @@
                                 {
                                     <h5>@(((int)product.SalePrice).ToString("N0")) VND</h5>
                                 }
-                                <h9>XL</h9>
+                                <h9>@product.Size</h9>
                             </div>
                         </div>
                     </div>

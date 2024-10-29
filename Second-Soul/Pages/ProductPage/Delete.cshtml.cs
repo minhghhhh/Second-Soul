@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace Second_Soul.Pages.BlogPage.Details
+namespace Second_Soul.Pages.ProductPage
 {
-    public class _1Model : PageModel
+    public class DeleteModel : PageModel
     {
         public void OnGet()
         {

@@ -1,3 +1,4 @@
+
 using BusssinessObject;
 using CloudinaryDotNet;
 using Data.Models;
@@ -37,6 +38,25 @@ namespace Second_Soul.Pages.UserPage
 			{
 				return RedirectToPage("/Login");
 			}
+			if (user != null)
+			{
+				var Totalprice = await _shoppingCartBusiness.PriceCart(user.UserId);
+				HttpContext.Session.SetInt32("TotalPrice", Totalprice);
+				var resultha = await _shoppingCartBusiness.GetByUserId(user.UserId, null, null);
+				if (resultha != null && resultha.Status > 0 && resultha.Data != null)
+				{
+					var totalProduct = (List<ShoppingCart>)resultha.Data;
+					if (totalProduct != null && totalProduct.Count > 0)
+					{
+						HttpContext.Session.SetInt32("TotalProduct", totalProduct.Count);
+					}
+					else
+					{	
+						HttpContext.Session.SetInt32("TotalProduct", 0);
+					}
+				}
+			}
+
 			var result = await _shoppingCartBusiness.GetByUserId(user.UserId, null, null); // Modify this for actual pagination in future
 			if (result == null || !(result.Status > 0))
 			{

@@ -1,7 +1,7 @@
 ﻿@page
 @model Second_Soul.Pages.UserPage.Profile.IndexModel
 @{
-    Layout = "_ProfileLayout";
+
 }
 
 <div id="main">
@@ -11,7 +11,6 @@
 
                 <div class="row">
                 </div>
-
                 <div class="row">
                     <div class="col-lg-4">
                         <div class="card mb-4">
@@ -19,11 +18,12 @@
                                 @if (@Model.UserProfile?.ImageUrl != null)
                                 {
                                     <img src="@Model.UserProfile.ImageUrl" alt="avatar"
-                                         class="rounded-circle img-fluid" style="width: 150px;">
+                                         class="rounded-circle img-fluid"
+                                         style="width: 150px; height: 150px; object-fit: cover;">
                                 }
                                 else
                                 {
-                                    <i class="bi bi-person-circle" style="width: 150px;"></i>
+                                    <i class="bi bi-person-circle img-fluid" alt="avatar" style="font-size: 150px; display: block;"></i>
                                 }
                                 <h5 class="my-3">@Model.UserProfile.Username</h5>
                                 <p class="text-muted mb-1">
@@ -35,6 +35,46 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="card mt-3">
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+                                    <div class="card-body text-center">
+                                    <h5>Wallet</h5>
+                                    </div>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+                                    <h6 class="mb-0">Balance</h6>
+                                    <span class="text-secondary">@Model.UserProfile.Wallet.ToString("N0") VND</span>
+                                </li>
+
+                                <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+                                        <h6 class="mb-0">Bank</h6>
+                                        <span class="text-secondary">
+                                            @Html.DropDownListFor(model => Model.BankInputs.Bank, Model.Banks, "Select a bank", new { @class = "form-control" })
+                                        </span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+                                    <h6 class="mb-0">Số tài khoản</h6>
+                                    <span class="text-secondary">
+                                        <input type="text" asp-for="@Model.BankInputs.BankInfo" value="@Model.UserProfile.Bankinfo">
+                                    </span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+                                    <h6 class="mb-0">Receiver name</h6>
+                                    <span class="text-secondary">
+                                        <input type="text" asp-for="@Model.BankInputs.BankUser" value="@Model.UserProfile.Bankuser">
+                                    </span>
+                                </li>
+
+                                <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+                                    <div class="d-flex justify-content-center mb-0">
+                                        <button type="submit" name="action" value="UpdateBank" data-mdb-button-init data-mdb-ripple-init class="btn btn-primary mb-0 me-2">Update bank info</button>
+                                        <button type="submit" name="action" value="Withdraw" data-mdb-button-init data-mdb-ripple-init class="btn btn-primary mb-0">Withdraw</button>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+
                     </div>
                     <div class="col-lg-8">
                         <div class="card mb-4">
@@ -116,6 +156,7 @@
                     @if (!string.IsNullOrEmpty(Model.SuccessMessage))
 
                         @Model.SuccessMessage
+
 
                     }
                     @if (!string.IsNullOrEmpty(Model.ErrorMessage))

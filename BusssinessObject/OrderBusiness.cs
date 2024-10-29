@@ -24,9 +24,9 @@ namespace BusssinessObject
 		Task<IBusinessResult> GetSinglePendingOrder(int userId);
 		Task<IBusinessResult> DeleteById(int id);
 		Task<int> CreateOrderAsync(int customerId, List<int> productIds,string fullname ,string phoneNumber, string address, int totalAmount, int? couponId);
-
-	}
-	public class OrderBusiness : IOrderBusiness
+		Task<List<Order>> GetFilterdAccountOrder(DateTime fromDate, DateTime toDate, int accountId);
+    }
+    public class OrderBusiness : IOrderBusiness
 	{
 		private readonly UnitOfWork _unitOfWork;
 		public OrderBusiness(UnitOfWork unitOfWork)
@@ -94,8 +94,13 @@ namespace BusssinessObject
 			}
 
 		}
+        public async Task<List<Order>> GetFilterdAccountOrder(DateTime fromDate, DateTime toDate, int accountId)
+		{
+			return await _unitOfWork.OrderRepository.GetFilterdAccountOrder(fromDate, toDate, accountId);
+		}
 
-		public async Task<IBusinessResult> ReadOnlyById(int orderId)
+
+        public async Task<IBusinessResult> ReadOnlyById(int orderId)
 		{
 			try
 			{
