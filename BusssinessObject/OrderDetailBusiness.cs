@@ -156,7 +156,7 @@ namespace BusssinessObject
 				var orderDetail = await _unitOfWork.OrderDetailRepository.GetByIdAsync(id);
 				if (orderDetail != null)
 				{
-					var result = await _unitOfWork.OrderDetailRepository.RemoveAsync(orderDetail);
+					var result = await _unitOfWork.OrderDetailRepository.RemoveOrderDetailAsync(orderDetail);
 					if (result)
 					{
 						return new BusinessResult(Const.SUCCESS_DELETE_CODE, Const.SUCCESS_DELETE_MSG);
