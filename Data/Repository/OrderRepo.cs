@@ -64,10 +64,10 @@ namespace Data.Repository
         }
         public async Task<List<Order>> GetFilterdAccountOrder(DateTime fromDate, DateTime toDate, int accountId)
         {
-            var filteredBills = context.Orders
+            var filteredBills = await context.Orders
                 .Where(b => b.CustomerId == accountId && b.OrderDate >= fromDate && b.OrderDate <= toDate)
                 .OrderBy(b => b.OrderDate)
-                .ToList();
+                .ToListAsync();
             return filteredBills;
         }
         public async Task<Order?> GetOrderWithOrderDetailsAndProductsById(int orderId)
