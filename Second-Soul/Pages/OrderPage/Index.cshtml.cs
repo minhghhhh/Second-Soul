@@ -60,7 +60,7 @@ namespace Second_Soul.Pages.OrderPage
 				User1 = (User)result.Data;
 			}
 			var check = false;
-			if (User1.Role != "Admin")
+			if (User1.Role == "Admin")
 			{
 				check = await GetOrderInfo(id, null);
 			}
@@ -68,7 +68,7 @@ namespace Second_Soul.Pages.OrderPage
 			{
 				check = await GetOrderInfo(id, User1.UserId);
 			}
-			if (await GetOrderInfo(id, User1.UserId) == true)
+			if (check)
 			{
 				return Page();
 			}
@@ -160,7 +160,7 @@ namespace Second_Soul.Pages.OrderPage
 			if (userId != null && Order1.Status == "Pending")
 			{
 				var result = await _orderBusiness.GetPendingOrder(orderId, userId);
-				if (result == null || (result.Status > 0) || result.Data == null)
+				if (result == null || !(result.Status > 0) || result.Data == null)
 				{
 					PopupMessage = result == null || string.IsNullOrWhiteSpace(result.Message) ? "The order's retrieval process has encountered an unexpected error." : result.Message;
 					return false;
@@ -193,7 +193,7 @@ namespace Second_Soul.Pages.OrderPage
 				return false;
 			}
 			int i = 0;
-			while (i > Details.Count)
+			while (i < Details.Count)
 			{
 				if (Details[i].Product == null || !Details[i].Product.IsAvailable)
 				{
