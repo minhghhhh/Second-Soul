@@ -119,6 +119,12 @@ namespace Second_Soul.Pages.OrderPage
 						PopupMessage = order1 == null || string.IsNullOrWhiteSpace(order1.Message) ? "The order's retrieval process has encountered an unexpected error." : order1.Message;
 						return await OnGetAsync(id);
 					}
+					Order1 = (Order)order1.Data;
+					if (string.IsNullOrWhiteSpace(Order1.Address) || string.IsNullOrWhiteSpace(Order1.FullName) || string.IsNullOrWhiteSpace(Order1.PhoneNumber))
+					{
+						PopupMessage =  "The address, full name or phone number is invalid.";
+						return await OnGetAsync(id);
+					}
 					var paymentLink = await _paymentBusiness.CreatePaymentLink(id, $"{Request.Scheme}://{Request.Host}/OrderPage/CancelPayment/{id}", $"{Request.Scheme}://{Request.Host}", user.UserId);
 
 					if (paymentLink == null || !(paymentLink.Status > 0) || paymentLink.Data == null)
@@ -132,7 +138,15 @@ namespace Second_Soul.Pages.OrderPage
 						int productId = int.Parse(action.Split('_')[1]);
 						if (productId > 0)
 						{
-							await _orderDetailBusiness.DeleteByProductIdAndOrderId(id, productId);
+							var deleteResult = await _orderDetailBusiness.DeleteByProductIdAndOrderId(id, productId);
+							if (deleteResult == null || !(deleteResult.Status > 0))
+							{
+								PopupMessage = "Removing the product from this order has failed.";
+							}
+							else
+							{
+								PopupMessage = "The product has been removed from this order.";
+							}
 						}
 						return await OnGetAsync(id);
 					}

@@ -267,7 +267,10 @@
 												<p>Giá: @product.Price.ToString("N0") VND</p>
 											</div>
 											<!-- Remove button -->
-											<button type="submit" name="action" value="removeProduct_@product.ProductId" class="remove-icon">❌</button>
+											@if (Model.Order1.Status == "Pending")
+											{
+												<button type="submit" name="action" value="removeProduct_@product.ProductId" class="remove-icon">❌</button>
+											}
 										</div>
 									}
 								</div>
