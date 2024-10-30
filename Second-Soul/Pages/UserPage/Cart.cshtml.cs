@@ -29,7 +29,7 @@ namespace Second_Soul.Pages.UserPage
 
 		public List<ShoppingCart> ShoppingCarts { get; set; } = [];
 		[BindProperty]
-		public List<int> SelectedProducts { get; set; }
+		public List<int> SelectedProducts { get; set; } = [];
 		public int Total { get; set; } = 0;
 		public async Task<IActionResult> OnGet()
 		{
@@ -38,22 +38,20 @@ namespace Second_Soul.Pages.UserPage
 			{
 				return RedirectToPage("/Login");
 			}
-			if (user != null)
+
+			var Totalprice = await _shoppingCartBusiness.PriceCart(user.UserId);
+			HttpContext.Session.SetInt32("TotalPrice", Totalprice);
+			var resultha = await _shoppingCartBusiness.GetByUserId(user.UserId, null, null);
+			if (resultha != null && resultha.Status > 0 && resultha.Data != null)
 			{
-				var Totalprice = await _shoppingCartBusiness.PriceCart(user.UserId);
-				HttpContext.Session.SetInt32("TotalPrice", Totalprice);
-				var resultha = await _shoppingCartBusiness.GetByUserId(user.UserId, null, null);
-				if (resultha != null && resultha.Status > 0 && resultha.Data != null)
+				var totalProduct = (List<ShoppingCart>)resultha.Data;
+				if (totalProduct != null && totalProduct.Count > 0)
 				{
-					var totalProduct = (List<ShoppingCart>)resultha.Data;
-					if (totalProduct != null && totalProduct.Count > 0)
-					{
-						HttpContext.Session.SetInt32("TotalProduct", totalProduct.Count);
-					}
-					else
-					{	
-						HttpContext.Session.SetInt32("TotalProduct", 0);
-					}
+					HttpContext.Session.SetInt32("TotalProduct", totalProduct.Count);
+				}
+				else
+				{
+					HttpContext.Session.SetInt32("TotalProduct", 0);
 				}
 			}
 
@@ -83,8 +81,11 @@ namespace Second_Soul.Pages.UserPage
 				var Totalprice = await _shoppingCartBusiness.PriceCart(user.UserId);
 				HttpContext.Session.SetInt32("TotalPrice", Totalprice);
 				var results = await _shoppingCartBusiness.GetByUserId(user.UserId, null, null);
-				var totalProduct = (List<ShoppingCart>)results.Data;
-				HttpContext.Session.SetInt32("TotalProduct", totalProduct.Count());
+				if (results != null && results.Status > 0 && results.Data != null)
+				{
+					var totalProduct = (List<ShoppingCart>)results.Data;
+					HttpContext.Session.SetInt32("TotalProduct", totalProduct.Count());
+				}
 			}
 			else
 			{
@@ -115,21 +116,31 @@ namespace Second_Soul.Pages.UserPage
 			switch (action)
 			{
 				case "payment":
-					if (SelectedProducts != null && SelectedProducts.Count > 0)
+					if (SelectedProducts.Count > 0)
 					{
 						var fullname = user.FullName;
 						var phone = user.PhoneNumber ?? string.Empty;
 						var address = user.Address ?? string.Empty;
 						int total = 0;
-						foreach (var productId in SelectedProducts)
+						int i = 0;
+						while (i < SelectedProducts.Count)
 						{
-							var result = await _productBusiness.GetById(productId);
+							var result = await _productBusiness.GetById(SelectedProducts[i]);
 							if (result == null || result.Status <= 0 || result.Data == null)
 							{
 								return await OnGet();
 							}
 							var product = (Product)result.Data;
-							total += product.IsSale && product.SalePrice != null && 0 < product.SalePrice && product.SalePrice < product.Price ? (int)product.SalePrice : product.Price;
+							if (!product.IsAvailable)
+							{
+								SelectedProducts.RemoveAt(i);
+								await _shoppingCartBusiness.RemoveFromCart(user.UserId, product.ProductId);
+							}
+							else
+							{
+								total += product.IsSale && product.SalePrice != null && 0 < product.SalePrice && product.SalePrice < product.Price ? (int)product.SalePrice : product.Price;
+								i++;
+							}
 						}
 						int orderId = await _orderBusiness.CreateOrderAsync(user.UserId, SelectedProducts, fullname, phone, address, total, null);
 						return RedirectToPage("/OrderPage/index", new { id = orderId });
