@@ -1,12 +1,11 @@
 using BusssinessObject;
-using CloudinaryDotNet;
 using Data.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace Second_Soul.Pages.UserPage.Profile
+namespace Second_Soul.Pages.UserPage.Profile.Order
 {
-    public class OrderDetailModel : PageModel
+    public class DetailsModel : PageModel
     {
         private readonly IOrderBusiness _orderBusiness;
         private readonly IUserBusiness _userBusiness;
@@ -14,7 +13,7 @@ namespace Second_Soul.Pages.UserPage.Profile
         private readonly IProductBusiness _productBusiness;
 
 
-        public OrderDetailModel(IOrderBusiness orderBusiness, IUserBusiness userBusiness, IOrderDetailBusiness orderDetailBusiness,IProductBusiness productBusiness)
+        public DetailsModel(IOrderBusiness orderBusiness, IUserBusiness userBusiness, IOrderDetailBusiness orderDetailBusiness, IProductBusiness productBusiness)
         {
             _productBusiness = productBusiness;
             _orderBusiness = orderBusiness;
@@ -24,7 +23,7 @@ namespace Second_Soul.Pages.UserPage.Profile
         [BindProperty]
         public string ErrorMessage { get; set; }
         public IList<OrderDetail> Details { get; set; } = new List<OrderDetail>();
-        public Order Order { get; set; } 
+        public Data.Models.Order Order { get; set; }
         public async Task<IActionResult> OnGet(int id)
         {
             var user = await _userBusiness.GetFromCookie(Request);
@@ -36,11 +35,11 @@ namespace Second_Soul.Pages.UserPage.Profile
             {
                 var billDetails = await _orderDetailBusiness.GetDetailsByOrderId(id);
                 var result = await _orderBusiness.GetById(id);
-                Order = (Order)result.Data;
+                Order = (Data.Models.Order)result.Data;
                 if (billDetails == null)
                 {
                     ErrorMessage = "Bill details not found";
-                    return RedirectToPage("/UserPage/Profile/Order");
+                    return RedirectToPage("/UserPage/Profile/Order/Index");
                 }
                 if (billDetails[0].Order.CustomerId != user.UserId)
                 {
@@ -59,6 +58,5 @@ namespace Second_Soul.Pages.UserPage.Profile
                 return Page();
             }
         }
-
     }
 }
