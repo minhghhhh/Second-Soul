@@ -56,7 +56,7 @@ namespace Second_Soul.Pages
 					}
 				}
 			}
-			TempData["TokenError"] = "The URL doesn't work. Please try again.";
+			TempData["TokenError"] = "The URL does not work. Please try again.";
 			return RedirectToPage("/Reset");
 		}
 
