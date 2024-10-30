@@ -19,10 +19,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Remove="Pages\UserPage\Profile\OrderDetail.cshtml" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Content Include="Controllers\lib\bootstrap\dist\css\bootstrap-grid.css" />
     <Content Include="Controllers\lib\bootstrap\dist\css\bootstrap-grid.css.map" />
     <Content Include="Controllers\lib\bootstrap\dist\css\bootstrap-grid.min.css" />
@@ -96,18 +92,6 @@
   <ItemGroup>
     <ProjectReference Include="..\BusssinessObject\BusssinessObject.csproj" />
     <ProjectReference Include="..\Data\Data.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <UpToDateCheckInput Remove="Pages\UserPage\Profile\OrderDetail.cshtml" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <_ContentIncludedByDefault Remove="Pages\UserPage\Profile\OrderDetail.cshtml" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="Pages\UserPage\Profile\OrderDetail.cshtml" />
   </ItemGroup>
 
 </Project>

@@ -1,8 +1,7 @@
 ﻿@page "{id:int}"
-@model Second_Soul.Pages.UserPage.Profile.OrderDetailModel
+@model Second_Soul.Pages.UserPage.Profile.Order.DetailsModel
 @{
     Layout = null;
-    ViewData["Title"] = "Details";
 }
 <html><body>
 <style>
@@ -24,14 +23,14 @@
     .mt-50 { margin-top: 50px; }
     .mb-50 { margin-bottom: 50px; }
 
-    @media (max-width: 767px) {
+/*      (max-width: 767px) {
         .card { width: 80%; }
     }
 
-    @media (height: 1366px) {
+     (height: 1366px) {
         .card { width: 75%; }
     }
-
+ */
     #orderno { padding: 1vh 2vh 0; font-size: smaller; }
     .gap .col-2 { background-color: rgb(213, 217, 233); width: 1.2rem; padding: 1.2rem; margin-top: -2.5rem; border-radius: 1.2rem; }
 
@@ -82,7 +81,7 @@
 </style>
 <div class="card mt-50 mb-50">
     <div class="col d-flex">
-        <span class="text-muted" id="orderno">Order #@Model.Order.OrderID</span>
+        <span class="text-muted" id="orderno">Order #@Model.Order.OrderId</span>
     </div>
     <div class="gap">
         <div class="col-2 d-flex mx-auto"></div>
@@ -110,7 +109,7 @@
                     </div>
                 </div>
                 <div class="col-3 d-flex justify-content-end">
-                    <p><b>@item.Price.ToString("N0") VND</b></p>
+                    <p><b>@item.Product.Price.ToString("N0") VND</b></p>
                 </div>
             </div>
         }
