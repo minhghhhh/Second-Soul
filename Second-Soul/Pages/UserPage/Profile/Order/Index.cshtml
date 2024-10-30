@@ -1,8 +1,6 @@
 ﻿@page
-@model Second_Soul.Pages.UserPage.Profile.OrderModel
-
+@model Second_Soul.Pages.UserPage.Profile.Order.IndexModel
 @{
-    ViewData["Title"] = "Index";
 }
 
 <body>
@@ -156,7 +154,7 @@
                                     <td>@Html.DisplayFor(modelItem => item.Status)</td>
                                     <td>
                                         <div class="form-button-action">
-                                                <a type="button" href="/UserPage/Profile/OrderDetail/@item.OrderId" data-bs-toggle="tooltip" title="View Details" class="btn btn-link btn-primary btn-lg">
+                                                <a type="button" href="/UserPage/Profile/Order/Details/@item.OrderId" data-bs-toggle="tooltip" title="View Details" class="btn btn-link btn-primary btn-lg">
                                                     <i class="fas fa-info-circle"></i>
                                                 </a>
                                         </div>
