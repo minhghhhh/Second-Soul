@@ -1,0 +1,502 @@
+﻿@using Data.Models
+@using System.Text.Json
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@{
+    var userCookie = HttpContextAccessor.HttpContext?.Request.Cookies["User"];
+    User? currentUser = null;
+
+    if (!string.IsNullOrEmpty(userCookie))
+    {
+        currentUser = JsonSerializer.Deserialize<User>(userCookie);
+    }
+
+}
+
+@{
+    var totalPrice = HttpContextAccessor.HttpContext.Session.GetInt32("TotalPrice");
+    var totalProduct = HttpContextAccessor.HttpContext.Session.GetInt32("TotalProduct");
+}
+<!DOCTYPE html>
+<html lang="zxx">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="Male_Fashion Template">
+    <meta name="keywords" content="Male_Fashion, unica, creative, html">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Second-Soul | 2ndhand</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500&display=swap">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+    <link rel="stylesheet" href="assets/css/jquery.mCustomScrollbar.min.css">
+    <link rel="stylesheet" href="assets/css/animate.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/media-queries.css">
+
+    <!-- Favicon and touch icons -->
+    <link rel="shortcut icon" href="assets/ico/favicon.png">
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="assets/ico/apple-touch-icon-144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="assets/ico/apple-touch-icon-114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="assets/ico/apple-touch-icon-72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="assets/ico/apple-touch-icon-57-precomposed.png">
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;600;700;800;900&display=swap"
+          rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/5.0.0-beta3/css/bootstrap.min.css" rel="stylesheet" />
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/js/bootstrap.bundle.min.js" integrity="..." crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Second_Soul</title>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="~template/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/Second_Soul.styles.css" asp-append-version="true" />
+
+    <!-- Css Styles -->
+    <link rel="stylesheet" href="~/template/css/bootstrap.min.css" type="text/css">
+    <link rel="stylesheet" href="~/template/css/font-awesome.min.css" type="text/css">
+    <link rel="stylesheet" href="~/template/css/elegant-icons.css" type="text/css">
+    <link rel="stylesheet" href="~/template/css/magnific-popup.css" type="text/css">
+    <link rel="stylesheet" href="~/template/css/nice-select.css" type="text/css">
+    <link rel="stylesheet" href="~/template/css/owl.carousel.min.css" type="text/css">
+    <link rel="stylesheet" href="~/template/css/slicknav.min.css" type="text/css">
+    <link rel="stylesheet" href="~/template/css/style.css" type="text/css">
+    <link rel="icon"
+          href="~/adminAssets/assets/img/kaiadmin/favicon.ico"
+          type="image/x-icon" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />    <!-- Fonts and icons -->
+    <script src="~/adminAssets/assets/js/plugin/webfont/webfont.min.js"></script>
+    <script>
+        WebFont.load({
+            google: { families: ["Public Sans:300,400,500,600,700"] },
+            custom: {
+                families: [
+                    "Font Awesome 5 Solid",
+                    "Font Awesome 5 Regular",
+                    "Font Awesome 5 Brands",
+                    "simple-line-icons",
+                ],
+                urls: ["~/adminAssets/assets/css/fonts.min.css"],
+            },
+            active: function () {
+                sessionStorage.fonts = true;
+            },
+        });
+    </script>
+
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="~/adminAssets/assets/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/adminAssets/assets/css/plugins.min.css" />
+    <link rel="stylesheet" href="~/adminAssets/assets/css/kaiadmin.min.css" />
+
+    <!-- CSS Just for demo purpose, don't include it in your project -->
+    <link rel="stylesheet" href="~/adminAssets/assets/css/demo.css" />
+    @Html.Raw("<link rel='https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-  free@5.15.4/css/fontawesome.min.css'/>")
+    @RenderSection("Styles", required: false)
+
+</head>
+
+<body>
+    <!-- Page Preloder -->
+    <div id="preloder">
+        <div class="loader"></div>
+    </div>
+
+    <!-- Offcanvas Menu Begin -->
+    <div class="offcanvas-menu-overlay"></div>
+    <div class="offcanvas-menu-wrapper">
+        <div class="offcanvas__option">
+            <div class="offcanvas__links">
+                <a href="#">Sign in</a>
+                <a href="#">FAQs</a>
+            </div>
+            <div class="offcanvas__top__hover">
+                @if (currentUser != null)
+                {
+                    <span>
+                        @if (currentUser?.ImageUrl != null)
+                        {
+                            <img src="@currentUser.ImageUrl" alt="Profile Picture" class="rounded-circle" width="30" height="30" />
+                        }
+                        else
+                        {
+                            <i class="bi bi-person-circle" style="font-size: 30px;"></i>
+                        }
+                        @currentUser?.Username
+                        <i class="arrow_carrot-down"></i>
+                    </span>
+                    <ul>
+                        <li><a class="dropdown-item" href="/UserPage/Profile">My Account</a></li>
+                        <li><a class="dropdown-item" href="/UserPage/Order">My Purchase</a></li>
+                        <li><a class="dropdown-item" href="/UserPage/Order">My Product</a></li>
+                        <li><a class="dropdown-item" href="/Logout">Logout</a></li>
+                    </ul>
+
+                }
+                else
+                {
+                    <div class="header__top__links">
+                        <a href="/Login" class="nav-link">Sign in</a>
+                    </div>
+                }
+            </div>
+        </div>
+        <div class="offcanvas__nav__option">
+            <a href="#" class="search-switch"><img src="~/template/img/icon/search.png" alt=""></a>
+            <a href="#"><img src="~/template/icon/heart.png" alt=""></a>
+            <a href="#"><img src="~/template/img/icon/cart.png" alt=""> <span>@totalProduct</span></a>
+            <div class="price">@totalPrice VND</div>
+        </div>
+        <div id="mobile-menu-wrap">
+        </div>
+        <div class="offcanvas__text">
+        </div>
+    </div>
+    <!-- Offcanvas Menu End -->
+    <!-- Header Section Begin -->
+    <header class="header">
+        <div class="header__top">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-6 col-md-7">
+                        <div style="color:white">2nd hand, First choice.</div>
+                    </div>
+                    <div class="col-lg-6 col-md-5">
+                        <div class="header__top__right">
+                            <div class="header__top__hover">
+                                @if (currentUser != null)
+                                {
+                                    <span>
+                                        @if (currentUser?.ImageUrl != null)
+                                        {
+                                            <img src="@currentUser.ImageUrl" alt="Profile Picture" class="rounded-circle" width="30" height="30" />
+                                        }
+                                        else
+                                        {
+                                            <i class="bi bi-person-circle" style="font-size: 30px;"></i>
+                                        }
+                                        @currentUser?.Username
+                                        <i class="arrow_carrot-down"></i>
+                                    </span>
+                                    <ul>
+                                        <li><a class="dropdown-item" href="/UserPage/Profile">My Account</a></li>
+                                        <li><a class="dropdown-item" href="/UserPage/Order">My Purchase</a></li>
+                                        <li><a class="dropdown-item" href="/UserPage/Order">My Product</a></li>
+                                        <li><a class="dropdown-item" href="/Logout">Logout</a></li>
+                                    </ul>
+
+                                }
+                                else
+                                {
+                                    <div class="header__top__links">
+                                        <a href="/Login" class="nav-link">Sign in</a>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-3 col-md-3">
+                    <div class="header__logo">
+                        <a href="/index"><img src="/pic/logo/2ndsoullogonoBG.png" alt="Second Soul Logo" style="height: 60px;"></a>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-6">
+                    <nav class="header__menu mobile-menu">
+                        <ul>
+                            <li><a href="/index">Home</a></li>
+                            <li><a href="/About">About</a></li>
+                            <li><a href="/Search">Shop</a></li>
+                            <li>
+                                <a href="#">Category</a>
+                                <ul class="dropdown">
+                                    <li><a href="/about">About Us</a></li>
+                                    <li><a href="./shop-details.html">Shop Details</a></li>
+                                    <li><a href="/UserPage/Cart">Shopping Cart</a></li>
+                                    <li><a href="./checkout.html">Check Out</a></li>
+                                    @* <li><a href="/BlogPage/Details/1">Blog Details</a></li> *@
+                                </ul>
+                            </li>
+                            <li><a href="/BlogPage">Blog</a></li>
+                        </ul>
+                    </nav>
+                </div>
+                <div class="col-lg-3 col-md-3">
+                    <div class="header__nav__option">
+                        <a href="#" class="search-switch"><img src="~/template/img/icon/search.png" alt=""></a>
+                        <a href="/UserPage/Cart"><img src="~/template/img/icon/cart.png" alt=""> <span>@(totalProduct ?? 0)</span></a>
+                        <div class="price">@(totalPrice ?? 0) VND</div>
+                    </div>
+                </div>
+            </div>
+            <div class="canvas__open"><i class="fa fa-bars"></i></div>
+        </div>
+        <div class="w3-sidebar w3-bar-block w3-card w3-animate-left" style="display:none" id="mySidebar">
+            <button class="w3-bar-item w3-button w3-large"
+                    onclick="w3_close()">
+                Close &times;
+            </button>
+            <a href="#" class="w3-bar-item w3-button">Link 1</a>
+            <a href="#" class="w3-bar-item w3-button">Link 2</a>
+            <a href="#" class="w3-bar-item w3-button">Link 3</a>
+        </div>
+        <div class="sidebar" data-background-color="dark">
+            <div class="sidebar-logo">
+                <!-- Logo Header -->
+                <div class="logo-header" data-background-color="dark">
+                    <a href="/" class="logo">
+                        <img src="~/assets/img/logo/logo.png"
+                             alt="navbar brand"
+                             class="navbar-brand"
+                             height="30" />
+                    </a>
+                    <div class="nav-toggle">
+                        <button class="btn btn-toggle toggle-sidebar">
+                            <i class="gg-menu-right"></i>
+                        </button>
+                        <button class="btn btn-toggle sidenav-toggler">
+                            <i class="gg-menu-left"></i>
+                        </button>
+                    </div>
+                    <button class="topbar-toggler more">
+                        <i class="gg-more-vertical-alt"></i>
+                    </button>
+                </div>
+                <!-- End Logo Header -->
+            </div>
+            <div class="sidebar-wrapper scrollbar scrollbar-inner">
+                <div class="sidebar-content">
+                    <ul class="nav nav-secondary">
+                        <li class="nav-section">
+                            <span class="sidebar-mini-icon">
+                                <i class="fa fa-ellipsis-h"></i>
+                            </span>
+                            <h4 class="text-section">Dashboard</h4>
+                        </li>
+                        <li class="nav-item">
+                            <a asp-page="/admin/index"
+                               class="collapsed"
+                               aria-expanded="false">
+                                <i class="fas fa-home"></i>
+                                <p>Dashboard</p>
+                            </a>
+                        </li>
+                        <li class="nav-section">
+                            <span class="sidebar-mini-icon">
+                                <i class="fa fa-ellipsis-h"></i>
+                            </span>
+                            <h4 class="text-section">Management</h4>
+                        </li>
+                        <li class="nav-item">
+                            <a asp-page="/admin/accountPage/index">
+                                <i class="fas fa-user"></i>
+                                <p>Account</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a asp-page="/admin/servicePage/index">
+                                <i class="fab fa-servicestack"></i>
+                                <p>Service</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a asp-page="/admin/FeedbackPage/index">
+                                <i class="fas fa-comment-dots"></i>
+                                <p>Feedback</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a asp-page="/admin/BillPage/index">
+                                <i class="fas fa-money-bill-alt"></i>
+                                <p>Bill</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a asp-page="/admin/BookingPage/index">
+                                <i class="fas fa-th-list"></i>
+                                <p>Booking</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a asp-page="/admin/VoucherPage/index">
+                                <i class="fas fa-ticket-alt"></i>
+                                <p>Voucher</p>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <style>
+
+
+            .main-panel {
+                padding-top: 30px; /* Adjust this value based on your header height */
+            }
+            main {
+                margin-top: 30px;
+                box-shadow: none;
+                border: none;
+            }
+        </style>
+
+        <div class="main-header">
+            <div class="main-header-logo">
+                <!-- Logo Header -->
+                <div class="logo-header" data-background-color="dark">
+                    <a href="index.html" class="logo">
+                        <img src="~/adminAssets/assets/img/kaiadmin/logo_light.svg"
+                             alt="navbar brand"
+                             class="navbar-brand"
+                             height="20" />
+                    </a>
+                    <div class="nav-toggle">
+                        <button class="btn btn-toggle toggle-sidebar">
+                            <i class="gg-menu-right"></i>
+                        </button>
+                        <button class="btn btn-toggle sidenav-toggler">
+                            <i class="gg-menu-left"></i>
+                        </button>
+                    </div>
+                    <button class="topbar-toggler more">
+                        <i class="gg-more-vertical-alt"></i>
+                    </button>
+                </div>
+            </div>
+            <nav class="navbar navbar-header navbar-header-transparent navbar-expand-lg">
+                <div class="container-fluid">
+                    <!-- Navbar content -->
+                </div>
+            </nav>
+        </div>
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-3 col-md-6 col-sm-6">
+                    <div class="footer__about">
+                        <div class="footer__logo">
+                            <a href="/index"><img src="/pic/logo/my-image.png" alt="Second Soul Logo"></a>
+                        </div>
+                        <p>The customer is at the heart of our unique business model, which includes design.</p>
+                        <a href="#"><img src="~/template/img/payment.png" alt=""></a>
+                    </div>
+                </div>
+                <div class="col-lg-2 offset-lg-1 col-md-3 col-sm-6">
+                    <div class="footer__widget">
+                        <h6>Shopping</h6>
+                        <ul>
+                            <li><a href="#">Clothing Store</a></li>
+                            <li><a href="#">Trending Shoes</a></li>
+                            <li><a href="#">Accessories</a></li>
+                            <li><a href="#">Sale</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-3 col-sm-6">
+                    <div class="footer__widget">
+                        <h6>Shopping</h6>
+                        <ul>
+                            <li><a href="#">Contact Us</a></li>
+                            <li><a href="#">Payment Methods</a></li>
+                            <li><a href="#">Delivary</a></li>
+                            <li><a href="#">Return & Exchanges</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-3 offset-lg-1 col-md-6 col-sm-6">
+                    <div class="footer__widget">
+                        <h6>NewLetter</h6>
+                        <div class="footer__newslatter">
+                            <p>Be the first to know about new arrivals, look books, sales & promos!</p>
+                            <form action="#">
+                                <input type="text" placeholder="Your email">
+                                <button type="submit"><span class="icon_mail_alt"></span></button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!-- Footer Section End -->
+    <!-- Search Begin -->
+    <div class="search-model">
+        <div class="h-100 d-flex align-items-center justify-content-center">
+            <div class="search-close-switch">+</div>
+            <form class="search-model-form" method="get" asp-page="/Search">
+                <input type="text" type="search" name="query" placeholder="Search here.....">
+            </form>
+        </div>
+    </div>
+    <!-- Search End -->
+    <!-- Js Plugins -->
+    <script src="assets/js/jquery-3.3.1.min.js"></script>
+    <script src="assets/js/jquery-migrate-3.0.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script src="assets/js/jquery.backstretch.min.js"></script>
+    <script src="assets/js/wow.min.js"></script>
+    <script src="assets/js/jquery.waypoints.min.js"></script>
+    <script src="assets/js/jquery.mCustomScrollbar.concat.min.js"></script>
+    <script src="assets/js/scripts.js"></script>
+
+    <script src="~/template/js/jquery-3.3.1.min.js"></script>
+    <script src="~/template/js/bootstrap.min.js"></script>
+    <script src="~/template/js/jquery.nice-select.min.js"></script>
+    <script src="~/template/js/jquery.nicescroll.min.js"></script>
+    <script src="~/template/js/jquery.magnific-popup.min.js"></script>
+    <script src="~/template/js/jquery.countdown.min.js"></script>
+    <script src="~/template/js/jquery.slicknav.js"></script>
+    <script src="~/template/js/mixitup.min.js"></script>
+    <script src="~/template/js/owl.carousel.min.js"></script>
+    <script src="~/template/js/main.js"></script>
+    <script src="~/adminAssets/assets/js/setting-demo.js"></script>
+    <script src="~/adminAssets/assets/js/demo.js"></script>
+    <script>
+        $("#lineChart").sparkline([102, 109, 120, 99, 110, 105, 115], {
+            type: "line",
+            height: "70",
+            width: "100%",
+            lineWidth: "2",
+            lineColor: "#177dff",
+            fillColor: "rgba(23, 125, 255, 0.14)",
+        });
+
+        $("#lineChart2").sparkline([99, 125, 122, 105, 110, 124, 115], {
+            type: "line",
+            height: "70",
+            width: "100%",
+            lineWidth: "2",
+            lineColor: "#f3545d",
+            fillColor: "rgba(243, 84, 93, .14)",
+        });
+
+        $("#lineChart3").sparkline([105, 103, 123, 100, 95, 105, 115], {
+            type: "line",
+            height: "70",
+            width: "100%",
+            lineWidth: "2",
+            lineColor: "#ffa534",
+            fillColor: "rgba(255, 165, 52, .14)",
+        });
+    </script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

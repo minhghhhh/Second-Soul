@@ -1,0 +1,78 @@
+﻿@page
+@using Data.Models
+@model Second_Soul.Pages.UserPage.AddProductModel
+@{
+	ViewData["Title"] = "Add Product";
+}
+
+<div class="container mt-5">
+	<h2 class="text-center mb-4">Add a New Product</h2>
+	<form id="productForm" method="post" enctype="multipart/form-data">
+		<div class="form-group mb-3">
+			<label asp-for="Product.Name" class="form-label"></label>
+			<input asp-for="Product.Name" class="form-control" placeholder="Enter product name" required />
+		</div>
+
+		<div class="form-group mb-3">
+			<label asp-for="Product.Description" class="form-label"></label>
+			<textarea asp-for="Product.Description" class="form-control" rows="4" placeholder="Enter product description"></textarea>
+		</div>
+
+		<div class="form-group mb-3">
+			<label asp-for="Product.Price" class="form-label"></label>
+			<input asp-for="Product.Price" class="form-control" placeholder="Enter price" type="number" step="1" required />
+		</div>
+
+		<div class="form-group mb-4">
+			<br />
+			<label asp-for="Product.CategoryID" class="form-label">Category</label>
+			<br />
+			<select asp-for="Product.CategoryID" class="form-select" required>
+				<option value="">Select a category</option>
+				@if (Model.Categories != null && Model.Categories.Count() > 0)
+				{
+					@foreach (var parentCategoryGroup in Model.Categories.GroupBy(c => c.Group.Name))
+					{
+						<optgroup label="@parentCategoryGroup.First().Group.Name" style="visibility:visible">
+							@foreach (var subCategory in parentCategoryGroup)
+							{
+								<option value="@subCategory.Value">@subCategory.Text</option>
+							}
+						</optgroup>
+					}
+				}
+			</select>
+		</div>
+
+		<div class="form-group mb-4">
+			<br />
+			<label asp-for="Product.Condition" class="form-label">Condition</label>
+			<br />
+			<select asp-for="Product.Condition" class="form-select" required>
+				<option value="New">New</option>
+				<option value="Like_New">Like New</option>
+				<option value="Good">Good</option>
+				<option value="Fair">Fair</option>
+			</select>
+		</div>
+
+		<div class="form-group mb-4">
+			<br />
+
+			<label for="photos" class="form-label">Upload Images</label>
+			<br />
+
+
+			<input type="file" name="Photos" multiple accept=".png,.jpg,.jpeg" class="form-control" required />
+			<small class="form-text text-muted">Allowed formats: JPEG, PNG, JPG.</small>
+		</div>
+
+		<button type="submit" class="btn btn-primary btn-lg w-100">Save Product</button>
+	</form>
+</div>
+@section Scripts {
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
+	<script src="https://unpkg.com/filepond/dist/filepond.min.js"></script>
+	<link href="https://unpkg.com/filepond/dist/filepond.css" rel="stylesheet" />
+	<!-- Remove this entire section -->
+}

@@ -1,0 +1,48 @@
+﻿@page
+@model Second_Soul.Pages.CategoryPage.EditCategoryModel
+@{
+    ViewData["Title"] = "Edit";
+}
+<h1 class="text-center text-success-edit">Edit Category</h1>
+<div class="container mt-4">
+    <form method="post" class="needs-validation" novalidate>
+        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+        <div class="row g-3">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label asp-for="Cate.CategoryId" class="control-label"></label>
+                    <input asp-for="Cate.CategoryId" class="form-control" readonly="" required />
+                    <span asp-validation-for="Cate.CategoryId" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label asp-for="Cate.CategoryName" class="control-label"></label>
+                    <input asp-for="Cate.CategoryName" class="form-control" required />
+                    <span asp-validation-for="Cate.CategoryName" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label asp-for="Cate.ParentCategoryId" class="control-label"></label>
+                    <input asp-for="Cate.ParentCategoryId" class="form-control" required />
+                    <span asp-validation-for="Cate.ParentCategoryId" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-4 text-center">
+            <button type="submit" class="btn btn-outline-primary me-2">Edit</button> |
+            <a asp-page="./IndexCategory" class="btn btn-outline-secondary"> Back to List</a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+
+

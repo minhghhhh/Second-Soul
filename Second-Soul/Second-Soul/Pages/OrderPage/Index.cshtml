@@ -1,0 +1,399 @@
+﻿@page "{id:int}"
+@model Second_Soul.Pages.OrderPage.IndexModel
+@{
+	var popupMessage = Model.PopupMessage;
+	Layout = null;
+}
+<style>
+	/* General Body Styles */
+	body {
+		font-family: 'Arial', sans-serif;
+		margin: 0;
+		padding: 0;
+		background-color: #f7f7f7;
+		color: #333;
+	}
+
+	/* Header Styles */
+	header {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		padding: 20px;
+		background-color: #fff;
+		border-bottom: 1px solid #ddd;
+	}
+
+	.logo {
+		font-size: 24px;
+		color: #E6455E;
+		font-weight: bold;
+	}
+
+	.nav-icons {
+		display: flex;
+		align-items: center;
+	}
+
+		.nav-icons img {
+			margin: 0 10px;
+			cursor: pointer;
+		}
+
+	/* Main Container Styles */
+	.main-container {
+		display: flex;
+		justify-content: center;
+		padding: 30px;
+		background-color: #f7f7f7;
+	}
+
+	/* Frame Styles */
+	.frame {
+		background-color: #fff;
+		box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+		padding: 30px;
+		border-radius: 10px;
+		width: 90%;
+		max-width: 1200px;
+	}
+
+	/* Order Form Container */
+	.container {
+		display: flex;
+		justify-content: space-between;
+	}
+
+	.shipping-info, .payment-info {
+		width: 48%;
+	}
+
+	.section-title {
+		font-size: 22px;
+		color: #E6455E;
+		margin-bottom: 20px;
+	}
+
+	.input-group {
+		margin-bottom: 20px;
+	}
+
+	input, select, textarea {
+		width: 100%;
+		padding: 15px;
+		border: 1px solid #ddd;
+		border-radius: 5px;
+		font-size: 16px;
+	}
+
+	textarea {
+		resize: none;
+		height: 80px;
+	}
+
+	.voucher {
+		margin-bottom: 20px;
+	}
+
+		.voucher input {
+			width: calc(100% - 10px);
+			padding: 10px;
+			border: 1px solid #E6455E;
+			border-radius: 5px;
+		}
+
+	.product-item {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		border-bottom: 1px solid #ddd;
+		padding: 15px 0;
+	}
+
+	.remove-icon {
+		color: #e74c3c;
+		cursor: pointer;
+		font-size: 18px;
+		margin-left: 10px;
+	}
+
+	.summary {
+		text-align: right;
+		margin-top: 20px;
+	}
+
+	.total-price {
+		font-size: 26px;
+		font-weight: bold;
+		color: #E6455E;
+	}
+
+	.order-button {
+		background-color: #E6455E;
+		color: #fff;
+		padding: 18px;
+		border: none;
+		border-radius: 5px;
+		width: 100%;
+		font-size: 18px;
+		cursor: pointer;
+		transition: background-color 0.3s ease;
+		margin-top: 20px;
+	}
+
+		.order-button:hover {
+			background-color: #c0392b;
+		}
+
+	.btn-apply-coupon {
+		background-color: #E6455E;
+		color: #fff;
+		padding: 10px;
+		border: none;
+		border-radius: 5px;
+		cursor: pointer;
+		margin-top: 10px;
+	}
+
+		.btn-apply-coupon:hover {
+			background-color: #c0392b;
+		}
+
+	.coupon-message {
+		color: #E6455E;
+		margin-top: 10px;
+	}
+
+	/* Modal Popup */
+	.modal {
+		display: none;
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		background-color: rgba(0, 0, 0, 0.5);
+		justify-content: center;
+		align-items: center;
+	}
+
+	.modal-content {
+		background-color: #fff;
+		padding: 20px;
+		border-radius: 5px;
+		width: 90%;
+		max-width: 400px;
+		text-align: center;
+	}
+
+	.modal-header {
+		font-size: 22px;
+		font-weight: bold;
+		color: #E6455E;
+		margin-bottom: 20px;
+	}
+
+	.modal-body {
+		margin-bottom: 20px;
+	}
+
+	.close-btn {
+		background-color: #E6455E;
+		color: #fff;
+		padding: 10px 20px;
+		border: none;
+		border-radius: 5px;
+		cursor: pointer;
+	}
+
+		.close-btn:hover {
+			background-color: #c0392b;
+		}
+
+</style>
+
+<body>
+	<!-- Main Form -->
+	<div class="main-container">
+		<div class="frame">
+			<form method="post">
+				<!-- Shipping Information Section -->
+				<div class="container">
+					<div class="shipping-info">
+						<div class="section-title">Thông tin nhận hàng</div>
+						<input type="hidden" name="id" value="@Model.Order1.OrderId" />
+
+						<div class="input-group">
+							<label>Email</label>
+							<input type="email" value="@Model.User1.Email" readonly />
+						</div>
+						<div class="input-group">
+							<label>UserName</label>
+							<input type="text" value="@Model.User1.Username" readonly />
+						</div>
+						<div class="input-group">
+							<label>Họ và Tên</label>
+							<input type="text" asp-for="@Model.Order1.FullName" value="@Model.User1.FullName" />
+						</div>
+						<div class="input-group">
+							<label>Số điện thoại</label>
+							<input type="text" asp-for="@Model.Order1.PhoneNumber" value="@Model.User1.PhoneNumber" />
+						</div>
+						<div class="input-group">
+							<label>Địa chỉ</label>
+							<input type="text" asp-for="@Model.Order1.Address" value="@Model.User1.Address" />
+						</div>
+						<div class="input-group">
+							<label>Ghi chú (tuỳ chọn)</label>
+							<textarea asp-for="@Model.Order1.Descriptions" placeholder="Ghi chú (tuỳ chọn)"></textarea>
+						</div>
+						<!-- Save details button -->
+						<button type="submit" name="action" value="saveDetails" class="order-button">Lưu thông tin</button>
+					</div>
+
+					<!-- Payment and Product Details Section -->
+					<div class="payment-info">
+						<div class="section-title">Thanh toán</div>
+						<div class="product-details">
+							<div class="section-title">Chi tiết sản phẩm</div>
+							@if (Model.Products != null && Model.Products.Any())
+							{
+								<div class="product-list" id="product-list">
+									@foreach (var product in Model.Products)
+									{
+										<div class="product-item" id="@product.ProductId">
+											<div>
+												<h3>@product.Name</h3>
+												<p>Giá: @product.Price.ToString("N0") VND</p>
+											</div>
+											<!-- Remove button -->
+											@if (Model.Order1.Status == "Pending")
+											{
+												<button type="submit" name="action" value="removeProduct_@product.ProductId" class="remove-icon">❌</button>
+											}
+										</div>
+									}
+								</div>
+							}
+							else
+							{
+								<p>Giỏ hàng của bạn đang trống.</p>
+							}
+						</div>
+
+						<!-- Coupon Code Section -->
+						<div>
+							<label for="couponCode">Coupon Code:</label>
+							<input type="text" id="couponCode" name="CouponCode" value="@Model.CouponCode" placeholder="Enter coupon code" />
+
+							@if (!string.IsNullOrEmpty(Model.CouponMessage))
+							{
+								<div class="coupon-message">@Model.CouponMessage</div>
+							}
+						</div>
+						<button type="submit" name="action" value="applyCoupon" class="btn-apply-coupon">Apply Coupon</button>
+					</div>
+				</div>
+
+				<!-- Summary and Order Button -->
+				<div class="summary">
+					<input type="hidden" name="total" value="@Model.Total" />
+					<div>Tổng tiền hàng: @Model.Total.ToString("N0") VND</div>
+					@if (Model.Order1.CouponId != null)
+					{
+						<div>Giảm giá: -@Model.Discount.ToString("N0") VND</div>
+						<div>Còn lại: @Model.Order1.TotalAmount.ToString("N0") VND</div>
+					}
+					<div>Phí vận chuyển: 30.000 VND</div>
+					@{
+						int totalPayment = Model.Order1.TotalAmount + 30000;
+					}
+					<div class="total-price">Tổng thanh toán: @totalPayment.ToString("N0") VND</div>
+					<button type="submit" name="action" value="placeOrder" class="order-button">Đặt hàng</button>
+				</div>
+
+				<!-- Place Order Button -->
+			</form>
+
+			<!-- Modal Popup (Success Message) -->
+			@if (!string.IsNullOrEmpty(popupMessage))
+			{
+				<div class="modal" id="successModal" style="display: flex;">
+					<div class="modal-content">
+						<div class="modal-header">Thông báo</div>
+						<div class="modal-body">@popupMessage</div>
+						<button class="close-btn" onclick="closeModal()">Đóng</button>
+					</div>
+				</div>
+			}
+
+			<script>
+				// Close the modal popup
+				function closeModal() {
+					document.getElementById("successModal").style.display = "none";
+				}
+			</script>
+		</div>
+	</div>
+	<form id="returnToCartForm" method="post" asp-page-handler="ReturnToCart" style="display: none;visibility:hidden;">
+		<input type="hidden" name="orderId" value="@Model.Order1.OrderId" />
+
+	</form>
+
+	<script>
+		let inactivityTime = 0;
+		const inactivityLimit = 15 * 60 * 1000; // 15 minutes in milliseconds
+		let inactivityTriggered = false; // Flag to track if inactivity has triggered a request
+
+		// Function to handle user inactivity
+		function handleInactivity() {
+			if (!inactivityTriggered) {
+				inactivityTriggered = true;
+				const formData = new FormData(document.getElementById('returnToCartForm'));
+				const xhr = new XMLHttpRequest();
+				xhr.open('POST', window.location.href + '?handler=ReturnToCart', true);
+				xhr.onload = function () {
+					if (xhr.status === 200) {
+						// Parse the JSON response
+						const response = JSON.parse(xhr.responseText);
+
+						if (response.redirectUrl) {
+							// Redirect to the cart page
+							window.location.href = response.redirectUrl;
+						} else {
+							// Optionally, update the UI if no redirect is needed
+							console.log('Order deleted, but no redirect.');
+						}
+					} else {
+						console.error('Failed to submit the form.');
+					}
+				};
+				xhr.send(formData);
+			}
+		}
+
+		// Increment the inactivity time
+		const timerIncrement = () => {
+			inactivityTime += 1000; // Increment by 1 second
+			if (inactivityTime >= inactivityLimit) {
+				handleInactivity();
+			}
+		};
+
+		// Reset inactivity timer on user activity
+		const resetInactivityTimer = () => {
+			inactivityTime = 0;
+			inactivityTriggered = false; // Reset the flag on user activity
+		};
+
+		// Listen for user activities
+		document.addEventListener('mousemove', resetInactivityTimer);
+		document.addEventListener('keypress', resetInactivityTimer);
+		document.addEventListener('click', resetInactivityTimer);
+		document.addEventListener('scroll', resetInactivityTimer);
+
+		// Start the timer
+		setInterval(timerIncrement, 1000); // Check every second
+	</script>
+
+</body>

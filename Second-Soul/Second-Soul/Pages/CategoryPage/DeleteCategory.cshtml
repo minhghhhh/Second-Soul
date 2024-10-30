@@ -1,0 +1,32 @@
+﻿@page
+@model Second_Soul.Pages.CategoryPage.DeleteCategoryModel
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<div class="container mt-4">
+    <h1 class="mb-4 text-center">Delete Category</h1>
+    <h3 class="mb-4 text-center">Are you sure want to delete this Category?</h3>
+    <div class="card border">
+        <div class="card-body">
+            <dl class="row mb-0">
+                <dt class="col-sm-3 border-bottom py-2">@Html.DisplayNameFor(model => model.Cate.CategoryId)</dt>
+                <dd class="col-sm-9 border-bottom py-2">@Html.DisplayFor(model => model.Cate.CategoryId)</dd>
+
+                <dt class="col-sm-3 border-bottom py-2">@Html.DisplayNameFor(model => model.Cate.CategoryName)</dt>
+                <dd class="col-sm-9 border-bottom py-2">@Html.DisplayFor(model => model.Cate.CategoryName)</dd>
+
+                <dt class="col-sm-3 border-bottom py-2">@Html.DisplayNameFor(model => model.Cate.ParentCategory)</dt>
+                <dd class="col-sm-9 border-bottom py-2">@Html.DisplayFor(model => model.Cate.ParentCategory)</dd>
+            </dl>
+        </div>
+    </div>
+
+    <div class="mt-4 text-center">
+        <form method="post">
+            <input type="hidden" asp-for="Cate.CategoryId" />
+            <input type="submit" value="Delete" class="btn btn-outline-danger me-2" /> |
+            <a asp-page="./IndexCategory" class="btn btn-outline-secondary">Back to List</a>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,184 @@
+﻿@page
+@model Second_Soul.Pages.UserPage.Profile.IndexModel
+@{
+
+}
+
+<div id="main">
+    <section style="background-color: #eee;">
+        <div class="container py-5">
+            <form method="post" enctype="multipart/form-data">
+
+                <div class="row">
+                </div>
+                <div class="row">
+                    <div class="col-lg-4">
+                        <div class="card mb-4">
+                            <div class="card-body text-center">
+                                @if (@Model.UserProfile?.ImageUrl != null)
+                                {
+                                    <img src="@Model.UserProfile.ImageUrl" alt="avatar"
+                                         class="rounded-circle img-fluid"
+                                         style="width: 150px; height: 150px; object-fit: cover;">
+                                }
+                                else
+                                {
+                                    <i class="bi bi-person-circle img-fluid" alt="avatar" style="font-size: 150px; display: block;"></i>
+                                }
+                                <h5 class="my-3">@Model.UserProfile.Username</h5>
+                                <p class="text-muted mb-1">
+                                    <input type="file" name="PictureFile" />
+                                </p>
+                                <p class="text-muted mb-4">File extension: .JPEG, .PNG, .JPG</p>
+                                <div class="d-flex justify-content-center mb-2">
+                                    <button type="submit" name="action" value="UpdatePicture" data-mdb-button-init data-mdb-ripple-init class="btn btn-primary">Update Picture</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card mt-3">
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+                                    <div class="card-body text-center">
+                                    <h5>Wallet</h5>
+                                    </div>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+                                    <h6 class="mb-0">Balance</h6>
+                                    <span class="text-secondary">@Model.UserProfile.Wallet.ToString("N0") VND</span>
+                                </li>
+
+                                <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+                                        <h6 class="mb-0">Bank</h6>
+                                        <span class="text-secondary">
+                                            @Html.DropDownListFor(model => Model.BankInputs.Bank, Model.Banks, "Select a bank", new { @class = "form-control" })
+                                        </span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+                                    <h6 class="mb-0">Số tài khoản</h6>
+                                    <span class="text-secondary">
+                                        <input type="text" asp-for="@Model.BankInputs.BankInfo" value="@Model.UserProfile.Bankinfo">
+                                    </span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+                                    <h6 class="mb-0">Receiver name</h6>
+                                    <span class="text-secondary">
+                                        <input type="text" asp-for="@Model.BankInputs.BankUser" value="@Model.UserProfile.Bankuser">
+                                    </span>
+                                </li>
+
+                                <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+                                    <div class="d-flex justify-content-center mb-0">
+                                        <button type="submit" name="action" value="UpdateBank" data-mdb-button-init data-mdb-ripple-init class="btn btn-primary mb-0 me-2">Update bank info</button>
+                                        <button type="submit" name="action" value="Withdraw" data-mdb-button-init data-mdb-ripple-init class="btn btn-primary mb-0">Withdraw</button>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+
+                    </div>
+                    <div class="col-lg-8">
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <p class="mb-0">Email</p>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <p class="text-muted mb-0">@Model.UserProfile.Email</p>
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <p class="mb-0">Full Name</p>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <p class="text-muted mb-0">
+                                            <input type="text" asp-for="@Model.Change.FullName" value="@Model.UserProfile.FullName">
+                                        </p>
+                                    </div>
+                                </div>
+                                <hr>
+
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <p class="mb-0">Phone</p>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <p class="text-muted mb-0">
+                                            <input type="number" asp-for="@Model.Change.Phone" value="@Model.UserProfile.PhoneNumber">
+                                        </p>
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <p class="mb-0">Address</p>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <p class="text-muted mb-0">
+                                            <input type="text" asp-for="@Model.Change.Address" value="@Model.UserProfile.Address">
+                                        </p>
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="row">
+                                    <div class="col-sm-5">
+                                        <div class="d-flex justify-content-center mb-0">
+                                            <button type="submit" name="action" value="UpdateEmail" data-mdb-button-init data-mdb-ripple-init class="btn btn-primary mb-0">Change Email</button>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <div class="d-flex justify-content-center mb-0">
+                                            <button type="submit" name="action" value="UpdatePassword" data-mdb-button-init data-mdb-ripple-init class="btn btn-primary mb-0">Reset Password</button>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <div class="d-flex justify-content-center mb-0">
+                                            <button type="submit" name="action" value="UpdateProfile" data-mdb-button-init data-mdb-ripple-init class="btn btn-primary mb-0">Update Profile</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </section>
+    <div class="modal fade" id="messageModal" tabindex="-1" aria-labelledby="messageModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="messageModalLabel">Notification</h5>
+                </div>
+                <div class="modal-body">
+                    @if (!string.IsNullOrEmpty(Model.SuccessMessage))
+
+                        @Model.SuccessMessage
+
+
+                    }
+                    @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+                    {
+                        @Model.ErrorMessage
+                    }
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Automatically show the modal if there's a message
+        $(document).ready(function () {
+            var successMessage = '@Model.SuccessMessage';
+            var errorMessage = '@Model.ErrorMessage';
+
+            if (successMessage || errorMessage) {
+                $('#messageModal').modal('show');
+            }
+        });
+    </script>

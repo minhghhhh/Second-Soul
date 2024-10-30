@@ -1,0 +1,100 @@
+﻿@page 
+@model Second_Soul.Pages.UserPage.ChangeEmailModel
+@{
+    Layout = null;
+}
+<body>
+    <div class="email-container">
+        <h1>Change Email Address</h1>
+        <form method="post">
+            <div class="form-group">
+                <label for="newEmail">New Email Address</label>
+                <input type="email" id="NewEmail" name="NewEmail" placeholder="Enter Your Email Address" required>
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-next" disabled>Next</button>
+            </div>
+        </form>
+
+        @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+        {
+            <div style="color: red;">@Model.ErrorMessage</div>
+        }
+
+
+        @if (!string.IsNullOrEmpty(Model.SuccessMessage))
+        {
+            <div style="color: green;">@Model.SuccessMessage</div>
+            <script>
+                setTimeout(function () {
+                    window.location.href = '/UserPage/Profile';
+                }, 3000);
+            </script>
+        }
+    </div>
+
+    <style>
+        .email-container {
+            width: 400px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 24px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+
+        input[type="email"] {
+            width: 100%;
+            padding: 10px;
+            font-size: 14px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .btn-next {
+            background-color: #f8d7da;
+            color: #fff;
+            padding: 10px;
+            font-size: 16px;
+            border: none;
+            border-radius: 4px;
+            width: 100%;
+            cursor: not-allowed;
+        }
+
+        input[type="checkbox"] {
+            margin-right: 5px;
+        }
+
+        label[for="subscribeNews"] {
+            font-size: 12px;
+        }
+    </style>
+
+    <script>
+        const emailInput = document.getElementById('NewEmail');
+        const nextButton = document.querySelector('.btn-next');
+
+        emailInput.addEventListener('input', function () {
+            if (emailInput.value.trim() !== '') {
+                nextButton.disabled = false;
+                nextButton.style.backgroundColor = '#ff6f61';
+                nextButton.style.cursor = 'pointer';
+            } else {
+                nextButton.disabled = true;
+                nextButton.style.backgroundColor = '#f8d7da';
+                nextButton.style.cursor = 'not-allowed';
+            }
+        });
+    </script>
+</body>

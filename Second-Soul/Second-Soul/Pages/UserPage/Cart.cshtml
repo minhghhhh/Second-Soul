@@ -1,0 +1,302 @@
+﻿@page
+@model Second_Soul.Pages.UserPage.CartModel
+@{
+	ViewData["Title"] = "Shopping Cart";
+}
+
+<!-- Breadcrumb Section Begin -->
+<section class="breadcrumb-option">
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="breadcrumb__text">
+					<h4>Shopping Cart</h4>
+					<div class="breadcrumb__links">
+						<a href="/Index">Home</a>
+						<a href="/Search">Shop</a>
+						<span>Shopping Cart</span>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+<!-- Breadcrumb Section End -->
+<!-- Shopping Cart Section Begin -->
+<form method="post" asp-page-handler="SubmitSelectedItems">
+
+	<section class="shopping-cart spad">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-8">
+					<div class="shopping__cart__table">
+						<table style="width: 100%">
+							<thead>
+								<tr>
+									<th></th>
+									<th>Product</th>
+									<th>Name</th>
+									<th>Price</th>
+									<th></th>
+								</tr>
+							</thead>
+							<tbody>
+								@if (Model.ShoppingCarts.Count > 0)
+								{
+									@foreach (var item in Model.ShoppingCarts)
+									{
+										<tr>
+											<td class="cart__close">
+												<input type="checkbox" class="select-checkbox" name="SelectedProducts" value="@item.ProductId" />
+											</td>
+											<td>
+
+												<div style="max-width:80%; margin:0 auto; align-items:center">
+													<img src="@item.Product.MainImage" alt="" style="max-height:50%; max-width:50%;margin:0 auto" />
+												</div>
+											</td>
+											<td>
+												<div>
+													<h6>@item.Product.Name</h6>
+												</div>
+											</td>
+											<td class="cart__price">
+												@(item.Product.IsSale && item.Product.SalePrice != null ?
+																						((int)item.Product.SalePrice).ToString("N0") + " VND" :
+																						item.Product.Price.ToString("N0") + " VND")
+											</td>
+											<td class="cart__close"><button style="background:none; border:none; cursor:pointer;" type="submit" name="action" value="delete__@item.ProductId"><i class="fa fa-close"></i></button></td>
+										</tr>
+									}
+								}
+								else
+								{
+									<tr>
+										<td colspan="4">Your Shopping Cart is Empty</td>
+									</tr>
+								}
+							</tbody>
+						</table>
+					</div>
+					<div class="row">
+						<div class="col-lg-6 col-md-6 col-sm-6">
+							<div class="continue__btn">
+								<a href="/Search">Continue Shopping</a>
+							</div>
+						</div>
+						<div class="col-lg-6 col-md-6 col-sm-6">
+							<div>
+								<button class="primary-btn" type="submit" name="action" value="delete">Remove From Cart</button>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-4">
+					@* 				<div class="cart__discount">
+					<h6>Discount codes</h6>
+					<form method="post" asp-page-handler="ApplyDiscount">
+					<input type="text" name="couponCode" placeholder="Coupon code">
+					<button type="submit">Apply</button>
+					</form>
+					</div>
+					*@
+					<div class="cart__total">
+						<h6>Cart total</h6>
+						<ul>
+							<li>Total<span>@Model.Total.ToString("N0") VND</span></li>
+							<li>Shipping<span>@(((int)30000).ToString("N0")) VND</span></li>
+						</ul>
+						<div>
+							<button type="submit" name="action" value="payment" class="primary-btn">Proceed to checkout</button>
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</div>
+	</section>
+</form>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@* <style>
+	body {
+		font-family: Arial, sans-serif;
+		background-color: #f9f9f9;
+		color: #333;
+	}
+
+	.cart-content {
+		max-width: 800px;
+		margin: 0 auto;
+		padding: 20px;
+		background: white;
+		border-radius: 8px;
+		box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+	}
+
+	h1 {
+		text-align: center;
+		color: #4a90e2;
+	}
+
+	.cart-item {
+		border: 1px solid #ccc;
+		border-radius: 5px;
+		padding: 15px;
+		margin: 10px 0;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		background-color: #fdfdfd;
+		transition: background 0.3s;
+	}
+
+		.cart-item:hover {
+			background-color: #f1f1f1;
+		}
+
+	.item-details {
+		flex-grow: 1;
+	}
+
+	.delete-button {
+		background-color: #e74c3c;
+		color: white;
+		border: none;
+		border-radius: 5px;
+		padding: 8px 12px;
+		cursor: pointer;
+		transition: background 0.3s;
+	}
+
+		.delete-button:hover {
+			background-color: #c0392b;
+		}
+
+	.payment-button {
+		background-color: #4a90e2;
+		color: white;
+		border: none;
+		border-radius: 8px;
+		padding: 15px 20px;
+		font-size: 18px;
+		text-align: center;
+		cursor: pointer;
+		display: block;
+		margin: 20px auto;
+		transition: background 0.3s;
+		width: 100%;
+		max-width: 300px;
+	}
+
+		.payment-button:hover {
+			background-color: #357abD;
+		}
+
+	#loading {
+		text-align: center;
+		font-size: 1.2em;
+		color: #555;
+	}
+
+	.select-checkbox {
+		margin-right: 15px;
+	}
+</style> *@
+
+@* @if (Model.ShoppingCarts.Count > 0)
+{
+	<div class="cart-content">
+		<h1>Your Shopping Cart</h1>
+		<div id="cart-items" class="cart-items-grid">
+			@if (Model.ShoppingCarts.Count > 0)
+			{
+				<form method="post" asp-page-handler="SubmitSelectedItems">
+					@foreach (var item in Model.ShoppingCarts)
+					{
+						<div class="cart-item" id="item-@item.Product.ProductId">
+							<input type="checkbox" class="select-checkbox" name="SelectedProducts" value="@item.Product.ProductId" />
+							<div class="item-details">
+								<h2>@item.Product.Name</h2>
+								<p>Price: @item.Product.Price.ToString("N0") VND</p>
+							</div>
+						</div>
+					}
+
+					<button type="submit" name="action" value="payment" class="btn btn-primary">Proceed to Payment</button>
+					<button type="submit" name="action" value="delete" class="btn btn-danger">Remove From Cart</button>
+				</form>
+			}
+			else
+			{
+				<p>No item in cart</p>
+			}
+		</div>
+		<div id="loading" style="display:none;">Loading more items...</div>
+	</div>
+}
+else
+{
+	<div class="cart-content">
+		<h1>Your Shopping Cart is Empty</h1>
+	</div>
+}
+ *@
+@* @section Scripts
+{
+	<script>
+		let offset = Model.ShoppingCarts.Count;
+
+		window.onscroll = async () => {
+			if (document.documentElement.scrollHeight - window.innerHeight <= window.scrollY + 100) {
+				document.getElementById("loading").style.display = "block";
+
+				try {
+					const response = await fetch(`/UserPage/Cart?handler=LoadMore&offset=${offset}`);
+					if (!response.ok) throw new Error("Network response was not ok");
+
+					const { items, hasMore } = await response.json();
+					items.forEach(item => {
+						const cartItemsDiv = document.getElementById("cart-items");
+						const itemDiv = document.createElement("div");
+						itemDiv.className = "cart-item";
+						itemDiv.id = `item-${item.Product.Id}`;
+						itemDiv.innerHTML = `<input type="checkbox" class="select-checkbox" name="selectedProducts" value="${item.Product.Id}"/><div class="item-details"><h2>${item.Product.Name}</h2><p>Quantity: ${item.Quantity}</p><p>Price: ${item.Product.Price.toLocaleString('en-US', { style: 'currency', currency: 'VND' })}</p></div><button class="delete-button" onclick="deleteItem(${item.Product.Id})">Remove</button>`;
+						cartItemsDiv.appendChild(itemDiv);
+					});
+
+					if (hasMore) {
+						offset += items.length;
+					}
+				} catch (error) {
+					console.error("Failed to load more items:", error);
+				} finally {
+					document.getElementById("loading").style.display = "none";
+				}
+			}
+		};
+
+	</script>
+}
+ *@
