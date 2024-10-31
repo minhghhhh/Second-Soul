@@ -177,13 +177,13 @@
 
                                         <td>
                                             <div class="form-button-action">
-                                                <a type="button" href="/ProductPage/Details/@item.ProductId" data-bs-toggle="tooltip" title="Edit Task" class="btn btn-link btn-primary btn-lg">
+                                                <a type="button" href="/ProductPage/Update/@item.ProductId" data-bs-toggle="tooltip" title="Edit Task" class="btn btn-link btn-primary btn-lg">
                                                     <i class="fa fa-edit"></i>
                                                 </a>
-                                                <a type="button" href="/ProductPage/Delete/@item.ProductId" data-bs-toggle="tooltip" title="View Details" class="btn btn-link btn-primary btn-lg">
+                                                <a type="button" href="/ProductPage/Details/@item.ProductId" data-bs-toggle="tooltip" title="View Details" class="btn btn-link btn-primary btn-lg">
                                                     <i class="fas fa-info-circle"></i>
                                                 </a>
-                                                <a type="button" href="/ProductPage/Update/@item.ProductId" data-bs-toggle="tooltip" title="Remove" class="btn btn-link btn-danger btn-lg">
+                                                <a type="button" href="/ProductPage/Delete/@item.ProductId" data-bs-toggle="tooltip" title="Remove" onclick="return confirm('Are you sure you want to delete this item?')" class="btn btn-link btn-danger btn-lg">
                                                     <i class="fa fa-times"></i>
                                                 </a>
 

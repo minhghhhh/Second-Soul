@@ -253,3 +253,20 @@
 		</div>
 	</section>
 </div>
+@if (!string.IsNullOrEmpty(Model.PopupMessage))
+{
+	<div class="modal" id="successModal" style="display: flex;">
+		<div class="modal-content">
+			<div class="modal-header">Thông báo</div>
+			<div class="modal-body">@Model.PopupMessage</div>
+			<button class="close-btn" onclick="closeModal()">Đóng</button>
+		</div>
+	</div>
+}
+
+<script>
+	// Close the modal popup
+	function closeModal() {
+		document.getElementById("successModal").style.display = "none";
+	}
+</script>

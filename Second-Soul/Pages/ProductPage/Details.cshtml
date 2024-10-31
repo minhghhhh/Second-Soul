@@ -2,6 +2,247 @@
 @model Second_Soul.Pages.ProductPage.DetailsModel
 @{
 }
+<body>
+<!-- Shop Details Section Begin -->
+<section class="shop-details">
+    <div class="product__details__pic">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="product__details__breadcrumb">
+                        <a href="/index">Home</a>
+                        <a href="/search">Shop</a>
+                        <span>Product Details</span>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+    <div class="col-lg-3 col-md-3">
+        <ul class="nav nav-tabs" role="tablist">
+            @for (int i = 0; i < Model.Images.Count; i++)
+            {
+                var image = Model.Images[i];
+                var isActive = i == 0 ? "active" : ""; <!-- Set active class on the first item -->
+                <li class="nav-item">
+                    <a class="nav-link @isActive" data-bs-toggle="tab" href="#tab-@i" role="tab">
+                        <div class="product__thumb__pic">
+                            <img src="@image.ImageUrl" alt="">
+                        </div>
+                    </a>
+                </li>
+            }
+        </ul>
+    </div>
+    <div class="col-lg-6 col-md-9">
+        <div class="tab-content">
+            @for (int i = 0; i < Model.Images.Count; i++)
+            {
+                var image = Model.Images[i];
+                var isActive = i == 0 ? "active" : ""; <!-- Set active class on the first pane -->
+                <div class="tab-pane fade show @isActive" id="tab-@i" role="tabpanel">
+                    <div class="product__details__pic__item">
+                        <img src="@image.ImageUrl" alt="">
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+        </div>
+    </div>
+    </div>
+    <div class="product__details__content">
+        <div class="container">
+            <div class="row d-flex justify-content-center">
+                <div class="col-lg-8">
+                    <div class="product__details__text">
+                        <h4>@Model.Product.Name</h4>
+                        @if (Model.Product.SalePrice.HasValue)
+                        {
+                            <h3>@Model.Product.SalePrice <span>@Model.Product.Price</span></h3>
+                        }
+                        else
+                        {
+                            <h3>@Model.Product.Price.ToString("N0") VND</h3>
+                        }
+
+                        <div class="product__details__option">
+                            <div class="product__details__option__size">
+                                <span>Size:</span>
+                                @Model.Product.Size
+                            </div>
+                            <div class="product__details__option__size">
+                                <span>Condition:</span>
+                                @Model.Product.Condition
+                            </div>
+                        </div>
+                        <div class="product__details__cart__option">
+                       <form method="post">
+				        <input type="hidden" name="id" value="@Model.Product.ProductId" />
+                                    @if (Model.isSeller == false)
+                                    {
+                                        <button id="addToCartButton" type="submit" name="action" value="addToCart" class="primary-btn">Add to Cart</button>
+                                        <button type="submit" name="action" value="buyNow" class="primary-btn">Buy Now</button>
+                                    }
+                                    else
+                                    {
+                                     <a href="/ProductPage/Delete/@Model.Product.ProductId" class="primary-btn" onclick="return confirm('Are you sure you want to delete this item?');">Delete</a>
+                                     <a href="/ProductPage/Update/@Model.Product.ProductId" class="primary-btn">Update</a>
+                                    }
+                                </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="product__details__tab">
+                        <ul class="nav nav-tabs" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link active" data-toggle="tab" href="#tabs-5"
+                                   role="tab">Description</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" data-toggle="tab" href="#tabs-6" role="tab">
+                                    Seller other product
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" data-toggle="tab" href="#tabs-7" role="tab">
+                                    Same Category
+                                </a>
+                            </li>
+                        </ul>
+                        <div class="tab-content">
+                            <div class="tab-pane active" id="tabs-5" role="tabpanel">
+                                <div class="product__details__tab__content">
+                                    <div class="product__details__tab__content__item">
+                                        <h5>Products Description</h5>
+                                        <p>
+                                            @Model.Product.Description
+                                        </p>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane" id="tabs-6" role="tabpanel">
+                                <div class="product__details__tab__content">
+                                    <div class="product__details__tab__content__item">
+                                        <h5>Products Infomation</h5>
+
+                                        <div class="col-lg-3 col-md-6 col-sm-6 col-sm-6">
+                                            <div class="product__item">
+                                                <div class="product__item__pic set-bg" data-setbg="img/product/product-1.jpg">
+                                                    <span class="label">New</span>
+                                                    <ul class="product__hover">
+                                                        <li><a href="#"><img src="img/icon/heart.png" alt=""></a></li>
+                                                        <li><a href="#"><img src="img/icon/compare.png" alt=""> <span>Compare</span></a></li>
+                                                        <li><a href="#"><img src="img/icon/search.png" alt=""></a></li>
+                                                    </ul>
+                                                </div>
+                                                <div class="product__item__text">
+                                                    <h6>Piqué Biker Jacket</h6>
+                                                    <a href="#" class="add-cart">+ Add To Cart</a>
+                                                    <div class="rating">
+                                                        <i class="fa fa-star-o"></i>
+                                                        <i class="fa fa-star-o"></i>
+                                                        <i class="fa fa-star-o"></i>
+                                                        <i class="fa fa-star-o"></i>
+                                                        <i class="fa fa-star-o"></i>
+                                                    </div>
+                                                    <h5>$67.24</h5>
+                                                    <div class="product__color__select">
+                                                        <label for="pc-1">
+                                                            <input type="radio" id="pc-1">
+                                                        </label>
+                                                        <label class="active black" for="pc-2">
+                                                            <input type="radio" id="pc-2">
+                                                        </label>
+                                                        <label class="grey" for="pc-3">
+                                                            <input type="radio" id="pc-3">
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane" id="tabs-7" role="tabpanel">
+                                <div class="product__details__tab__content">
+                                    <p class="note">
+                                        Nam tempus turpis at metus scelerisque placerat nulla deumantos
+                                        solicitud felis. Pellentesque diam dolor, elementum etos lobortis des mollis
+                                        ut risus. Sedcus faucibus an sullamcorper mattis drostique des commodo
+                                        pharetras loremos.
+                                    </p>
+                                    <div class="product__details__tab__content__item">
+                                        <h5>Products Infomation</h5>
+                                        <p>
+                                            A Pocket PC is a handheld computer, which features many of the same
+                                            capabilities as a modern PC. These handy little devices allow
+                                            individuals to retrieve and store e-mail messages, create a contact
+                                            file, coordinate appointments, surf the internet, exchange text messages
+                                            and more. Every product that is labeled as a Pocket PC must be
+                                            accompanied with specific software to operate the unit and must feature
+                                            a touchscreen and touchpad.
+                                        </p>
+                                        <p>
+                                            As is the case with any new technology product, the cost of a Pocket PC
+                                            was substantial during it’s early release. For approximately $700.00,
+                                            consumers could purchase one of top-of-the-line Pocket PCs in 2003.
+                                            These days, customers are finding that prices have become much more
+                                            reasonable now that the newness is wearing off. For approximately
+                                            $350.00, a new Pocket PC can now be purchased.
+                                        </p>
+                                    </div>
+                                    <div class="product__details__tab__content__item">
+                                        <h5>Material used</h5>
+                                        <p>
+                                            Polyester is deemed lower quality due to its none natural quality’s. Made
+                                            from synthetic materials, not natural like wool. Polyester suits become
+                                            creased easily and are known for not being breathable. Polyester suits
+                                            tend to have a shine to them compared to wool and cotton suits, this can
+                                            make the suit look cheap. The texture of velvet is luxurious and
+                                            breathable. Velvet is a great choice for dinner party jacket and can be
+                                            worn all year round.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section
+</br>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        // Activate the clicked tab
+        $('.nav-tabs .nav-link').click(function (e) {
+            e.preventDefault();
+            $(this).tab('show'); // Bootstrap's tab function to show the corresponding content
+        });
+    });
+</script>
+
+</body>
+
+
+
+
+
+
+
+
+
+
+
+
+@*
 <div class="product-container">
 	<div class="product-details">
 		<div class="image-gallery">
@@ -140,3 +381,4 @@
 		background-color: #f9f9f9; /* Light background for seller info */
 	}
 </style>
+ *@

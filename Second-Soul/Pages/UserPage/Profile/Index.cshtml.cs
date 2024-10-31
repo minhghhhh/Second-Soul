@@ -48,13 +48,14 @@ namespace Second_Soul.Pages.UserPage.Profile
 
         public async Task<IActionResult> OnGetAsync()
         {
-            UserProfile = await _userBusiness.GetFromCookie(Request);
-            if (UserProfile == null)
-            {
-                return RedirectToPage("/Login");
-            }
-
-            Banks = Enum.GetNames(typeof(Bank))
+			var user = await _userBusiness.GetFromCookie(Request);
+			if (user == null)
+			{
+				return RedirectToPage("/Login");
+			}
+            var result = await _userBusiness.GetById(user.UserId);
+            UserProfile = (User)result.Data;
+			Banks = Enum.GetNames(typeof(Bank))
                     .Select(b => new SelectListItem
                     {
                         Text = b.ToString(),
@@ -68,13 +69,14 @@ namespace Second_Soul.Pages.UserPage.Profile
 
         public async Task<IActionResult> OnPostAsync(string action, IFormFile PictureFile)
         {
-            UserProfile = await _userBusiness.GetFromCookie(Request);
-            if (UserProfile == null)
+            var user = await _userBusiness.GetFromCookie(Request);
+            if (user == null)
             {
                 return RedirectToPage("/Login");
             }
-
-            switch (action)
+			var results = await _userBusiness.GetById(user.UserId);
+			UserProfile = (User)results.Data;
+			switch (action)
             {
                 case "UpdateBank":
                     if (string.IsNullOrWhiteSpace(BankInputs.BankInfo) || string.IsNullOrWhiteSpace(BankInputs.Bank) || string.IsNullOrWhiteSpace(BankInputs.BankUser))

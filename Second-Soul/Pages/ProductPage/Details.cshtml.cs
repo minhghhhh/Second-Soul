@@ -24,6 +24,9 @@ namespace Second_Soul.Pages.ProductPage
         }
 
         [BindProperty]
+        public bool isSeller { get; set; } = false;
+
+        [BindProperty]
         public Product Product { get; set; }
         public List<ProductImage> Images { get; set; } 
         public async Task<IActionResult> OnGetAsync(int id)
@@ -44,6 +47,10 @@ namespace Second_Soul.Pages.ProductPage
                 return RedirectToPage("/Search");
             }
             Product = (Product)product.Data;
+            if(user.UserId == Product.SellerId)
+            {
+                isSeller = true;
+            }
             var images = await _productImageBusiness.GetByProductId(id);
             if (images != null && images.Status > 0 && images.Data != null)
             {
