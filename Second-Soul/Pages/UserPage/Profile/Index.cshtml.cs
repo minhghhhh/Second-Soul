@@ -40,86 +40,95 @@ namespace Second_Soul.Pages.UserPage.Profile
             _userBusiness = userBusiness;
         }
         [BindProperty]
-        public ChangeProfileInput Change { get; set; }
+        public ChangeProfileInput Change { get; set; } = new();
         [BindProperty]
-        public BankInput BankInputs { get; set; }
+        public BankInput BankInputs { get; set; } = new();
         public User? UserProfile { get; set; } = null;
-        [BindProperty]
-        public string ErrorMessage { get; set; }
-        [BindProperty]
-        public string SuccessMessage { get; set; }
+        public string PopupMessage { get; set; } = string.Empty;
 
         public async Task<IActionResult> OnGetAsync()
         {
-            var user = await _userBusiness.GetFromCookie(Request);
-            if (user == null)
+            UserProfile = await _userBusiness.GetFromCookie(Request);
+            if (UserProfile == null)
             {
                 return RedirectToPage("/Login");
-
             }
-            var result = await _userBusiness.GetById(user.UserId);
-            UserProfile = (User)result.Data;
+
             Banks = Enum.GetNames(typeof(Bank))
                     .Select(b => new SelectListItem
                     {
                         Text = b.ToString(),
                         Value = b,
-                        Selected = user.Bank == b.ToString()
+                        Selected = UserProfile.Bank == b.ToString()
                     })
                     .ToList();
             return Page();
-        } 
-        public List<SelectListItem> Banks { get; set; }
+        }
+        public List<SelectListItem> Banks { get; set; } = [];
 
         public async Task<IActionResult> OnPostAsync(string action, IFormFile PictureFile)
         {
-            var user = await _userBusiness.GetFromCookie(Request);
-            if (user == null)
+            UserProfile = await _userBusiness.GetFromCookie(Request);
+            if (UserProfile == null)
             {
                 return RedirectToPage("/Login");
-
             }
-            var var = await _userBusiness.GetById(user.UserId);
-            UserProfile = (User)var.Data;
 
             switch (action)
             {
                 case "UpdateBank":
+                    if (string.IsNullOrWhiteSpace(BankInputs.BankInfo) || string.IsNullOrWhiteSpace(BankInputs.Bank) || string.IsNullOrWhiteSpace(BankInputs.BankUser))
+                    {
+                        PopupMessage = "Vui long ghi day du thong tin ngan hang";
+                        return await OnGetAsync();
+                    }
                     UserProfile.Bank = BankInputs.Bank;
                     UserProfile.Bankinfo = BankInputs.BankInfo;
                     UserProfile.Bankuser = BankInputs.BankUser;
                     await _userBusiness.Update(UserProfile);
-                    SuccessMessage = "Banking infomation successfully updated.";
+                    PopupMessage = "Banking infomation successfully updated.";
                     return await OnGetAsync();
                 case "Withdraw":
-                    if(UserProfile.Wallet == 0)
+                    if (UserProfile.Wallet == 0)
                     {
-                        ErrorMessage = "Your Balance need to be more than 0";
+                        PopupMessage = "Your Balance need to be more than 0";
                         return await OnGetAsync();
                     }
-                    if (UserProfile.Bank == null ||UserProfile.Bankinfo == null|| UserProfile.Bankuser == null)
+                    if (UserProfile.Bank == null || UserProfile.Bankinfo == null || UserProfile.Bankuser == null)
                     {
-                        ErrorMessage = "Please fill in your banking infomation";
+                        PopupMessage = "Please fill in your banking infomation";
                         return await OnGetAsync();
                     }
                     var domain = Request.Scheme + "://" + Request.Host;
                     bool emailSentbank = await SendMail.SendBankTransferEmail("mphamtran8@gmail.com", UserProfile, domain);
                     if (emailSentbank)
                     {
-                        SuccessMessage = "Your withdraw request has been send,please wait 1-2hours for proceed.";
+                        PopupMessage = "Your withdraw request has been send,please wait 1-2hours for proceed.";
                         return await OnGetAsync();
                     }
                     else
                     {
-                        ErrorMessage = "Failed to send email. Please try again."; 
+                        PopupMessage = "Failed to send email. Please try again.";
                         return await OnGetAsync();
 
                     }
                 case "UpdateEmail":
-                    var confirmationLink = $"{Request.Scheme}://{Request.Host}/UserPage/ChangeEmail/{UserProfile.UserId}";
-                    var emailSend = await SendMail.SendToChangeEmail(UserProfile.Email, confirmationLink);
-                    SuccessMessage = "Change Email Link has been sent to your current email.";
-                    return await OnGetAsync();
+                    UserProfile.Token = FormatUtilities.GenerateRandomCodeWithExpiration(20);
+                    var emailResult = await _userBusiness.Update(UserProfile);
+
+                    if (emailResult != null && emailResult.Status > 0)
+                    {
+
+                        var confirmationLink = $"{Request.Scheme}://{Request.Host}/UserPage/ChangeEmail?token=" + HashPassWithSHA256.HashWithSHA256(UserProfile.Token);
+                        var emailSend = await SendMail.SendToChangeEmail(UserProfile.Email, confirmationLink);
+                        if (emailSend)
+                        {
+                            PopupMessage = "Change Email Link has been sent to your current email.";
+                            return await OnGetAsync();
+                        }
+                    }
+                    PopupMessage = "Changing the Email has failed.";
+                    break;
                 case "UpdatePassword":
                     UserProfile.Token = FormatUtilities.GenerateRandomCodeWithExpiration(20);
 
@@ -135,14 +144,19 @@ namespace Second_Soul.Pages.UserPage.Profile
                             return await OnGetAsync();
                         }
                     }
-                    ErrorMessage = "Failed to send email. Please try again.";
+                    PopupMessage = "Failed to send email. Please try again.";
                     return await OnGetAsync();
                 case "UpdateProfile":
+                    if (string.IsNullOrWhiteSpace(Change.FullName) || string.IsNullOrEmpty(Change.Address) || string.IsNullOrWhiteSpace(Change.Phone))
+                    {
+                        PopupMessage = "Vui long ghi day du thong tin tai khoan.";
+                        return await OnGetAsync();
+                    }
                     UserProfile.FullName = Change.FullName;
                     UserProfile.Address = Change.Address;
                     UserProfile.PhoneNumber = Change.Phone;
                     await _userBusiness.Update(UserProfile);
-                    SuccessMessage = "Profile picture successfully changed.";
+                    PopupMessage = "Profile successfully changed.";
                     return await OnGetAsync();
                 case "UpdatePicture":
                     if (PictureFile != null)
@@ -151,7 +165,7 @@ namespace Second_Soul.Pages.UserPage.Profile
                         var fileExtension = Path.GetExtension(PictureFile.FileName).ToLower();
                         if (!allowedExtensions.Contains(fileExtension))
                         {
-                            ErrorMessage = "Only PNG, JPG, and JPEG formats are allowed.";
+                            PopupMessage = "Only PNG, JPG, and JPEG formats are allowed.";
                             return await OnGetAsync();
                         }
                         var uploadParams = new ImageUploadParams()
@@ -165,11 +179,11 @@ namespace Second_Soul.Pages.UserPage.Profile
                     }
                     else
                     {
-                        ErrorMessage = "Please select a file to upload.";
+                        PopupMessage = "Please select a file to upload.";
                         return await OnGetAsync();
                     }
 
-                    SuccessMessage = "Profile picture successfully changed.";
+                    PopupMessage = "Profile picture successfully changed.";
                     return await OnGetAsync();
             }
             return await OnGetAsync();

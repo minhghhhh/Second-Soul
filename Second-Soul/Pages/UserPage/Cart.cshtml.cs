@@ -1,4 +1,3 @@
-
 using BusssinessObject;
 using CloudinaryDotNet;
 using Data.Models;
@@ -27,6 +26,7 @@ namespace Second_Soul.Pages.UserPage
 			_orderDetailBusiness = orderDetailBusiness;
 		}
 
+		public String PopupMessage = string.Empty;
 		public List<ShoppingCart> ShoppingCarts { get; set; } = [];
 		[BindProperty]
 		public List<int> SelectedProducts { get; set; } = [];
@@ -135,6 +135,8 @@ namespace Second_Soul.Pages.UserPage
 							{
 								SelectedProducts.RemoveAt(i);
 								await _shoppingCartBusiness.RemoveFromCart(user.UserId, product.ProductId);
+								PopupMessage = "A product has been removed from cart due to no longer being available.";
+								return await OnGet();
 							}
 							else
 							{
@@ -144,7 +146,9 @@ namespace Second_Soul.Pages.UserPage
 						}
 						int orderId = await _orderBusiness.CreateOrderAsync(user.UserId, SelectedProducts, fullname, phone, address, total, null);
 						return RedirectToPage("/OrderPage/index", new { id = orderId });
+
 					}
+					PopupMessage = "Chon 1 san pham";
 					break;
 				case "delete":
 					if (SelectedProducts != null && SelectedProducts.Count > 0)
@@ -154,12 +158,14 @@ namespace Second_Soul.Pages.UserPage
 							var result = await _shoppingCartBusiness.RemoveFromCart(user.UserId, product);
 							if (result == null || result.Status <= 0)
 							{
-								ModelState.AddModelError(string.Empty, "Removing a product from cart has failed.");
+								//ModelState.AddModelError(string.Empty, "Removing a product from cart has failed.");
+								PopupMessage = "Removing a product from cart has failed.";
 								return await OnGet();
 							}
 						}
 						return await OnGet();
 					}
+					PopupMessage = "Chon 1 san pham";
 					break;
 				case string a when a.Contains("delete__"):
 					{
@@ -169,7 +175,8 @@ namespace Second_Soul.Pages.UserPage
 							if (result == null || result.Status <= 0)
 							{
 
-								ModelState.AddModelError(string.Empty, "Removing a product from cart has failed.");
+								//ModelState.AddModelError(string.Empty, "Removing a product from cart has failed.");
+								PopupMessage = "Removing a product from cart has failed.";
 							}
 						}
 						return await OnGet();

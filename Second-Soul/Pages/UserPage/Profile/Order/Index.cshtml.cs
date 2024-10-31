@@ -36,7 +36,7 @@ namespace Second_Soul.Pages.UserPage.Profile.Order
             Orders = await _orderBusiness.GetOrdersByUserId(user.UserId);
             if (Orders.Count == 0)
             {
-                ErrorMessage = "You dont have any order";
+                ErrorMessage = "You don't have any order";
             }
             return Page();
         }

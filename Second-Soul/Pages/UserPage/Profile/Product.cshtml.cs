@@ -73,7 +73,7 @@ namespace Second_Soul.Pages.UserPage.Profile
             products = await _productBusiness.GetProductsBySeller(user.UserId);
             if (products.Count == 0)
             {
-                ErrorMessage = "You dont have any product";
+                ErrorMessage = "You don't have any product";
             }
 
             var categoryResult = await _categoryBusiness.GetAll();
