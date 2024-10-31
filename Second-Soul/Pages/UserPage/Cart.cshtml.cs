@@ -138,7 +138,14 @@ namespace Second_Soul.Pages.UserPage
 								PopupMessage = "A product has been removed from cart due to no longer being available.";
 								return await OnGet();
 							}
-							else
+							if (product.SellerId == user.UserId)
+							{
+                                SelectedProducts.RemoveAt(i);
+                                await _shoppingCartBusiness.RemoveFromCart(user.UserId, product.ProductId);
+                                PopupMessage = "A product has been removed from cart as one cannot purchase one's own wares.";
+                                return await OnGet();
+                            }
+                            else
 							{
 								total += product.IsSale && product.SalePrice != null && 0 < product.SalePrice && product.SalePrice < product.Price ? (int)product.SalePrice : product.Price;
 								i++;
