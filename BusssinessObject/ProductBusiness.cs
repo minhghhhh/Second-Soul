@@ -33,7 +33,7 @@ namespace BusssinessObject
         Task<List<Product>> GetProductsBySeller(int id);
         Task<List<Product>> GetFilterdAccountProduct(DateTime fromDate, DateTime toDate, int accountId);
         IQueryable<List<Product>> GetProductsAsQueryable();
-        Task<IBusinessResult> SearchProduct(string? query, int? minPrice, int? maxPrice, List<int>? categoryIDs, string? condition, string? size, bool? isAvailable, int? sellerID, int pageIndex = 1, int pageSize = 10);
+        Task<IBusinessResult> SearchProduct(string? query, int? minPrice, int? maxPrice, List<int>? categoryIDs, string? condition, string? size, bool? isAvailable, int? sellerID);
 
     }
     public class ProductBusiness : IProductBusiness
@@ -77,7 +77,7 @@ namespace BusssinessObject
         {
             return _unitOfWork.ProductRepository.GetProductsAsQueryable();
         }
-        public async Task<IBusinessResult> SearchProduct(string? query, int? minPrice, int? maxPrice, List<int>? categoryIDs, string? condition,string? size, bool? isAvailable, int? sellerID, int pageIndex = 1, int pageSize = 10)
+        public async Task<IBusinessResult> SearchProduct(string? query, int? minPrice, int? maxPrice, List<int>? categoryIDs, string? condition,string? size, bool? isAvailable, int? sellerID)
         {
             try
             {
@@ -87,7 +87,7 @@ namespace BusssinessObject
                 {
                     query = FormatUtilities.TrimSpacesPreserveSingle(query);
                 }
-                var search = await _unitOfWork.ProductRepository.SearchProduct(query, minPrice, maxPrice, categoryIDs, condition,size, isAvailable, sellerID, pageIndex, pageSize);
+                var search = await _unitOfWork.ProductRepository.SearchProduct(query, minPrice, maxPrice, categoryIDs, condition,size, isAvailable, sellerID);
                 if (search.Any())
                 {
 

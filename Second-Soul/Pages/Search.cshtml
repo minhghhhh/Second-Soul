@@ -90,7 +90,7 @@
 						</div>
 						<div class="shop__sidebar__accordion">
 							<div class="accordion" id="accordionExample">
-
+								<!-- Category Filter -->
 								<div class="card">
 									<div class="card-heading">
 										<a data-toggle="collapse" data-target="#collapseSubcategory" aria-expanded="false" aria-controls="collapseSubcategory">
@@ -126,6 +126,7 @@
 										</div>
 									</div>
 								</div>
+								<!-- Condition Filter -->
 								@if (Model.Conditions.Count > 0)
 								{
 									<div class="card">
@@ -189,7 +190,7 @@
 										</div>
 									</div>
 								}
-								<button type="submit" class="btn btn-primary">Search</button>
+								<button type="submit" class="primary-btn">Search</button>
 							</div>
 						</div>
 					</div>
@@ -228,9 +229,6 @@
 												<span class="label">Sale</span>
 											}
 											<ul class="product__hover">
-												<li>
-													<a href="#"><img src="/template/img/icon/compare.png" alt=""> <span>Compare</span></a>
-												</li>
 												<li><a href="/ProductPage/Details/@product.ProductId"><img src="/template/img/icon/search.png" alt=""><span>View Detail</span></a></li>
 											</ul>
 										</div>
