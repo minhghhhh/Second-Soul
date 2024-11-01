@@ -1,317 +1,291 @@
 ﻿@page
 @model Second_Soul.Pages.SearchModel
 @{
-    ViewData["Title"] = "Search Results";
+	ViewData["Title"] = "Search Results";
 }
 <script>
-    document.querySelectorAll('.toggle-subcategories').forEach(button => {
-        button.addEventListener('click', function () {
-            const subcategoryList = this.nextElementSibling;
-            if (subcategoryList.style.display === 'none' || subcategoryList.style.display === '') {
-                subcategoryList.style.display = 'block';
-            } else {
-                subcategoryList.style.display = 'none';
-            }
-        });
-    });
+	document.querySelectorAll('.toggle-subcategories').forEach(button => {
+		button.addEventListener('click', function () {
+			const subcategoryList = this.nextElementSibling;
+			if (subcategoryList.style.display === 'none' || subcategoryList.style.display === '') {
+				subcategoryList.style.display = 'block';
+			} else {
+				subcategoryList.style.display = 'none';
+			}
+		});
+	});
 
 </script>
 <style>
-    .card-heading a {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        text-decoration: none;
-        color: #333;
-    }
+	.card-heading a {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		text-decoration: none;
+		color: #333;
+	}
 
-    .shop__sidebar__subcategory a i {
-        margin-left: 14px;
-        transition: transform 0.3s ease;
-    }
+	.shop__sidebar__subcategory a i {
+		margin-left: 14px;
+		transition: transform 0.3s ease;
+	}
 
-    .shop__sidebar__subcategory label {
-        margin-left: 0.3rem;
-    }
+	.shop__sidebar__subcategory label {
+		margin-left: 0.3rem;
+	}
 
-    .shop__sidebar__condition label {
-        margin-left: 0.3rem;
-    }
+	.shop__sidebar__condition label {
+		margin-left: 0.3rem;
+	}
 
 
-    .shop__sidebar__search {
-        display: flex;
-    }
+	.shop__sidebar__search {
+		display: flex;
+	}
 
-        .shop__sidebar__search input {
-            flex: 1; /* Allows the input to take up available space */
-            border-radius: 5px 0 0 5px;
-            border-right: none;
-        }
+		.shop__sidebar__search input {
+			flex: 1; /* Allows the input to take up available space */
+			border-radius: 5px 0 0 5px;
+			border-right: none;
+		}
 
-        .shop__sidebar__search button {
-            border-radius: 0 5px 5px 0;
-            border-left: none; /* Remove default button border */
-            width: fit-content;
-            background-color: white; /* Set a background color */
-        }
+		.shop__sidebar__search button {
+			border-radius: 0 5px 5px 0;
+			border-left: none; /* Remove default button border */
+			width: fit-content;
+			background-color: white; /* Set a background color */
+		}
 
-    .price-old {
-        text-decoration: line-through;
-        margin-right: 10px;
-        color: darkgrey;
-    }
+	.price-old {
+		text-decoration: line-through;
+		margin-right: 10px;
+		color: darkgrey;
+	}
 </style>
 <section class="breadcrumb-option">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="breadcrumb__text">
-                    <h4>Shop</h4>
-                    <div class="breadcrumb__links">
-                        <a href="/index">Home</a>
-                        <span>Shop</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="breadcrumb__text">
+					<h4>Shop</h4>
+					<div class="breadcrumb__links">
+						<a href="/index">Home</a>
+						<span>Shop</span>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 </section>
 <section class="shop spad">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-3">
-                <div class="shop__sidebar">
-                    <form method="get">
-                        <div class="shop__sidebar__search">
-                            <input type="text" name="query" class="form-control" value="@Model.Query" placeholder="Search products..." />
-                            <button type="submit" class="form-control"><span class="icon_search"></span></button>
-                        </div>
-                        <div class="shop__sidebar__accordion">
-                            <div class="accordion" id="accordionExample">
+	<div class="container">
+		<form method="get" style="margin:0; padding:0;">
 
-                                <div class="card">
-                                    <div class="card-heading">
-                                        <a data-toggle="collapse" data-target="#collapseSubcategory" aria-expanded="false" aria-controls="collapseSubcategory">
-                                            Category
-                                        </a>
-                                    </div>
-                                    <div id="collapseSubcategory" class="collapse" data-parent="#accordionExample">
-                                        <div class="card-body">
-                                            <div class="shop__sidebar__subcategory">
-                                                <ul>
-                                                    @if (Model.Categories.Count > 0)
-                                                    {
-                                                        @foreach (var parentCategoryGroup in Model.Categories.GroupBy(c => c.Group.Name))
-                                                        {
-                                                            <li>
-                                                                <a class="toggle-subcategories" data-toggle="collapse" data-target="#subCollapse@(parentCategoryGroup.Key)" aria-expanded="false" aria-controls="subCollapse@(parentCategoryGroup.Key)">
-                                                                    @parentCategoryGroup.Key <i class="fas fa-chevron-down"></i>
-                                                                </a>
-                                                                <ul id="subCollapse@(parentCategoryGroup.Key)" class="collapse sub-list">
-                                                                    @foreach (var subCategory in parentCategoryGroup)
-                                                                    {
-                                                                        <li class="form-check row">
-                                                                            <label class="form-check-label col-md-5">@subCategory.Text</label>
-                                                                            @if (subCategory.Selected)
-                                                                            {
-                                                                                <input type="checkbox" name="categoryIDs" value="@subCategory.Value" class="form-check-input col-md-6" checked />
-                                                                            }
-                                                                            else
-                                                                            {
-                                                                                <input type="checkbox" name="categoryIDs" value="@subCategory.Value" class="form-check-input col-md-6" />
-                                                                            }
-                                                                        </li>
-                                                                    }
-                                                                </ul>
-                                                            </li>
-                                                        }
-                                                    }
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                @if (Model.Conditions.Count > 0)
-                                {
-                                    <div class="card">
-                                        <div class="card-heading">
-                                            <a data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                                                Condition
-                                            </a>
-                                        </div>
-                                        <div id="collapseTwo" class="collapse" data-parent="#accordionExample">
-                                            <div class="card-body">
-                                                <div class="shop__sidebar__condition">
-                                                    <ul>
-                                                        @foreach (var condition in Model.Conditions)
-                                                        {
-                                                            <li class="form-check row">
-                                                                <label class="form-check-label col-md-6">@condition.Text</label>
-                                                                @if (condition.Selected)
-                                                                {
-                                                                    <input type="radio" name="condition" value="@condition.Value" id="condition-@condition.Value" class="form-check-input col-md-5" checked />
+			<div class="row">
+				<div class="col-lg-3">
+					<div class="shop__sidebar">
+						<div class="shop__sidebar__search">
+							<input type="text" name="query" class="form-control" value="@Model.Query" placeholder="Search products..." />
+							<button type="submit" class="form-control"><span class="icon_search"></span></button>
+						</div>
+						<div class="shop__sidebar__accordion">
+							<div class="accordion" id="accordionExample">
 
-                                                                }
-                                                                else
-                                                                {
-                                                                    <input type="radio" name="condition" value="@condition.Value" id="condition-@condition.Value" class="form-check-input col-md-5" />
-                                                                }
-                                                            </li>
-                                                        }
-                                                    </ul>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                }
-                                @*                             @if (Model.Conditions.Count > 0)
-                                {
-                                <div class="form-group">
-                                <label for="condition">Condition</label>
-                                @Html.DropDownList("condition", Model.Conditions, "Select Condition", new { @class = "form-control" })
-                                </div>
-                                } *@
+								<div class="card">
+									<div class="card-heading">
+										<a data-toggle="collapse" data-target="#collapseSubcategory" aria-expanded="false" aria-controls="collapseSubcategory">
+											Category
+										</a>
+									</div>
+									<div id="collapseSubcategory" class="collapse" data-parent="#accordionExample">
+										<div class="card-body">
+											<div class="shop__sidebar__subcategory">
+												<ul>
+													@if (Model.Categories.Count > 0)
+													{
+														@foreach (var parentCategoryGroup in Model.Categories.GroupBy(c => c.Group.Name))
+														{
+															<li>
+																<a class="toggle-subcategories" data-toggle="collapse" data-target="#subCollapse@(parentCategoryGroup.Key)" aria-expanded="false" aria-controls="subCollapse@(parentCategoryGroup.Key)">
+																	@parentCategoryGroup.Key <i class="fas fa-chevron-down"></i>
+																</a>
+																<ul id="subCollapse@(parentCategoryGroup.Key)" class="collapse sub-list">
+																	@foreach (var subCategory in parentCategoryGroup)
+																	{
+																		<li class="form-check row">
+																			<label class="form-check-label col-md-5">@subCategory.Text</label>
+																			<input type="checkbox" name="categoryIDs" value="@subCategory.Value" class="form-check-input col-md-6" @(subCategory.Selected ? "checked" : "") />
+																		</li>
+																	}
+																</ul>
+															</li>
+														}
+													}
+												</ul>
+											</div>
+										</div>
+									</div>
+								</div>
+								@if (Model.Conditions.Count > 0)
+								{
+									<div class="card">
+										<div class="card-heading">
+											<a data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+												Condition
+											</a>
+										</div>
+										<div id="collapseTwo" class="collapse" data-parent="#accordionExample">
+											<div class="card-body">
+												<div class="shop__sidebar__condition">
+													<ul>
+														@foreach (var condition in Model.Conditions)
+														{
+															<li class="form-check row">
+																<label class="form-check-label col-md-6">@condition.Text</label>
+																<input type="radio" name="condition" value="@condition.Value" id="condition-@condition.Value" class="form-check-input col-md-5" @(condition.Selected ? "checked" : "") />
+															</li>
+														}
+													</ul>
+												</div>
+											</div>
+										</div>
+									</div>
+								}
+								<!-- Price Filter -->
+								<div class="card">
+									<div class="card-heading">
+										<a data-toggle="collapse" data-target="#collapseThree">Filter Price</a>
+									</div>
+									<div id="collapseThree" class="collapse show" data-parent="#accordionExample">
+										<div class="card-body">
+											<div class="shop__sidebar__price">
+												<div>
+													<input type="number" name="minPrice" class="form-control" value="@Model.MinPrice" min="0" max="999999999" step="1" placeholder="Min Price" />
+													<input type="number" name="maxPrice" class="form-control" value="@Model.MaxPrice" min="0" max="999999999" step="1" placeholder="Max Price" />
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<!-- Size Filter -->
+								@if (Model.Sizes.Count > 0)
+								{
+									<div class="card">
+										<div class="card-heading">
+											<a data-toggle="collapse" data-target="#collapseFour">Size</a>
+										</div>
+										<div id="collapseFour" class="collapse show" data-parent="#accordionExample">
+											<div class="card-body">
+												<div class="shop__sidebar__size">
+													@foreach (var size in Model.Sizes)
+													{
+														<label for="@size.Text">
+															@size.Text
+															<input type="radio" value="@size.Value" name="size">
+														</label>
+													}
+												</div>
+											</div>
+										</div>
+									</div>
+								}
+								<button type="submit" class="btn btn-primary">Search</button>
+							</div>
+						</div>
+					</div>
+				</div>
 
-                                <div class="card">
-                                    <div class="card-heading">
-                                        <a data-toggle="collapse" data-target="#collapseThree">Filter Price</a>
-                                    </div>
-                                    <div id="collapseThree" class="collapse show" data-parent="#accordionExample">
-                                        <div class="card-body">
-                                            <div class="shop__sidebar__price">
-                                                <div>
-                                                    <input type="number" name="minPrice" class="form-control" value="@Model.MinPrice" min="0" max="999999999" step="1" placeholder="Min Price" />
-                                                    <span class="col-form-label col-sm-1 text-center"></span>
-                                                    <input type="number" name="maxPrice" class="form-control" value="@Model.MaxPrice" min="0" max="999999999" step="1" placeholder="Max Price" />
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                @if (Model.Sizes.Count > 0)
-                                {
-                                    <div class="card">
-                                        <div class="card-heading">
-                                            <a data-toggle="collapse" data-target="#collapseFour">Size</a>
-                                        </div>
-                                        <div id="collapseFour" class="collapse show" data-parent="#accordionExample">
-                                            <div class="card-body">
-                                                <div class="shop__sidebar__size">
-                                                    @foreach (var size in Model.Sizes)
-                                                    {
-                                                        <label for="@size.Text">
-                                                            @size.Text
-                                                            <input type="radio" value="@size.Value" name="size">
-                                                        </label>
-                                                    }
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                }
-                                <button type="submit" class="primary-btn">Search</button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-
-            <div class="col-lg-8">
-                <div class="shop__product__option">
-                    <div class="row">
-                        <div class="col-lg-6 col-md-6 col-sm-6">
-                            <div class="shop__product__option__left">
-                                <p>Showing 1–12 of @Model.Products.Count results</p>
-                            </div>
-                        </div>
-                        <div class="col-lg-6 col-md-6 col-sm-6">
-                            <div class="shop__product__option__right">
-                                <form method="get">
-                                    <p>Sort:</p>
-                                    <select asp-for="SortOption" asp-items="@Model.SortOptions" onchange="this.form.submit()">
-\                                        <option value="PriceAsc">Lowest to Highest Price</option>
-                                        <option value="PriceDesc">Highest to Lowest Price</option>
-                                        <option value="Newest">Newest</option>
-                                        <option value="Oldest">Oldest</option>
-                                    </select>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    @if (Model.Products.Any())
-                    {
-                        @foreach (var product in Model.Products)
-                        {
-                            <div class="col-lg-4 col-md-6 col-sm-6">
-                                <div class="product__item">
-                                    <div class="product__item__pic set-bg" data-setbg="@product.MainImage">
-                                        @if (@product.IsNew && @product.IsSale)
-                                        {
-                                            <span class="label">Sale</span>
-                                        }
-                                        else
-                                        {
-                                            if (@product.IsNew)
-                                            {
-                                                <span class="label">New</span>
-                                            }
-                                            if (@product.IsSale)
-                                            {
-                                                <span class="label">Sale</span>
-                                            }
-                                        }
-                                        <ul class="product__hover">
-                                            <li><a href="/ProductPage/Details/@product.ProductId"><img src="/template/img/icon/search.png" alt=""><span>View Detail</span></a></li>
-                                        </ul>
-                                    </div>
-                                    <div class="product__item__text">
-                                        <h6>@product.Name</h6>
-                                        <a href="/AddToCart/@product.ProductId">+ Add To Cart</a>
-                                        @if (product.SalePrice != null)
-                                        {
-                                        <h9 class="price-old">@product.Price.ToString("N0") VND</h9>
-                                            <h5>@(((int)product.SalePrice).ToString("N0")) VND</h5>
-                                        }
-                                        else{
-                                        <h5>@product.Price.ToString("N0") VND</h5>
-                                        }
-                                        <h9>@product.Size</h9>
-                                    </div>
-                                </div>
-                            </div>
-                        }
-                    }
-                    else
-                    {
-                        <div class="result-item"><p>No products name "@Model.Query"found.</p></div>
-                    }
-
-                </div>
-                <div class="row">
-                    <div class="col-lg-12">
-                        <div class="product__pagination">
-                            @if (Model.HasPreviousPage)
-                            {
-                                <a asp-route-query="@Model.Query" asp-route-pageIndex="@(Model.PageIndex - 1)">Previous</a>
-                            }
-
-                            @for (var i = 1; i <= Model.TotalPages; i++)
-                            {
-                                <a class="@(i == Model.PageIndex ? "active" : "")" asp-route-query="@Model.Query" asp-route-pageIndex="@i">@i</a>
-                            }
-                            @if (Model.HasNextPage)
-                            {
-                                <a asp-route-query="@Model.Query" asp-route-pageIndex="@(Model.PageIndex + 1)">Next</a>
-                            }
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+				<div class="col-lg-8">
+					<div class="shop__product__option">
+						<div class="row">
+							<div class="col-lg-6 col-md-6 col-sm-6">
+								<div class="shop__product__option__left">
+									<p>Showing 1–12 of @Model.Products.Count results</p>
+								</div>
+							</div>
+							<div class="col-lg-6 col-md-6 col-sm-6">
+								<div class="shop__product__option__right">
+									<p>Sort:</p>
+									<select asp-for="SortOption" asp-items="@Model.SortOptions" onchange="this.form.submit()"></select>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						@if (Model.Products.Any())
+						{
+							@foreach (var product in Model.Products)
+							{
+								<div class="col-lg-4 col-md-6 col-sm-6">
+									<div class="product__item">
+										<div class="product__item__pic set-bg" data-setbg="@product.MainImage">
+											@if (product.IsNew)
+											{
+												<span class="label">New</span>
+											}
+											@if (product.IsSale)
+											{
+												<span class="label">Sale</span>
+											}
+											<ul class="product__hover">
+												<li>
+													<a href="#"><img src="/template/img/icon/compare.png" alt=""> <span>Compare</span></a>
+												</li>
+												<li><a href="/ProductPage/Details/@product.ProductId"><img src="/template/img/icon/search.png" alt=""><span>View Detail</span></a></li>
+											</ul>
+										</div>
+										<div class="product__item__text">
+											<h6>@product.Name</h6>
+											<a href="/AddToCart/@product.ProductId">+ Add To Cart</a>
+											@if (product.SalePrice != null)
+											{
+												<h9 class="price-old">@product.Price.ToString("N0") VND</h9>
+												<h5>@(((int)product.SalePrice).ToString("N0")) VND</h5>
+											}
+											else
+											{
+												<h5>@product.Price.ToString("N0") VND</h5>
+											}
+											<h9>@product.Size</h9>
+										</div>
+									</div>
+								</div>
+							}
+						}
+						else
+						{
+							<div class="result-item"><p>No products matching "@Model.Query" found.</p></div>
+						}
+					</div>
+				</div>
+			</div>
+		</form>
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="product__pagination">
+					@if (Model.HasPreviousPage)
+					{
+						<a asp-route-query="@Model.Query" asp-route-pageIndex="@(Model.PageIndex - 1)">Previous</a>
+					}
+					@for (var i = 1; i <= Model.TotalPages; i++)
+					{
+						@if (Model.PageIndex == i)
+						{
+							<a class="active" asp-route-query="@Model.Query" asp-route-pageIndex="@i">@i</a>
+						}
+						else
+						{
+							<a asp-route-query="@Model.Query" asp-route-pageIndex="@i">@i</a>
+						}
+					}
+					@if (Model.HasNextPage)
+					{
+						<a asp-route-query="@Model.Query" asp-route-pageIndex="@(Model.PageIndex + 1)">Next</a>
+					}
+				</div>
+			</div>
+		</div>
+	</div>
 </section>
 <!-- Shop Section End -->
 @*     <div class="container search-results layout">

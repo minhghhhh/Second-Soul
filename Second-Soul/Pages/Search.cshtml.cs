@@ -23,20 +23,19 @@ namespace Second_Soul.Pages
 			_categoryBusiness = categoryBusiness;
 			_userBusiness = userBusiness;
 		}
-        [BindProperty(SupportsGet = true)]
-        public string SortOption { get; set; }
-        public List<SelectListItem> SortOptions { get; set; }
-
-        public string? Query { get; set; }
+		[BindProperty(SupportsGet = true)]
+		public string SortOption { get; set; } = "Newest";
+		public List<SelectListItem> SortOptions { get; set; } = new();
+		public string? Query { get; set; }
 		public int? MinPrice { get; set; }
 		public int? MaxPrice { get; set; }
 		public List<SelectListItem> Conditions { get; set; } = new List<SelectListItem>();
-        public List<SelectListItem> Sizes { get; set; } = new List<SelectListItem>();
+		public List<SelectListItem> Sizes { get; set; } = new List<SelectListItem>();
 
-        public string? Condition { get; set; }
-        public string? Size { get; set; }
+		public string? Condition { get; set; }
+		public string? Size { get; set; }
 
-        public bool IsAvailable { get; set; } = true;
+		public bool IsAvailable { get; set; } = true;
 		public List<SelectListItem> Sellers { get; set; } = new List<SelectListItem>();
 		public List<Product> Products { get; set; } = new List<Product>();
 		public List<SelectListItem> Categories { get; set; } = new List<SelectListItem>();
@@ -45,7 +44,7 @@ namespace Second_Soul.Pages
 		public int PageSize { get; set; } = 10; // Default items per page
 
 		// OnGet method to handle the search logic
-		public async Task<IActionResult> OnGetAsync(string? query, int? minPrice, int? maxPrice,string? size, List<int>? categoryIDs, string? condition, bool? isAvailable, int? sellerID, int pageIndex = 1)
+		public async Task<IActionResult> OnGetAsync(string? query, int? minPrice, int? maxPrice, string? size, List<int>? categoryIDs, string? condition, bool? isAvailable, int? sellerID, int pageIndex = 1)
 		{
 			var user = await _userBusiness.GetFromCookie(Request);
 			if (user != null)
@@ -70,31 +69,32 @@ namespace Second_Soul.Pages
 			MinPrice = minPrice;
 			MaxPrice = maxPrice;
 			Condition = string.IsNullOrEmpty(condition) ? null : condition;
-            Size = string.IsNullOrEmpty(size) ? null : size;
+			Size = string.IsNullOrEmpty(size) ? null : size;
 
 
-            Conditions = Enum.GetNames(typeof(Condition)).Select(o => new SelectListItem
+			Conditions = Enum.GetNames(typeof(Condition)).Select(o => new SelectListItem
 			{
 				Text = o.Replace('_', ' '),
 				Value = o,
 				Selected = condition != null ? o == Condition : false
 			}).ToList();
-            Sizes = Enum.GetNames(typeof(Size)).Select(o => new SelectListItem
-            {
-                Text = o.Replace("two", "2"),
-                Value = o,
-                Selected = size != null ? o == Size : false
-            }).ToList();
-            IsAvailable = isAvailable != null && (bool)isAvailable;
+			Sizes = Enum.GetNames(typeof(Size)).Select(o => new SelectListItem
+			{
+				Text = o.Replace("two", "2"),
+				Value = o,
+				Selected = size != null ? o == Size : false
+			}).ToList();
+			IsAvailable = isAvailable != null && (bool)isAvailable;
 			PageIndex = pageIndex;
 
-			var productResult = await _productBusiness.SearchProduct(query, minPrice, maxPrice, categoryIDs, condition,size, isAvailable, sellerID, pageIndex, PageSize);
+			var productResult = await _productBusiness.SearchProduct(query, minPrice, maxPrice, categoryIDs, condition, size, isAvailable, sellerID);
 			if (productResult.Status > 0 && productResult.Data != null)
 			{
 				Products = (List<Product>)productResult.Data;
-            }
+				TotalPages = (int)Math.Ceiling(Products.Count() / (double)PageSize);
+				Products = Products.Skip((PageIndex - 1) * PageSize).Take(PageSize).ToList();
+			}
 
-			// Update the method that fetches categories
 			var categoryResult = await _categoryBusiness.GetAll();
 			if (categoryResult != null && categoryResult.Status > 0 && categoryResult.Data != null)
 			{
@@ -114,7 +114,7 @@ namespace Second_Soul.Pages
 						{
 							Categories.Add(new SelectListItem
 							{
-								Text = subCategory.CategoryName, // Subcategory text
+								Text = subCategory.CategoryName,
 								Value = subCategory.CategoryId.ToString(),
 								Selected = categoryIDs != null && categoryIDs.Contains(subCategory.CategoryId),
 								Group = selectGroup
@@ -140,41 +140,38 @@ namespace Second_Soul.Pages
 					}
 				}
 			}
-            SortOptions = new List<SelectListItem>
-        {
-            new SelectListItem { Value = "PriceAsc", Text = "Lowest to Highest Price" },
-            new SelectListItem { Value = "PriceDesc", Text = "Highest to Lowest Price" },
-            new SelectListItem { Value = "Newest", Text = "Newest" },
-            new SelectListItem { Value = "Oldest", Text = "Oldest" }
-        };
-            // Set the default sort option to "Newest" if not specified
-            if (string.IsNullOrEmpty(SortOption))
-            {
-                SortOption = "Newest";
-            }
-            Products = SortProducts(Products, SortOption);
+			SortOptions = new List<SelectListItem>
+		{
+			new SelectListItem { Value = "PriceAsc", Text = "Lowest to Highest Price" },
+			new SelectListItem { Value = "PriceDesc", Text = "Highest to Lowest Price" },
+			new SelectListItem { Value = "Newest", Text = "Newest" },
+			new SelectListItem { Value = "Oldest", Text = "Oldest" }
+		};
+			if (string.IsNullOrEmpty(SortOption))
+			{
+				SortOption = "Newest";
+			}
+			Products = SortProducts(Products, SortOption);
 
-            // Pagination logic
-            TotalPages = (int)Math.Ceiling(Products.Count() / (double)PageSize);
 			return Page();
 		}
-        private  List<Product> SortProducts(List<Product> products, string sortOption)
-        {
-            switch (sortOption)
-            {
-                case "PriceAsc":
-                    return  _productBusiness.SortPriceLowToHigh(products);
-                case "PriceDesc":
-                    return  _productBusiness.SortPriceHighToLow(products);
-                case "Newest":
-                    return  _productBusiness.SortNewestProduct(products);
-                case "Oldest":
-                    return  _productBusiness.SortOldestProduct(products);
-            }
-			 return products;
-        }
+		private List<Product> SortProducts(List<Product> products, string sortOption)
+		{
+			switch (sortOption)
+			{
+				case "PriceAsc":
+					return _productBusiness.SortPriceLowToHigh(products);
+				case "PriceDesc":
+					return _productBusiness.SortPriceHighToLow(products);
+				case "Newest":
+					return _productBusiness.SortNewestProduct(products);
+				case "Oldest":
+					return _productBusiness.SortOldestProduct(products);
+			}
+			return products;
+		}
 
-        public bool HasPreviousPage => PageIndex > 1;
+		public bool HasPreviousPage => PageIndex > 1;
 		public bool HasNextPage => PageIndex < TotalPages;
 	}
 

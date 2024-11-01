@@ -24,10 +24,15 @@ namespace Second_Soul.Pages
                 return RedirectToPage("/Login");
             }
 
-            var product = await _productBusiness.GetById(id);
-            if (product == null || product.Status <= 0 || product.Data == null)
+            var result = await _productBusiness.GetById(id);
+            if (result == null || result.Status <= 0 || result.Data == null)
             {
                 return RedirectToPage("/Index");
+            }
+            var product = (Product)result.Data;
+            if (!product.IsAvailable || product.SellerId == user.UserId)
+            {
+                return RedirectToPage("/Error");
             }
             var newCartProduct = new ShoppingCart
             {
