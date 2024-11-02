@@ -61,6 +61,23 @@
 		margin-right: 10px;
 		color: darkgrey;
 	}
+
+		.pagination__navlink:hover,
+		.pagination__navlink:focus {
+			border: none;
+		}
+
+	.product__pagination {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+
+	.product__pagination div {
+		padding: 0;
+		width: fit-content
+	}
+
 </style>
 <section class="breadcrumb-option">
 	<div class="container">
@@ -201,7 +218,7 @@
 						<div class="row">
 							<div class="col-lg-6 col-md-6 col-sm-6">
 								<div class="shop__product__option__left">
-									<p>Showing 1–12 of @Model.Products.Count results</p>
+									<p>Showing of @Model.FirstIndex-@Model.LastIndex of @Model.TotalResults results</p>
 								</div>
 							</div>
 							<div class="col-lg-6 col-md-6 col-sm-6">
@@ -263,22 +280,30 @@
 				<div class="product__pagination">
 					@if (Model.HasPreviousPage)
 					{
-						<a asp-route-query="@Model.Query" asp-route-pageIndex="@(Model.PageIndex - 1)">Previous</a>
+						<div>
+							<a asp-route-query="@Model.Query" asp-route-pageIndex="@(Model.PageIndex - 1)" class="pagination__navlink" style="width:fit-content">Previous</a>
+						</div>
 					}
 					@for (var i = 1; i <= Model.TotalPages; i++)
 					{
 						@if (Model.PageIndex == i)
 						{
-							<a class="active" asp-route-query="@Model.Query" asp-route-pageIndex="@i">@i</a>
+							<div>
+								<a class="active" asp-route-query="@Model.Query" asp-route-pageIndex="@i">@i</a>
+							</div>
 						}
 						else
 						{
-							<a asp-route-query="@Model.Query" asp-route-pageIndex="@i">@i</a>
+							<div>
+								<a asp-route-query="@Model.Query" asp-route-pageIndex="@i">@i</a>
+							</div>
 						}
 					}
 					@if (Model.HasNextPage)
 					{
-						<a asp-route-query="@Model.Query" asp-route-pageIndex="@(Model.PageIndex + 1)">Next</a>
+						<div>
+							<a asp-route-query="@Model.Query" asp-route-pageIndex="@(Model.PageIndex + 1)" class="pagination__navlink" style="width:fit-content">Next</a>
+						</div>
 					}
 				</div>
 			</div>

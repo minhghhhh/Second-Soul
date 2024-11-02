@@ -31,10 +31,11 @@ namespace Second_Soul.Pages
         public int? MaxPrice { get; set; }
         public List<SelectListItem> Conditions { get; set; } = new List<SelectListItem>();
         public List<SelectListItem> Sizes { get; set; } = new List<SelectListItem>();
-
+        public int TotalResults { get; set; } = 0;
         public string? Condition { get; set; }
         public string? Size { get; set; }
-
+        public string FirstIndex { get; set; } = "??";
+        public string LastIndex { get; set; } = "??";
         public bool IsAvailable { get; set; } = true;
         public List<SelectListItem> Sellers { get; set; } = new List<SelectListItem>();
         public List<Product> Products { get; set; } = new List<Product>();
@@ -91,8 +92,15 @@ namespace Second_Soul.Pages
             if (productResult.Status > 0 && productResult.Data != null)
             {
                 Products = (List<Product>)productResult.Data;
+                TotalResults = Products.Count();
                 TotalPages = (int)Math.Ceiling(Products.Count() / (double)PageSize);
                 Products = Products.Skip((PageIndex - 1) * PageSize).Take(PageSize).ToList();
+                if (Products.Count > 0)
+                {
+                    int first = PageSize * PageIndex - PageSize + 1;
+					FirstIndex = first.ToString();
+                    LastIndex = (Math.Min(Math.Abs(TotalResults - first), 9) + first).ToString();
+				}
             }
 
             var categoryResult = await _categoryBusiness.GetAll();
