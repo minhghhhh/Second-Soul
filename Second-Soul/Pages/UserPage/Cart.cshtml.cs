@@ -118,6 +118,16 @@ namespace Second_Soul.Pages.UserPage
 				case "payment":
 					if (SelectedProducts.Count > 0)
 					{
+						var order = await _orderBusiness.GetSinglePendingOrder(user.UserId);
+						if (order.Status > 0  && order.Data != null)
+						{
+							var result = await _orderBusiness.DeleteById(((Order)order.Data).OrderId);
+							if (!(result.Status > 0))
+							{
+								PopupMessage = "No order can be made as of this moment.";
+								return Page();
+							}
+						}
 						var fullname = user.FullName;
 						var phone = user.PhoneNumber ?? string.Empty;
 						var address = user.Address ?? string.Empty;

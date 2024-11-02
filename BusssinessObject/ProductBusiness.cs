@@ -20,7 +20,7 @@ namespace BusssinessObject
         List<Product> SortOldestProduct(List<Product> products);
         Task<List<Product>> GetAllSellProduct();
         Task<List<Product>> GetProductPriceHighToLow();
-
+        Task<List<Product>?> GetRelatedProduct(Product product);
         Task<List<Product>> GetProductPriceLowToHigh();
         Task<List<Product>> GetOldestProducts();
         Task<List<Product>> GetNewestProducts();
@@ -76,6 +76,11 @@ namespace BusssinessObject
         public IQueryable<List<Product>> GetProductsAsQueryable()
         {
             return _unitOfWork.ProductRepository.GetProductsAsQueryable();
+        }
+
+        public async Task<List<Product>?> GetRelatedProduct(Product product)
+        {
+            return await _unitOfWork.ProductRepository.GetRelatedProduct(product);
         }
         public async Task<IBusinessResult> SearchProduct(string? query, int? minPrice, int? maxPrice, List<int>? categoryIDs, string? condition,string? size, bool? isAvailable, int? sellerID)
         {

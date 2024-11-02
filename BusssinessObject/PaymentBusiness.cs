@@ -37,7 +37,12 @@ namespace BusssinessObject
 			try
 			{
 				PaymentLinkInformation cancelInfor = await _payOS.cancelPaymentLink(orderId);
+				var result = await _orderBusiness.GetById(orderId);
+				var order = (Order)result.Data;
+				order.Status = "Cancelled";
+				await _orderBusiness.Update(order);
 				return cancelInfor;
+
 			}
 			catch
 			{

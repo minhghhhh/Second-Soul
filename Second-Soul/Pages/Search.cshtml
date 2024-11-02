@@ -62,10 +62,10 @@
 		color: darkgrey;
 	}
 
-		.pagination__navlink:hover,
-		.pagination__navlink:focus {
-			border: none;
-		}
+	.pagination__navlink:hover,
+	.pagination__navlink:focus {
+		border: none;
+	}
 
 	.product__pagination {
 		display: flex;
@@ -73,10 +73,10 @@
 		align-items: center;
 	}
 
-	.product__pagination div {
-		padding: 0;
-		width: fit-content
-	}
+		.product__pagination div {
+			padding: 0;
+			width: fit-content
+		}
 
 </style>
 <section class="breadcrumb-option">
@@ -94,10 +94,10 @@
 		</div>
 	</div>
 </section>
+
 <section class="shop spad">
 	<div class="container">
 		<form method="get" style="margin:0; padding:0;">
-
 			<div class="row">
 				<div class="col-lg-3">
 					<div class="shop__sidebar">
@@ -217,63 +217,76 @@
 					<div class="shop__product__option">
 						<div class="row">
 							<div class="col-lg-6 col-md-6 col-sm-6">
-								<div class="shop__product__option__left">
-									<p>Showing of @Model.FirstIndex-@Model.LastIndex of @Model.TotalResults results</p>
-								</div>
-							</div>
-							<div class="col-lg-6 col-md-6 col-sm-6">
-								<div class="shop__product__option__right">
-									<p>Sort:</p>
-									<select asp-for="SortOption" asp-items="@Model.SortOptions" onchange="this.form.submit()"></select>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="row">
-						@if (Model.Products.Any())
-						{
-							@foreach (var product in Model.Products)
-							{
-								<div class="col-lg-4 col-md-6 col-sm-6">
-									<div class="product__item">
-										<div class="product__item__pic set-bg" data-setbg="@product.MainImage">
-											@if (product.IsNew)
-											{
-												<span class="label">New</span>
-											}
-											@if (product.IsSale)
-											{
-												<span class="label">Sale</span>
-											}
-											<ul class="product__hover">
-												<li><a href="/ProductPage/Details/@product.ProductId"><img src="/template/img/icon/search.png" alt=""><span>View Detail</span></a></li>
-											</ul>
+								<div class="shop__product__option">
+									<div class="row">
+										<div class="col-lg-6 col-md-6 col-sm-6">
+											<div class="shop__product__option__left">
+												<p>Showing of @Model.FirstIndex-@Model.LastIndex of @Model.TotalResults results</p>
+											</div>
 										</div>
-										<div class="product__item__text">
-											<h6>@product.Name</h6>
-											<a href="/AddToCart/@product.ProductId">+ Add To Cart</a>
-											@if (product.SalePrice != null)
-											{
-												<h9 class="price-old">@product.Price.ToString("N0") VND</h9>
-												<h5>@(((int)product.SalePrice).ToString("N0")) VND</h5>
-											}
-											else
-											{
-												<h5>@product.Price.ToString("N0") VND</h5>
-											}
-											<h9>@product.Size</h9>
+										<div class="col-lg-6 col-md-6 col-sm-6">
+											<div class="shop__product__option__right">
+												<p>Sort:</p>
+												<select asp-for="SortOption" asp-items="@Model.SortOptions" onchange="this.form.submit()"></select>
+											</div>
 										</div>
 									</div>
 								</div>
+							</div>
+						</div>
+						<div class="row">
+							@if (Model.Products.Any())
+							{
+								@foreach (var product in Model.Products)
+								{
+									<div class="col-lg-4 col-md-6 col-sm-6">
+										<div class="product__item">
+											<div class="product__item__pic set-bg" data-setbg="@product.MainImage">
+												@if (product.IsSale && product.IsNew)
+												{
+													<span class="label">Sale</span>
+												}
+												else
+												{
+													@if (product.IsNew)
+													{
+														<span class="label">New</span>
+													}
+													@if (product.IsSale)
+													{
+														<span class="label">Sale</span>
+													}
+												}
+												<ul class="product__hover">
+													<li><a href="/ProductPage/Details/@product.ProductId"><img src="/template/img/icon/search.png" alt=""><span>View Detail</span></a></li>
+												</ul>
+											</div>
+											<div class="product__item__text">
+												<h6>@product.Name</h6>
+												<a href="/AddToCart/@product.ProductId">+ Add To Cart</a>
+												@if (product.SalePrice != null)
+												{
+													<h9 class="price-old">@product.Price.ToString("N0") VND</h9>
+													<h5>@(((int)product.SalePrice).ToString("N0")) VND</h5>
+												}
+												else
+												{
+													<h5>@product.Price.ToString("N0") VND</h5>
+												}
+												<h9>@product.Size</h9>
+											</div>
+										</div>
+									</div>
+								}
 							}
-						}
-						else
-						{
-							<div class="result-item"><p>No products matching "@Model.Query" found.</p></div>
-						}
-					</div>
-				</div>
-			</div>
+							else
+							{
+								<div class="result-item"><p>No products matching "@Model.Query" found.</p></div>
+							}
+						</div>
+					</div> <!-- End of shop__product__option -->
+				</div> <!-- End of col-lg-8 -->
+			</div> <!-- End of row -->
 		</form>
 		<div class="row">
 			<div class="col-lg-12">
@@ -305,10 +318,10 @@
 							<a asp-route-query="@Model.Query" asp-route-pageIndex="@(Model.PageIndex + 1)" class="pagination__navlink" style="width:fit-content">Next</a>
 						</div>
 					}
-				</div>
-			</div>
-		</div>
-	</div>
+				</div> <!-- End of product__pagination -->
+			</div> <!-- End of col-lg-12 -->
+		</div> <!-- End of row -->
+	</div> <!-- End of container -->
 </section>
 <!-- Shop Section End -->
 @*     <div class="container search-results layout">
