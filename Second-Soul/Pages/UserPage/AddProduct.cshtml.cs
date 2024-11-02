@@ -33,7 +33,8 @@ namespace Second_Soul.Pages.UserPage
 		{
 			[Required]
 			public string Name { get; set; } = string.Empty;
-			public string? Description { get; set; }
+			[Required]
+			public string Description { get; set; }
 			[Required]
 			[Range(1, int.MaxValue, ErrorMessage = "Price must be a positive value")]
 			public int Price { get; set; }
@@ -41,9 +42,13 @@ namespace Second_Soul.Pages.UserPage
 			public int CategoryID { get; set; }
 			[Required]
 			public string Condition { get; set; } = string.Empty;
-			public bool IsAvailable { get; set; } = true;
-		}
+			[Required]
+			public string Size { get; set; } = string.Empty;
 
+			public bool IsSale { get; set; } = false;
+			public int SalePrice { get; set; } = 0;
+
+		}
 		[BindProperty]
 		public ProductInputModel Product { get; set; } = new();
 
@@ -124,10 +129,12 @@ namespace Second_Soul.Pages.UserPage
 					Price = Product.Price,
 					CategoryId = Product.CategoryID,
 					Condition = Product.Condition,
+					Size = Product.Size,
+					IsSale = Product.IsSale,
+					SalePrice = Product.SalePrice,
 					AddedDate = DateTime.Now,
 					IsAvailable = true
 				};
-
 
 				// Save the product (assuming your _productBusiness has the Save method)
 				await _productBusiness.Save(product);
@@ -150,8 +157,13 @@ namespace Second_Soul.Pages.UserPage
 							ImageUrl = uploadResult
 						};
 						await _productImageBusiness.Save(productImage);
-					}
-				}
+						if (string.IsNullOrWhiteSpace(product.MainImage)) 
+						{
+							product.MainImage = productImage.ImageUrl;
+                            await _productBusiness.Update(product);
+                        }
+                    }
+                }
 			}
 			catch (Exception ex)
 			{
@@ -170,7 +182,7 @@ namespace Second_Soul.Pages.UserPage
 			tempData[key] = JsonConvert.SerializeObject(value);
 		}
 
-		public static T Get<T>(this ITempDataDictionary tempData, string key) where T : class
+		public static T? Get<T>(this ITempDataDictionary tempData, string key) where T : class
 		{
 			object o;
 			tempData.TryGetValue(key, out o);

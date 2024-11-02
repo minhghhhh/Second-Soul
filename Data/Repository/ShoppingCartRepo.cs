@@ -16,7 +16,6 @@ namespace Data.Repository
         {
             _dbcontext = context;
         }
-
         public async Task<List<ShoppingCart>> GetShoppingCartsWithProductByUserId(int userId, int? offset, int? limit)
         {
             if (offset != null && limit != null && offset >= 0 && limit > 0)

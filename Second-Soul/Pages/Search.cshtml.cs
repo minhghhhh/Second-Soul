@@ -90,7 +90,14 @@ namespace Second_Soul.Pages
             var productResult = await _productBusiness.SearchProduct(query, minPrice, maxPrice, categoryIDs, condition, size, isAvailable, sellerID);
             if (productResult.Status > 0 && productResult.Data != null)
             {
-                Products = (List<Product>)productResult.Data;
+				Products = (List<Product>)productResult.Data;
+
+				if (string.IsNullOrEmpty(SortOption))
+				{
+					SortOption = "Newest";
+				}
+				Products = SortProducts(Products, SortOption);
+
                 TotalPages = (int)Math.Ceiling(Products.Count() / (double)PageSize);
                 Products = Products.Skip((PageIndex - 1) * PageSize).Take(PageSize).ToList();
             }
@@ -147,12 +154,6 @@ namespace Second_Soul.Pages
             new SelectListItem { Value = "Newest", Text = "Newest" },
             new SelectListItem { Value = "Oldest", Text = "Oldest" }
         };
-            if (string.IsNullOrEmpty(SortOption))
-            {
-                SortOption = "Newest";
-            }
-            Products = SortProducts(Products, SortOption);
-
             return Page();
         }
         private List<Product> SortProducts(List<Product> products, string sortOption)

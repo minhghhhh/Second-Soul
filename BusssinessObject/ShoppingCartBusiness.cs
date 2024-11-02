@@ -12,8 +12,10 @@ using System.Threading.Tasks;
 namespace BusssinessObject
 {
 	public interface IShoppingCartBusiness
-	{
-		Task<int> PriceCart(int userId);
+    {
+		Task<ShoppingCart?> GetByUserIdAndProductId(int userId, int productId);
+
+        Task<int> PriceCart(int userId);
 		Task<IBusinessResult> GetByUserId(int userId, int? offset, int? limit);
 		Task<IBusinessResult> Save(ShoppingCart cart);
 		Task<IBusinessResult> RemoveFromCart(int userId, int productId);
@@ -130,8 +132,12 @@ namespace BusssinessObject
 				return new BusinessResult(Const.ERROR_EXCEPTION, ex.ToString());
 			}
 		}
+        public async Task<ShoppingCart?> GetByUserIdAndProductId(int userId, int productId)
+		{
+			return await _unitOfWork.ShoppingCartRepository.GetByUserIdAndProductId(userId, productId);
+		}
 
-		public async Task<IBusinessResult> RemoveFromCart(int userId, int productId)
+        public async Task<IBusinessResult> RemoveFromCart(int userId, int productId)
 		{
 			try
 			{

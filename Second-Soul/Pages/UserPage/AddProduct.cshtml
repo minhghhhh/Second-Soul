@@ -24,7 +24,6 @@
 		</div>
 
 		<div class="form-group mb-4">
-			<br />
 			<label asp-for="Product.CategoryID" class="form-label">Category</label>
 			<br />
 			<select asp-for="Product.CategoryID" class="form-select" required>
@@ -43,9 +42,9 @@
 				}
 			</select>
 		</div>
+		<br />
 
 		<div class="form-group mb-4">
-			<br />
 			<label asp-for="Product.Condition" class="form-label">Condition</label>
 			<br />
 			<select asp-for="Product.Condition" class="form-select" required>
@@ -55,24 +54,53 @@
 				<option value="Fair">Fair</option>
 			</select>
 		</div>
-
+		<br />
 		<div class="form-group mb-4">
+			<label asp-for="Product.Size" class="form-label">Size</label>
 			<br />
-
+			<select asp-for="Product.Size" class="form-select" required>
+				<option value="XS">XS</option>
+				<option value="S">S</option>
+				<option value="M">M</option>
+				<option value="L">L</option>
+				<option value="XL">XL</option>
+				<option value="twoXl">2XL</option>
+				<option value="Other">Other</option>
+			</select>
+		</div>
+		<br />
+		<div class="form-group mb-4">
 			<label for="photos" class="form-label">Upload Images</label>
-			<br />
-
-
 			<input type="file" name="Photos" multiple accept=".png,.jpg,.jpeg" class="form-control" required />
 			<small class="form-text text-muted">Allowed formats: JPEG, PNG, JPG.</small>
+		</div>
+		<div class="form-group form-check mb-4">
+			<input asp-for="Product.IsSale" class="form-check-input" type="checkbox" id="isSaleCheckbox" onchange="toggleSalePrice()" />
+			<label asp-for="Product.IsSale" class="form-check-label">On Sale</label>
+		</div>
+
+		<div class="form-group mb-4">
+			<label asp-for="Product.SalePrice" class="form-label">Sale Price</label>
+			<input asp-for="Product.SalePrice" class="form-control" type="number" step="1" id="salePriceInput" disabled />
 		</div>
 
 		<button type="submit" class="btn btn-primary btn-lg w-100">Save Product</button>
 	</form>
 </div>
+
 @section Scripts {
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
+	<script>
+		function toggleSalePrice() {
+			const isSaleCheckbox = document.getElementById("isSaleCheckbox");
+			const salePriceInput = document.getElementById("salePriceInput");
+			salePriceInput.disabled = !isSaleCheckbox.checked;
+		}
+
+		document.addEventListener("DOMContentLoaded", toggleSalePrice);
+	</script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
 	<script src="https://unpkg.com/filepond/dist/filepond.min.js"></script>
 	<link href="https://unpkg.com/filepond/dist/filepond.css" rel="stylesheet" />
-	<!-- Remove this entire section -->
+
 }

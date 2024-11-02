@@ -245,10 +245,10 @@ namespace Second_Soul.Pages.OrderPage
 			User1 = (User)results.Data;
 
 			var order1 = await _orderBusiness.GetPendingOrder(orderId, User1.UserId);
-			if (order1 == null || !(order1.Status > 0) || order1.Data == null)
-			{
-				order1 = await _orderBusiness.GetSinglePendingOrder(user.UserId);
-			}
+			//if (order1 == null || !(order1.Status > 0) || order1.Data == null)
+			//{
+			//	order1 = await _orderBusiness.GetSinglePendingOrder(user.UserId);
+			//}
 			if (order1 == null || !(order1.Status > 0) || order1.Data == null)
 			{
 				return Page();

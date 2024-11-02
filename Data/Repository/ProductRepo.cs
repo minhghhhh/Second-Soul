@@ -136,7 +136,13 @@ namespace Data.Repository
             // Execute the query and return the result
             return await productQuery.ToListAsync();
         }
-
+        public async Task<List<Product>?> GetRelatedProduct(Product product)
+        {
+            var productList = await _dbcontext.Products.Where(a=>a.CategoryId == product.CategoryId).ToListAsync();
+            if(productList.Remove(product))
+                return productList;
+            else return productList;
+        }
         private async Task ValidateSearchParametersAsync(decimal? minPrice, decimal? maxPrice, List<int>? categoryIDs, bool? isAvailable, int? sellerID)
         {
             // Ensure minPrice is not negative
