@@ -36,12 +36,17 @@ namespace Second_Soul.Pages.ProductPage
             var user = await _userBusiness.GetFromCookie(Request);
             if (user != null)
             {
+                if (user.UserId == Product.SellerId)
+                {
+                    isSeller = true;
+                }
                 var Totalprice = await _shoppingCartBusiness.PriceCart(user.UserId);
                 HttpContext.Session.SetInt32("TotalPrice", Totalprice);
                 var result = await _shoppingCartBusiness.GetByUserId(user.UserId, null, null);
                 var totalProduct = (List<ShoppingCart>)result.Data;
                 HttpContext.Session.SetInt32("TotalProduct", totalProduct.Count());
             }
+
 
             var product = await _productBusiness.GetById(id);
             if (product == null || product.Status <= 0 || product.Data == null)
@@ -52,10 +57,6 @@ namespace Second_Soul.Pages.ProductPage
             if (Product.IsAvailable == false)
             {
                 return RedirectToPage("/Search");
-            }
-            if (user.UserId == Product.SellerId)
-            {
-                isSeller = true;
             }
             var images = await _productImageBusiness.GetByProductId(id);
             if (images != null && images.Status > 0 && images.Data != null)

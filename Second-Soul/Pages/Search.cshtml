@@ -143,7 +143,6 @@
 										</div>
 									</div>
 								</div>
-								<!-- Condition Filter -->
 								@if (Model.Conditions.Count > 0)
 								{
 									<div class="card">
@@ -318,6 +317,7 @@
 							<a asp-route-query="@Model.Query" asp-route-pageIndex="@(Model.PageIndex + 1)" class="pagination__navlink" style="width:fit-content">Next</a>
 						</div>
 					}
+
 				</div> <!-- End of product__pagination -->
 			</div> <!-- End of col-lg-12 -->
 		</div> <!-- End of row -->

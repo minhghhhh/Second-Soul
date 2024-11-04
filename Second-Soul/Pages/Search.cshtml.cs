@@ -34,8 +34,8 @@ namespace Second_Soul.Pages
         public int TotalResults { get; set; } = 0;
         public string? Condition { get; set; }
         public string? Size { get; set; }
-        public string FirstIndex { get; set; } = "??";
-        public string LastIndex { get; set; } = "??";
+        public string FirstIndex { get; set; } = "0";
+        public string LastIndex { get; set; } = "0";
         public bool IsAvailable { get; set; } = true;
         public List<SelectListItem> Sellers { get; set; } = new List<SelectListItem>();
         public List<Product> Products { get; set; } = new List<Product>();
