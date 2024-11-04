@@ -119,13 +119,18 @@ namespace Second_Soul.Pages.OrderPage
 						PopupMessage = order1 == null || string.IsNullOrWhiteSpace(order1.Message) ? "The order's retrieval process has encountered an unexpected error." : order1.Message;
 						return await OnGetAsync(id);
 					}
-					Order1 = (Order)order1.Data;
 					if (string.IsNullOrWhiteSpace(Order1.Address) || string.IsNullOrWhiteSpace(Order1.FullName) || string.IsNullOrWhiteSpace(Order1.PhoneNumber))
 					{
 						PopupMessage =  "The address, full name or phone number is invalid.";
 						return await OnGetAsync(id);
 					}
-					var paymentLink = await _paymentBusiness.CreatePaymentLink(id, $"{Request.Scheme}://{Request.Host}/OrderPage/CancelPayment/{id}", $"{Request.Scheme}://{Request.Host}", user.UserId);
+					var Order = (Order)order1.Data;
+					Order.Address = Order1.Address;
+					Order.FullName = Order1.FullName;
+					Order.PhoneNumber = Order1.PhoneNumber;
+					Order.Descriptions = Order1.Descriptions;
+					await _orderBusiness.Update(Order);
+					var paymentLink = await _paymentBusiness.CreatePaymentLink(id, $"{Request.Scheme}://{Request.Host}/OrderPage/CancelPayment?token={user.Token}", $"{Request.Scheme}://{Request.Host}/OrderPage/Success?token={user.Token}", user.UserId);
 
 					if (paymentLink == null || !(paymentLink.Status > 0) || paymentLink.Data == null)
 					{

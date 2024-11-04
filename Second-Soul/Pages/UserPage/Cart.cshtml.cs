@@ -118,7 +118,7 @@ namespace Second_Soul.Pages.UserPage
 				case "payment":
 					if (SelectedProducts.Count > 0)
 					{
-						var order = await _orderBusiness.GetSinglePendingOrder(user.UserId);
+							var order = await _orderBusiness.GetSinglePendingOrder(user.UserId);
 						if (order.Status > 0  && order.Data != null)
 						{
 							var result = await _orderBusiness.DeleteById(((Order)order.Data).OrderId);
@@ -165,7 +165,7 @@ namespace Second_Soul.Pages.UserPage
 						return RedirectToPage("/OrderPage/index", new { id = orderId });
 
 					}
-					PopupMessage = "Chon 1 san pham";
+					PopupMessage = "Chon san pham";
 					break;
 				case "delete":
 					if (SelectedProducts != null && SelectedProducts.Count > 0)

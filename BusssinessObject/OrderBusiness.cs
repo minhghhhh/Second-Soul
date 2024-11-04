@@ -142,7 +142,6 @@ namespace BusssinessObject
 				{
 					throw new Exception("Orders of the user cannot be found.");
 				}
-
 				var orders = await _unitOfWork.OrderRepository.GetListWithNoTracking(o => o.CustomerId == userId);
 
 				if (orders == null || orders.Count == 0)
@@ -295,7 +294,6 @@ namespace BusssinessObject
 			{
 				if (order.Status != "Pending")
 				{
-					await _unitOfWork.OrderRepository.RemoveAsync(order);
 					return (null, "This is not a pending order.");
 				}
 				if (userId != null && order.CustomerId != userId)
@@ -323,22 +321,25 @@ namespace BusssinessObject
 						await _unitOfWork.OrderDetailRepository.RemoveAsync(orderDetail);
 						orderDetails.RemoveAt(i);
 					}
-					else if (orderDetail.Product.SalePrice == null || orderDetail.Product.SalePrice >= orderDetail.Product.Price)
-					{
-
-						orderDetail.Product.IsSale = false;
-						orderDetail.Product.SalePrice = null;
-						await _unitOfWork.ProductRepository.UpdateAsync(orderDetail.Product);
-						i++;
-					}
+					/*else if (orderDetail.Product.SalePrice == null || orderDetail.Product.SalePrice >= orderDetail.Product.Price)
+						{
+							orderDetail.Product.IsSale = false;
+							orderDetail.Product.SalePrice = null;
+							await _unitOfWork.ProductRepository.UpdateAsync(orderDetail.Product);
+							i++;
+						}*/
 					else if (orderDetail.Product.IsSale || orderDetail.Product.SalePrice < orderDetail.Product.Price)
 					{
-                        orderDetail.Product.IsSale = true;
-                        await _unitOfWork.ProductRepository.UpdateAsync(orderDetail.Product);
-                        orderDetail.Price = (int)orderDetail.Product.SalePrice;
+						orderDetail.Product.IsSale = true;
+						await _unitOfWork.ProductRepository.UpdateAsync(orderDetail.Product);
+						orderDetail.Price = (int)orderDetail.Product.SalePrice;
 						await _unitOfWork.OrderDetailRepository.UpdateAsync(orderDetail);
 						i++;
 					}
+					else
+					{
+						i++;
+					} 
                 }
 				if (orderDetails == null || orderDetails.Count <= 0)
 				{
@@ -361,7 +362,7 @@ namespace BusssinessObject
 						await _unitOfWork.OrderRepository.UpdateAsync(order);
 					}
 				}
-				await _unitOfWork.SaveChangeAsync();
+			//	await _unitOfWork.SaveChangeAsync();
 			}
 			return (order, error);
 		}

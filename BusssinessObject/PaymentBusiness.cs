@@ -42,7 +42,6 @@ namespace BusssinessObject
 				order.Status = "Cancelled";
 				await _orderBusiness.Update(order);
 				return cancelInfor;
-
 			}
 			catch
 			{
@@ -51,7 +50,6 @@ namespace BusssinessObject
 		}
 		public async Task<IBusinessResult> CreatePaymentLink(int orderId, string cancelUrl, string successUrl, int? userId)
 		{
-			var total = 0;
 			try
 			{
 				var result = await _orderBusiness.GetPendingOrder(orderId, userId);
@@ -60,7 +58,7 @@ namespace BusssinessObject
 					return new BusinessResult(Const.FAIL_CREATE_CODE, result == null || string.IsNullOrEmpty(result.Message) ? Const.FAIL_CREATE_MSG : result.Message);
 				}
 				var order = (Order)result.Data;
-				if (order == null || order.OrderDetails == null || order.OrderDetails.Count == 0 || order.OrderDetails.ElementAt(0).Product == null)
+				if (order == null || order.OrderDetails == null || order.OrderDetails.Count == 0 || order.OrderDetails.Any(o => o.Product == null) || order.TotalAmount <= 0 || order.OrderDetails.Any(o => o.Price <= 0))
 				{
 					return new BusinessResult(Const.WARNING_NO_DATA_CODE, "The order is invalid, either due to unavailable products being processed or other errors.");
 				}
@@ -68,20 +66,27 @@ namespace BusssinessObject
 
 				foreach (var orderDetails in order.OrderDetails)
 				{
-					 total = total + orderDetails.Price;
 					var item = new ItemData(orderDetails.Product.Name, 1, orderDetails.Price);
 					itemlist.Add(item);
 				}
-				total = total + 30000;
-				var paymentData = new PaymentData(orderId, total, order.Descriptions, itemlist, cancelUrl, successUrl);
-				var paymentResult = await _payOS.createPaymentLink(paymentData);
-				if (paymentResult != null)
+				order.TotalAmount += 30000;
+				result = await _orderBusiness.Update(order);
+				if (result == null || !(result.Status > 0))
 				{
-					return new BusinessResult(Const.SUCCESS_CREATE_CODE, string.IsNullOrEmpty(result.Message) ? Const.SUCCESS_READ_MSG : result.Message, paymentResult);
+					return new BusinessResult(Const.FAIL_CREATE_CODE, result == null || string.IsNullOrEmpty(result.Message) ? Const.FAIL_CREATE_MSG : result.Message);
 				}
 				else
 				{
-					return new BusinessResult(Const.FAIL_CREATE_CODE, Const.FAIL_CREATE_MSG);
+					var paymentData = new PaymentData(orderId, order.TotalAmount, order.Descriptions, itemlist, cancelUrl, successUrl);
+					var paymentResult = await _payOS.createPaymentLink(paymentData);
+					if (paymentResult != null)
+					{
+						return new BusinessResult(Const.SUCCESS_CREATE_CODE, string.IsNullOrEmpty(result.Message) ? Const.SUCCESS_READ_MSG : result.Message, paymentResult);
+					}
+					else
+					{
+						return new BusinessResult(Const.FAIL_CREATE_CODE, Const.FAIL_CREATE_MSG);
+					}
 				}
 			}
 			catch (Exception ex)

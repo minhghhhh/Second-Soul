@@ -1,4 +1,5 @@
 using BusssinessObject;
+using Data.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
@@ -6,23 +7,34 @@ namespace Second_Soul.Pages.OrderPage
 {
 	public class CancelPaymentModel : PageModel
 	{
-		public int Id { get; set; } = 0;
+		private readonly IUserBusiness _userBusiness;
 		private readonly IPaymentBusiness _paymentBusiness;
 		private readonly IOrderBusiness _orderBusiness;
-		public CancelPaymentModel(IPaymentBusiness paymentBusiness, IOrderBusiness orderBusiness)
+		public CancelPaymentModel(IPaymentBusiness paymentBusiness, IOrderBusiness orderBusiness,IUserBusiness userBusiness)
 		{
+			_userBusiness = userBusiness;
 			_paymentBusiness = paymentBusiness;
 			_orderBusiness = orderBusiness;
 		}
-		public async Task OnGet(int id)
+		public async Task<IActionResult> OnGet(string? token)
 		{
-			Id = id;
-			var result = await _orderBusiness.ReadOnlyById(Id);
-			if (result == null || !(result.Status > 0) || result.Data == null)
-			{
-				RedirectToPage("/Index");
-			}
-			await _paymentBusiness.CancelOrder(Id);
+            if (string.IsNullOrWhiteSpace(token))
+            {
+                return RedirectToPage("/Index");
+            }
+            var user = await _userBusiness.GetUserByToken(token);
+            if (user == null)
+            {
+                return RedirectToPage("/Index");
+            }
+            var result = await _orderBusiness.GetSinglePendingOrder(user.UserId);
+            if (result == null || !(result.Status > 0) || result.Data == null)
+            {
+                return RedirectToPage("/Index");
+            }
+            var order = (Order)result.Data;
+            await _paymentBusiness.CancelOrder(order.OrderId);
+            return Page();
 		}
 	}
 }

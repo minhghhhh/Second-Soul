@@ -1,5 +1,6 @@
 using BusssinessObject;
 using Data.Models;
+using Data.Utils;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
@@ -27,12 +28,12 @@ namespace Second_Soul.Pages.OrderPage
                 return RedirectToPage("/Index");
             }
             var user = await _userBusiness.GetUserByToken(token);
-            if (user == null) 
+            if (user == null)
             {
                 return RedirectToPage("/Index");
             }
             var result = await _orderBusiness.GetSinglePendingOrder(user.UserId);
-            if (result == null || !(result.Status > 0) || result.Data == null) 
+            if (result == null || !(result.Status > 0) || result.Data == null)
             {
                 return RedirectToPage("/Index");
             }
@@ -44,17 +45,19 @@ namespace Second_Soul.Pages.OrderPage
                 return RedirectToPage("/Index");
             }
             var details = await _orderDetailBusiness.GetDetailsByOrderId(order.OrderId);
-            foreach (var item in details) { 
+            foreach (var item in details)
+            {
                 result = await _productBusiness.GetById(item.ProductId);
                 var product = (Product)result.Data;
                 product.IsAvailable = false;
                 await _productBusiness.Update(product);
                 await _shoppingCartBusiness.RemoveFromCart(user.UserId, product.ProductId);
             }
-            double balance = (order.TotalAmount - 30000) *80 / 100;
+            double balance = (order.TotalAmount - 30000) * 80 / 100;
             user.Wallet = (int)Math.Ceiling(balance);
             await _userBusiness.Update(user);
-            return RedirectToPage("Index");
+            await SendMail.SendOrderPaymentSuccessEmail(order, details, user);
+            return RedirectToPage("/Index");
         }
     }
 }

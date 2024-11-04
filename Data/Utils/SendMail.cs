@@ -547,29 +547,28 @@ namespace Data.Utils
                 }
             }
         }
-            /*        public static async Task<bool> SendOrderPaymentSuccessEmail(ShowOrderSuccessEmailDTO orderEmailDto, string toEmail)
-                    {
-                        var userName = "Second Soul";
-                        var emailFrom = "chechminh1136@gmail.com";
-                        var password = "fnwl dkyf sqps wgoq";
+        public static async Task<bool> SendOrderPaymentSuccessEmail(Order order,List<OrderDetail> orderDetails, User user)
+        {
+            var userName = "Second Soul";
+            var emailFrom = "chechminh1136@gmail.com";
+            var password = "fnwl dkyf sqps wgoq";
 
-                        var message = new MimeMessage();
-                        message.From.Add(new MailboxAddress(userName, emailFrom));
-                        message.To.Add(new MailboxAddress("", toEmail));
-                        message.Subject = "Order Payment Successful";
-
-                        var orderItemsHtml = string.Join("", orderEmailDto.OrderItems.Select(item => $@"
+            var message = new MimeMessage();
+            message.From.Add(new MailboxAddress(userName, emailFrom));  
+            message.To.Add(new MailboxAddress("", user.Email));
+            message.Subject = "Order Payment Successful";
+            var orderItemsHtml = string.Join("", orderDetails.Select(item => $@"
                     <tr>
-                        <td>{item.ProductName}</td>
-                        <td>{item.Quantity}</td>
-                        <td>{item.Price:C}</td>
-                        <td>{item.TotalPrice:C}</td>
+                        <td>{item.Product.Name}</td>
+                        <td>{item.Product.Size}</td>
+                        <td>{item.Product.Condition}</td>
+                        <td>{item.Price.ToString("N0")} VND</td>
                     </tr>
                 "));
 
-                        message.Body = new TextPart("html")
-                        {
-                            Text = $@"
+            message.Body = new TextPart("html")
+            {
+                Text = $@"
             <html>
                 <head>
                     <style>
@@ -606,16 +605,16 @@ namespace Data.Utils
                 <body>
                     <div class='container'>
                         <div class='content'>
-                            <h1>Thank you for your purchase, {orderEmailDto.UserName}!</h1>
-                            <p>Your payment for order ID {orderEmailDto.OrderId} has been confirmed successfully on {orderEmailDto.PaymentDate:MMMM dd, yyyy}.</p>
+                            <h1>Thank you for your purchase, {user.Username}!</h1>
+                            <p>Your payment for order ID {order.OrderId} has been confirmed successfully on {order.OrderDate:MMMM dd, yyyy}.</p>
                             <h2>Order Details</h2>
                             <table>
                                 <thead>
                                     <tr>
                                         <th>Product Name</th>
-                                        <th>Quantity</th>
+                                        <th>Size</th>
+                                        <th>Condition</th>
                                         <th>Price</th>
-                                        <th>Total</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -624,7 +623,7 @@ namespace Data.Utils
                                 <tfoot>
                                     <tr>
                                         <td colspan='3' style='text-align:right'><strong>Total Price:</strong></td>
-                                        <td>{orderEmailDto.TotalPrice:C}</td>
+                                        <td>{order.TotalAmount.ToString("N0")} VND</td>
                                     </tr>
                                 </tfoot>
                             </table>
@@ -632,26 +631,26 @@ namespace Data.Utils
                     </div>
                 </body>
             </html>"
-                        };
+            };
 
-                        using (var client = new SmtpClient())
-                        {
-                            client.Connect("smtp.gmail.com", 587, SecureSocketOptions.StartTls);
-                            client.Authenticate(emailFrom, password);
+            using (var client = new SmtpClient())
+            {
+                client.Connect("smtp.gmail.com", 587, SecureSocketOptions.StartTls);
+                client.Authenticate(emailFrom, password);
 
-                            try
-                            {
-                                await client.SendAsync(message);
-                                await client.DisconnectAsync(true);
-                                return true;
-                            }
-                            catch (Exception ex)
-                            {
-                                System.Console.WriteLine(ex.Message);
-                                return false;
-                            }
-                        }
-                    }
-            */
+                try
+                {
+                    await client.SendAsync(message);
+                    await client.DisconnectAsync(true);
+                    return true;
+                }
+                catch (Exception ex)
+                {
+                    System.Console.WriteLine(ex.Message);
+                    return false;
+                }
+            }
         }
+
     }
+}
