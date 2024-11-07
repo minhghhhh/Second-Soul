@@ -50,7 +50,7 @@ namespace Second_Soul.Pages.UserPage.Profile.Order
                 {
                     if (item != null)
                     {
-                        var product = await _productBusiness.GetById(item.ProductId);
+                        var product = await _productBusiness.GetByIdNoAvailable(item.ProductId);
                         item.Product = (Product)product.Data;
                         Details.Add(item);
                     }

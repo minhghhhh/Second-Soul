@@ -14,6 +14,8 @@ namespace BusssinessObject
 {
     public interface IProductBusiness
     {
+        Task<IBusinessResult> GetByIdNoAvailable(int id);
+
         List<Product> SortPriceHighToLow(List<Product> products);
         List<Product> SortPriceLowToHigh(List<Product> products);
         List<Product> SortNewestProduct(List<Product> products);
@@ -82,7 +84,7 @@ namespace BusssinessObject
         {
             return await _unitOfWork.ProductRepository.GetRelatedProduct(product);
         }
-        public async Task<IBusinessResult> SearchProduct(string? query, int? minPrice, int? maxPrice, List<int>? categoryIDs, string? condition,string? size, bool? isAvailable, int? sellerID)
+        public async Task<IBusinessResult> SearchProduct(string? query, int? minPrice, int? maxPrice, List<int>? categoryIDs, string? condition, string? size, bool? isAvailable, int? sellerID)
         {
             try
             {
@@ -92,7 +94,7 @@ namespace BusssinessObject
                 {
                     query = FormatUtilities.TrimSpacesPreserveSingle(query);
                 }
-                var search = await _unitOfWork.ProductRepository.SearchProduct(query, minPrice, maxPrice, categoryIDs, condition,size, isAvailable, sellerID);
+                var search = await _unitOfWork.ProductRepository.SearchProduct(query, minPrice, maxPrice, categoryIDs, condition, size, isAvailable, sellerID);
                 if (search.Any())
                 {
 
@@ -126,6 +128,31 @@ namespace BusssinessObject
                 else
                 {
                     return new BusinessResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, currencies);
+                }
+            }
+            catch (Exception ex)
+            {
+                return new BusinessResult(Const.ERROR_EXCEPTION, ex.Message);
+            }
+        }
+        public async Task<IBusinessResult> GetByIdNoAvailable(int id)
+        {
+            try
+            {
+                #region Business rule
+                #endregion
+
+                //var currency = await _currencyRepository.GetByIdAsync(code);
+                var cv = await _unitOfWork.ProductRepository.GetProductDetailsNoAvailableNeed
+(id);
+
+                if (cv == null)
+                {
+                    return new BusinessResult(Const.WARNING_NO_DATA_CODE, Const.WARNING_NO_DATA__MSG);
+                }
+                else
+                {
+                    return new BusinessResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, cv);
                 }
             }
             catch (Exception ex)
@@ -248,10 +275,10 @@ namespace BusssinessObject
 
         public List<Product> SortNewestProduct(List<Product> products)
         {
-            return  _unitOfWork.ProductRepository.SortNewestProduct(products);
+            return _unitOfWork.ProductRepository.SortNewestProduct(products);
         }
 
-        public  List<Product>SortOldestProduct(List<Product> products)
+        public List<Product> SortOldestProduct(List<Product> products)
         {
             return _unitOfWork.ProductRepository.SortOldestProduct(products);
         }

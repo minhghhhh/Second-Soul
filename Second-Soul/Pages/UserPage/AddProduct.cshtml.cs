@@ -46,10 +46,22 @@ namespace Second_Soul.Pages.UserPage
 			public string Size { get; set; } = string.Empty;
 
 			public bool IsSale { get; set; } = false;
-			public int SalePrice { get; set; } = 0;
+            [Range(1, int.MaxValue, ErrorMessage = "Sale price must be a positive value")]
+            public int? SalePrice { get; set; } = null;
+            public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+            {
+                // Check if SalePrice is less than Price
+                if (SalePrice.HasValue && SalePrice.Value >= Price)
+                {
+                    yield return new ValidationResult(
+                        "Sale price must be less than the regular price.",
+                        new[] { nameof(SalePrice) });
+                }
+            }
 
-		}
-		[BindProperty]
+
+        }
+        [BindProperty]
 		public ProductInputModel Product { get; set; } = new();
 
 		[BindProperty]

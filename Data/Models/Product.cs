@@ -10,7 +10,7 @@ namespace Data.Models
         [Key]
         public int ProductId { get; set; }
 
-        public int? SellerId { get; set; }
+        public int SellerId { get; set; }
 
         [Required]
         [MaxLength(100)]
@@ -45,13 +45,10 @@ namespace Data.Models
 
         [ForeignKey("CategoryId")]
         public virtual Category Category { get; set; } = null!;
-
         public virtual ICollection<OrderDetail> OrderDetails { get; set; } = new List<OrderDetail>();
-
         public virtual ICollection<Review> Reviews { get; set; } = new List<Review>();
-
         [ForeignKey("SellerId")]
-        public virtual User? Seller { get; set; }
+        public virtual User Seller { get; set; }
         public virtual ICollection<ShoppingCart> ShoppingCarts { get; set; } = new List<ShoppingCart>();
         public virtual ICollection<ProductImage> ProductImages { get; set; } = new List<ProductImage>();
     }

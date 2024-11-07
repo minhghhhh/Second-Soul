@@ -33,7 +33,7 @@ public partial class Order
     [MaxLength(15)]
     public string PhoneNumber { get; set; } = string.Empty;
     [MaxLength(100)]
-    public string Descriptions { get; set; } = string.Empty;
+    public string? Descriptions { get; set; } = string.Empty;
 
     [Required]
     [MaxLength(255)]

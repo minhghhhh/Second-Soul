@@ -622,9 +622,15 @@ namespace Data.Utils
                                 </tbody>
                                 <tfoot>
                                     <tr>
+                                        <td colspan='3' style='text-align:right'><strong>Shipping fee:</strong></td>
+                                        <td>30,000 VND</td>
+                                    </tr>
+
+                                    <tr>
                                         <td colspan='3' style='text-align:right'><strong>Total Price:</strong></td>
                                         <td>{order.TotalAmount.ToString("N0")} VND</td>
                                     </tr>
+
                                 </tfoot>
                             </table>
                         </div>

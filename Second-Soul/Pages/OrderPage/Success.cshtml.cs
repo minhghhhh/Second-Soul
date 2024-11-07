@@ -51,11 +51,13 @@ namespace Second_Soul.Pages.OrderPage
                 var product = (Product)result.Data;
                 product.IsAvailable = false;
                 await _productBusiness.Update(product);
+                var Seller = await _userBusiness.GetById(product.SellerId);
+                double balance = (order.TotalAmount - 30000) * 80 / 100;
+                user.Wallet = (int)Math.Ceiling(balance);
+                await _userBusiness.Update(user);
+
                 await _shoppingCartBusiness.RemoveFromCart(user.UserId, product.ProductId);
             }
-            double balance = (order.TotalAmount - 30000) * 80 / 100;
-            user.Wallet = (int)Math.Ceiling(balance);
-            await _userBusiness.Update(user);
             await SendMail.SendOrderPaymentSuccessEmail(order, details, user);
             return RedirectToPage("/Index");
         }

@@ -22,7 +22,6 @@ namespace Second_Soul.Pages.ProductPage
             _shoppingCartBusiness = shoppingCartBusiness;
             _orderBusiness = orderBusiness;
         }
-
         [BindProperty]
         public bool isSeller { get; set; } = false;
 
@@ -33,6 +32,17 @@ namespace Second_Soul.Pages.ProductPage
 
         public async Task<IActionResult> OnGetAsync(int id)
         {
+
+            var product = await _productBusiness.GetById(id);
+            if (product == null || product.Status <= 0 || product.Data == null)
+            {
+                return RedirectToPage("/Search");
+            }
+            Product = (Product)product.Data;
+            if (Product.IsAvailable == false)
+            {
+                return RedirectToPage("/Search");
+            }
             var user = await _userBusiness.GetFromCookie(Request);
             if (user != null)
             {
@@ -45,18 +55,6 @@ namespace Second_Soul.Pages.ProductPage
                 var result = await _shoppingCartBusiness.GetByUserId(user.UserId, null, null);
                 var totalProduct = (List<ShoppingCart>)result.Data;
                 HttpContext.Session.SetInt32("TotalProduct", totalProduct.Count());
-            }
-
-
-            var product = await _productBusiness.GetById(id);
-            if (product == null || product.Status <= 0 || product.Data == null)
-            {
-                return RedirectToPage("/Search");
-            }
-            Product = (Product)product.Data;
-            if (Product.IsAvailable == false)
-            {
-                return RedirectToPage("/Search");
             }
             var images = await _productImageBusiness.GetByProductId(id);
             if (images != null && images.Status > 0 && images.Data != null)

@@ -189,6 +189,11 @@ namespace Data.Repository
         {
             return await context.Products.Include(a => a.Category).Include(a => a.Seller).Where(a => a.ProductId == id && a.IsAvailable == true).FirstOrDefaultAsync();
         }
+        public async Task<Product?> GetProductDetailsNoAvailableNeed(int id)
+        {
+            return await context.Products.Include(a => a.Category).Include(a => a.Seller).Where(a => a.ProductId == id).FirstOrDefaultAsync();
+        }
+
         private async Task<bool> IsValidCategoryAsync(int categoryID)
         {
             return await _categoryRepo.GetSingleOrDefaultWithNoTracking(c => c.CategoryId == categoryID) != null;
