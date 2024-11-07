@@ -4,21 +4,22 @@
 }
 
 <div class="container mt-5">
-	<h2 class="text-center mb-4">Add Product</h2>
+	<h2 class="text-center mb-4">Update Product</h2>
 	<form id="productForm" method="post" enctype="multipart/form-data">
+		<input name="id" hidden value="@Model.Id" />
 		<div class="form-group mb-3">
 			<label asp-for="Product.Name" class="form-label"></label>
-			<input asp-for="Product.Name" class="form-control" value="Product.Name" placeholder="Enter product name" required />
+			<input asp-for="Product.Name" class="form-control" value="@Model.Product.Name" placeholder="Enter product name" required />
 		</div>
 
 		<div class="form-group mb-3">
 			<label asp-for="Product.Description" class="form-label"></label>
-			<textarea asp-for="Product.Description" class="form-control" rows="4" placeholder="Enter product description"></textarea>
+			<textarea asp-for="@Model.Product.Description" value="@Model.Product.Description" class="form-control" rows="4" placeholder="Enter product description"></textarea>
 		</div>
 
 		<div class="form-group mb-3">
 			<label asp-for="Product.Price" class="form-label"></label>
-			<input asp-for="Product.Price" class="form-control" value="Product.Price" placeholder="Enter price" type="number" step="1" required />
+			<input asp-for="Product.Price" class="form-control" value="@Model.Product.Price" placeholder="Enter price" type="number" step="1" required />
 		</div>
 
 		<div class="form-group mb-4">
@@ -68,8 +69,30 @@
 		</div>
 		<br />
 		<div class="form-group mb-4">
+			<label class="form-label">Existing Images</label>
+			<div id="existing-images">
+				@foreach (var image in Model.Images)
+				{
+					<div class="image-container">
+						<img src="@image.ImageUrl" alt="Product Image" style="max-width: 150px; max-height: 150px;" />
+						@if (Model.Product.MainImage == image.ImageUrl)
+						{
+							<input type="radio" asp-for="Product.MainImage" value="@image.ImageUrl" selected />
+						}
+						else
+						{
+							<input type="radio" asp-for="Product.MainImage" value="@image.ImageUrl" selected />
+						}
+						<label>Main Image</label>
+						<input type="checkbox" name="DeleteImages" value="@image.Id" /> Delete
+					</div>
+				}
+			</div>
+		</div>
+		<br />
+		<div class="form-group mb-4">
 			<label for="photos" class="form-label">Upload Images</label>
-			<input type="file" name="Photos" multiple accept=".png,.jpg,.jpeg" class="form-control" required />
+			<input type="file" name="Photos" multiple accept=".png,.jpg,.jpeg" class="form-control" />
 			<small class="form-text text-muted">Allowed formats: JPEG, PNG, JPG.</small>
 		</div>
 		<div class="form-group form-check mb-4">

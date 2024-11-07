@@ -16,11 +16,12 @@ namespace Second_Soul.Pages
 
         public string Message { get; set; }
 
-        public async Task<IActionResult> OnGetAsync(string token)
+        public async Task<IActionResult> OnGetAsync(string? token)
         {
-
-
-            // Validate the token
+            if (string.IsNullOrWhiteSpace(token))
+            {
+                return RedirectToPage("Login");
+            }
             var user = await _userBusiness.GetUserByToken(token);
             if (user == null)
             {

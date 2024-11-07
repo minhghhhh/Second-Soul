@@ -20,8 +20,8 @@ namespace BusssinessObject
         Task<IBusinessResult> Update(ProductImage cate);
         Task<IBusinessResult> DeleteById(int id);
         Task<string> UploadImageAsync(IFormFile file);
-
-    }
+        Task<ProductImage?> GetById(int id);
+	}
     public class ProductImageBusiness : IProductImageBusiness
     {
         private readonly UnitOfWork _unitOfWork;
@@ -155,6 +155,18 @@ namespace BusssinessObject
             catch (Exception ex)
             {
                 return new BusinessResult(-4, ex.ToString());
+            }
+        }
+
+        public async Task<ProductImage?> GetById(int id)
+        {
+            try
+            {
+                return await _unitOfWork.ProductImageRepo.GetByIdAsync(id);
+            }
+            catch
+            {
+                return null;
             }
         }
     }
