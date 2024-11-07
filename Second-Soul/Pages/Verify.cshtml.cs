@@ -60,7 +60,7 @@ namespace Second_Soul.Pages
 			return RedirectToPage("/Reset");
 		}
 
-		public async Task<IActionResult> OnPostConfirmToken()
+		public async Task<IActionResult> OnPostAsync()
 		{
 			if (!ModelState.IsValid)
 			{

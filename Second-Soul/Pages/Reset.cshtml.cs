@@ -52,7 +52,8 @@ namespace Second_Soul.Pages
 				bool emailSent = await SendMail.SendResetLinkEmail(user.Email, resetLink);
                 if (emailSent)
                 {
-                    return Page();
+					ViewData["SuccessMessage"] = "A link has been sent to your email.";
+					return Page();
                 }
             }
 			ViewData["TokenError"] = "Failed to send email. Please try again.";
