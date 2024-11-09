@@ -64,39 +64,41 @@
     <div class="offcanvas-menu-wrapper">
         <div class="offcanvas__option">
             <div class="offcanvas__links">
-                <a href="#">Sign in</a>
-                <a href="#">FAQs</a>
+                @* <a href="#">Sign in</a>
+                <a href="#">FAQs</a> *@
             </div>
-            <div class="offcanvas__top__hover">
-                @if (currentUser != null)
-                {
-                    <span>
-                        @if (currentUser?.ImageUrl != null)
-                        {
-                            <img src="@currentUser.ImageUrl" alt="Profile Picture" class="rounded-circle" width="30" height="30" />
-                        }
-                        else
-                        {
-                            <i class="bi bi-person-circle" style="font-size: 30px;"></i>
-                        }
-                        @currentUser?.Username
-                        <i class="arrow_carrot-down"></i>
-                    </span>
-                    <ul>
-                        <li><a class="dropdown-item" href="/UserPage/Profile">My Account</a></li>
-                        <li><a class="dropdown-item" href="/UserPage/Profile/Order">My Purchase</a></li>
-                        <li><a class="dropdown-item" href="/UserPage/Profile/Product">My Product</a></li>
-                        <li><a class="dropdown-item" href="/Logout">Logout</a></li>
-                    </ul>
+                                                            <div class="offcanvas__top__hover">
+                @if (currentUser != null) 
+                                {
 
-                }
-                else
-                {
-                    <div class="header__top__links">
-                        <a href="/Login" class="nav-link">Sign in</a>
-                    </div>
-                }
+                                    <span>
+                                        @if (currentUser?.ImageUrl != null)
+                                        {
+                                            <img src="@currentUser.ImageUrl" alt="Profile Picture" class="rounded-circle" width="30" height="30" />
+                                        }
+                                        else
+                                        {
+                                            <i class="bi bi-person-circle" style="font-size: 30px;"></i>
+                                        }
+                                        @currentUser?.Username
+                                        <i class="arrow_carrot-down"></i>
+                                    </span>
+                                    <ul>
+                                        <li><a class="dropdown-item nav-link" href="/UserPage/Profile">My Account</a></li>
+                                        <li><a class="dropdown-item nav-link" href="/UserPage/AddProduct">Add Product</a></li>
+                                        <li><a class="dropdown-item nav-link" href="/UserPage/Profile/Order">My Purchase</a></li>
+                                        <li><a class="dropdown-item nav-link" href="/UserPage/Profile/Product">My Product</a></li>
+                                        <li><a class="dropdown-item nav-link" href="/Logout">Logout</a></li 
+                                    </ul>
+                                }
+                                else
+                                {
+                                    <div class="header__top__links offcanvas__links">
+                                        <a href="/Login" class="nav-link">Sign in</a>
+                                    </div>
+                                }
             </div>
+
         </div>
         <div class="offcanvas__nav__option">
             <a href="#" class="search-switch"><img src="~/template/img/icon/search.png" alt=""></a>
