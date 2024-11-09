@@ -38,13 +38,18 @@ namespace Second_Soul.Pages.OrderPage
                 return RedirectToPage("/Index");
             }
             var order = (Order)result.Data;
+            order.TotalAmount += 30000;
             order.Status = "Completed";
             result = await _orderBusiness.Update(order);
             if (!(result.Status > 0))
             {
                 return RedirectToPage("/Index");
             }
-            var details = await _orderDetailBusiness.GetDetailsByOrderId(order.OrderId);
+            user.Token = string.Empty;
+			double balance = (order.TotalAmount - 30000) * 80 / 100;
+			user.Wallet += (int)Math.Ceiling(balance);
+			await _userBusiness.Update(user);
+			var details = await _orderDetailBusiness.GetDetailsByOrderId(order.OrderId);
             foreach (var item in details)
             {
                 result = await _productBusiness.GetById(item.ProductId);
@@ -52,13 +57,11 @@ namespace Second_Soul.Pages.OrderPage
                 product.IsAvailable = false;
                 await _productBusiness.Update(product);
                 var Seller = await _userBusiness.GetById(product.SellerId);
-                double balance = (order.TotalAmount - 30000) * 80 / 100;
-                user.Wallet = (int)Math.Ceiling(balance);
-                await _userBusiness.Update(user);
 
                 await _shoppingCartBusiness.RemoveFromCart(user.UserId, product.ProductId);
             }
-            await SendMail.SendOrderPaymentSuccessEmail(order, details, user);
+			
+			await SendMail.SendOrderPaymentSuccessEmail(order, details, user);
             return RedirectToPage("/Index");
         }
     }

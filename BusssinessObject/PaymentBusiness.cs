@@ -69,15 +69,15 @@ namespace BusssinessObject
 					var item = new ItemData(orderDetails.Product.Name, 1, orderDetails.Price);
 					itemlist.Add(item);
 				}
-				order.TotalAmount += 30000;
-				result = await _orderBusiness.Update(order);
+				//order.TotalAmount += 30000;
+				//result = await _orderBusiness.Update(order);
 				if (result == null || !(result.Status > 0))
 				{
 					return new BusinessResult(Const.FAIL_CREATE_CODE, result == null || string.IsNullOrEmpty(result.Message) ? Const.FAIL_CREATE_MSG : result.Message);
 				}
 				else
 				{
-					var paymentData = new PaymentData(orderId, order.TotalAmount, order.Descriptions, itemlist, cancelUrl, successUrl);
+					var paymentData = new PaymentData(orderId, order.TotalAmount + 30000, order.Descriptions ?? string.Empty, itemlist, cancelUrl, successUrl);
 					var paymentResult = await _payOS.createPaymentLink(paymentData);
 					if (paymentResult != null)
 					{

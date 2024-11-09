@@ -464,7 +464,7 @@ namespace Data.Utils
             <div class='content'>
                 <h2>Withdraw Successful!</h2>
                 <p>Dear {user.Username},</p>
-                <p>Your withdrawal of {user.Wallet} VND has been processed successfully.</p>
+                <p>Your withdrawal of {wallet} VND has been processed successfully.</p>
             </div>
         </body>
     </html>"
