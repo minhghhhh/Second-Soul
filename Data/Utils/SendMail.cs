@@ -188,8 +188,8 @@ namespace Data.Utils
             <body>
                 <div class='content'>
                     <p>Email: " + email + @"</p>  
-                    <p>Name: " + email + @"</p> 
-                    <p>Message: " + email + @"</p> 
+                    <p>Name: " + name + @"</p> 
+                    <p>Message: " + mess + @"</p> 
                 </div>
             </body>
         </body>

@@ -30,7 +30,7 @@ namespace Second_Soul.Pages
 			{
 				return Page();
 			}
-			await SendMail.SendContactMail(FormatUtilities.TrimSpacesPreserveSingle(name), email, FormatUtilities.TrimSpacesPreserveSingle(message));
+			await SendMail.SendContactMail(email, FormatUtilities.TrimSpacesPreserveSingle(name), FormatUtilities.TrimSpacesPreserveSingle(message));
 			PopUpMessage = "Your message has beent sent.";
 			return Page();
         }
