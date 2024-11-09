@@ -21,7 +21,7 @@ namespace Second_Soul.Pages
 			
 		}
 
-		public void OnPost()
+		public void OnPost(string name)
         {
 
         }
