@@ -7,21 +7,18 @@ namespace Second_Soul.Pages
 {
     public class ContactModel : PageModel
     {
-		private readonly UserBusiness _userBusiness;
-		public User User { get; set; }
+		private readonly IUserBusiness _userBusiness;
+		public User? User1 { get; set; }
 
-		public ContactModel(UserBusiness userBusiness)
+		public ContactModel(IUserBusiness userBusiness)
 		{
 			_userBusiness = userBusiness;
 		}
 
         public async Task OnGet()
         {
-			var user = await _userBusiness.GetFromCookie(Request);
-			if (user != null)
-			{
-				
-			}
+			User1 = await _userBusiness.GetFromCookie(Request);
+			
 		}
 
 		public void OnPost()
